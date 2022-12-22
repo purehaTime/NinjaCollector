@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+
+  storedb:
+    image: mongo:6.0.3
+    restart: always
+    container_name: 'StoreDb'
+  
   dbservice:
     image: ${DOCKER_REGISTRY-}dbservice
     build:
@@ -13,8 +19,6 @@ services:
       context: .
       dockerfile: MainService/Dockerfile
 
-
- 
   loggerservice:
     image: ${DOCKER_REGISTRY-}loggerservice
     build:
