@@ -1,15 +1,18 @@
 ﻿using Serilog;
 using Serilog.Configuration;
-using Serilog.Core;
 using Serilog.Events;
 
 namespace Logger
 {
     public static class LoggerSink
     {
-        public static LoggerConfiguration HttpServer(this LoggerSinkConfiguration sinkConfiguration, LogEventLevel level = LogEventLevel.Warning)
+        public static LoggerConfiguration HttpServer(this LoggerSinkConfiguration sinkConfiguration, HttpSinkOption? option, LogEventLevel level = LogEventLevel.Warning)
         {
-            return sinkConfiguration.Sink<HttpSink>(level);
+            var sinkOpt = option ?? new HttpSinkOption
+            {
+                ServerAddress = @"http:\\localhost:443"
+            };
+            return sinkConfiguration.Sink(new HttpSink(sinkOpt));
         }
     }
 }
