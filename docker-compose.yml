@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  dbservice:
+    image: ${DOCKER_REGISTRY-}dbservice
+    build:
+      context: .
+      dockerfile: DbService/Dockerfile
+
+  mainservice:
+    image: ${DOCKER_REGISTRY-}mainservice
+    build:
+      context: .
+      dockerfile: MainService/Dockerfile
+
+
+ 
+  loggerservice:
+    image: ${DOCKER_REGISTRY-}loggerservice
+    build:
+      context: .
+      dockerfile: LoggerService/Dockerfile
+
