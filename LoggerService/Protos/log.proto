@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "LoggerService.Protos";
+import "google/protobuf/timestamp.proto";
+
+package logger;
+
+service Logger {
+    rpc WriteLog(LogModel) returns (WriteResponse);
+    rpc GetLogs(LogsRequest) returns (LogsResponse);
+}
+
+message LogModel {
+    int32 id = 1;
+    string application = 2;
+    string environment = 3;
+    string message = 4;
+    google.protobuf.Timestamp timestamp = 5;
+}
+
+message WriteResponse {
+  bool success = 1;
+}
+
+message LogsResponse {
+    repeated LogModel logs = 1;
+}
+
+message LogsRequest {
+    LogModel filter = 1;
+}
