@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GrpcHelper.LogService;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GrpcHelper
 {
