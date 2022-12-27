@@ -4,7 +4,8 @@ sudo: required
 mono: none 
 dotnet: 6.0 
 
-os: - linux 
+os: 
+- linux 
 
 before_script: 
 - dotnet restore ".\NinjaCollector.sln" 
