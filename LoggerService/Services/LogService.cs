@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using LoggerService.Protos;
 
 namespace LoggerService.Services
 {

@@ -1,3 +1,4 @@
+using GrpcHelper;
 using Logger;
 using Serilog;
 
@@ -10,7 +11,9 @@ namespace MainService
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddGrpcHelper();
             builder.Host.UseSerilog(LoggerSetup.Configure);
+
 
             var app = builder.Build();
 

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "LoggerService";
+option csharp_namespace = "GrpcHelper.LogService";
 import "google/protobuf/timestamp.proto";
 
 package logger;

@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "Logger\Logger.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerService", "LoggerService\LoggerService.csproj", "{BC35F0E5-3581-4587-82CB-ECBB567A9389}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GrpcHelper", "GrpcHelper", "{13B2BB81-9444-4298-BD92-76B91F966F2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcHelper", "GrpcHelper\GrpcHelper.csproj", "{F4E58584-307F-4FD2-A261-B80EA356CB08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,10 @@ Global
 		{BC35F0E5-3581-4587-82CB-ECBB567A9389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC35F0E5-3581-4587-82CB-ECBB567A9389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC35F0E5-3581-4587-82CB-ECBB567A9389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E58584-307F-4FD2-A261-B80EA356CB08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E58584-307F-4FD2-A261-B80EA356CB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E58584-307F-4FD2-A261-B80EA356CB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E58584-307F-4FD2-A261-B80EA356CB08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +59,7 @@ Global
 		{56240EC2-D0FA-4F8C-938C-C46332EDB470} = {EFC4F508-EABF-437A-8793-0C1B15A639D5}
 		{44E71EF8-5FE4-4F3A-934D-E3BB04250A09} = {FC6F89BE-2F8F-4A14-B19C-2BC535CB4F5E}
 		{BC35F0E5-3581-4587-82CB-ECBB567A9389} = {FC6F89BE-2F8F-4A14-B19C-2BC535CB4F5E}
+		{F4E58584-307F-4FD2-A261-B80EA356CB08} = {13B2BB81-9444-4298-BD92-76B91F966F2D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C53FDDA5-F946-40F4-9AC0-5D8EEE41AF2A}
