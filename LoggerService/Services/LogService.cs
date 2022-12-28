@@ -3,12 +3,12 @@ using GrpcHelper.LogService;
 
 namespace LoggerService.Services
 {
-    public class LogService : Logger.LoggerClient
+    public class LogService : Logger.LoggerBase
     {
-        public override AsyncUnaryCall<WriteResponse> WriteLogAsync(LogModel request, Metadata headers = null, DateTime? deadline = null,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<WriteResponse> WriteLog(LogModel request, ServerCallContext context)
         {
-            return new AsyncUnaryCall<WriteResponse>(null, null, null, null, null, null);
+            Console.WriteLine("here");
+            return await Task.FromResult(new WriteResponse() { Success = true });
         }
     }
 }

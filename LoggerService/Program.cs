@@ -1,3 +1,5 @@
+using LoggerService.Services;
+
 namespace LoggerService
 {
     public class Program
@@ -6,12 +8,11 @@ namespace LoggerService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
+            builder.Services.AddGrpc();
 
             var app = builder.Build();
 
-            //app.MapGet("/", () => "Hello World!");
-
-            app.MapControllers();
+            app.MapGrpcService<LogService>();
             app.Run();
         }
     }
