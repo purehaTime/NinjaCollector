@@ -17,11 +17,11 @@ namespace Logger
 
         public void Emit(LogEvent logEvent)
         {
+            if (_option.LogLevel > logEvent.Level) return;
+
             _loggerClient.WriteLog(logEvent.ToString())
                 .GetAwaiter()
                 .GetResult();
-
-            Console.WriteLine("test here !");
         }
     }
 }

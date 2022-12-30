@@ -1,3 +1,5 @@
+using GrpcHelper;
+using GrpcHelper.LogService;
 using LoggerService.Services;
 
 namespace LoggerService
@@ -8,7 +10,11 @@ namespace LoggerService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
+            builder.Services.AddGrpcHelper();
             builder.Services.AddGrpc();
+
+
+            builder.Services.AddGrpcClient<Logger.LoggerClient>((opt) => { opt.Address = new Uri("http://loggerservice"); });
 
             var app = builder.Build();
 

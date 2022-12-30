@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcHelper.DbService";
+import "google/protobuf/timestamp.proto";
+
+package database;
+
+service DatabaseLog {
+    rpc WriteLog(DbLogModel) returns (WriteLogResponse);
+    rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
+}
+
+message DbLogModel {
+    string jsondata = 2;
+    google.protobuf.Timestamp timestamp = 5;
+}
+
+message WriteLogResponse {
+  bool success = 1;
+}
+
+message DbLogsRequest {
+    repeated DbLogModel logs = 1;
+}
+
+message DbLogsResponse {
+    DbLogModel filter = 1;
+}
