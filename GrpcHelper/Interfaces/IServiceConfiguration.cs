@@ -2,6 +2,6 @@
 {
     public interface IServiceConfiguration
     {
-        public string GetServiceAddress();
+        public string GetServiceAddress<TService>();
     }
 }

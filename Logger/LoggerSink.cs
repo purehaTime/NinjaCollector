@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
 
@@ -6,13 +7,14 @@ namespace Logger
 {
     public static class LoggerSink
     {
-        public static LoggerConfiguration HttpServer(this LoggerSinkConfiguration sinkConfiguration, HttpSinkOption? option, LogEventLevel level = LogEventLevel.Warning)
+        public static LoggerConfiguration HttpServer(this LoggerSinkConfiguration sinkConfiguration, IConfiguration config, LogEventLevel level = LogEventLevel.Warning)
         {
-            var sinkOpt = option ?? new HttpSinkOption
+            var sinkOpt = new HttpSinkOption
             {
-                ServerAddress = @"http:\\localhost:443"
+                LogLevel = level
             };
-            return sinkConfiguration.Sink(new HttpSink(sinkOpt));
+
+            return sinkConfiguration.Sink(new HttpSink(sinkOpt, config));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GrpcHelper.Interfaces;
+﻿using GrpcHelper.Clients;
+using GrpcHelper.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GrpcHelper

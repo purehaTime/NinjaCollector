@@ -13,9 +13,6 @@ namespace LoggerService
             builder.Services.AddGrpcHelper();
             builder.Services.AddGrpc();
 
-
-            builder.Services.AddGrpcClient<Logger.LoggerClient>((opt) => { opt.Address = new Uri("http://loggerservice"); });
-
             var app = builder.Build();
 
             app.MapGrpcService<LogService>();

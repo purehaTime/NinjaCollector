@@ -11,9 +11,8 @@ service Logger {
 }
 
 message LogModel {
-    int32 id = 1;
+    string id = 1;
     string application = 2;
-    string environment = 3;
     string message = 4;
     google.protobuf.Timestamp timestamp = 5;
 }

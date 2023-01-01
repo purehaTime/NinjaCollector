@@ -2,6 +2,6 @@
 {
     public interface ILoggerServiceClient
     {
-        public Task WriteLog(string? message);
+        public Task WriteLog(string message, string? eventId, string? application);
     }
 }
