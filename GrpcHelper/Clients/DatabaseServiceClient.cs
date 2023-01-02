@@ -20,10 +20,7 @@ namespace GrpcHelper.Clients
             using var channel = GrpcChannel.ForAddress(serverAddress);
 
             var client = new DatabaseLogClient(channel);
-            var result = await client.WriteLogAsync(new DbLogModel
-            {
-                Jsondata = "" 
-            });
+            var result = await client.WriteLogAsync(message);
 
             return result.Success;
         }

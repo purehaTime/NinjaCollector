@@ -22,7 +22,11 @@ namespace Logger
         {
             if (_option.LogLevel > logEvent.Level) return;
 
-            _loggerClient.WriteLog("logEvent", null, null)
+            var eventId = logEvent.Properties["ActionId"].ToString();
+            var appName = logEvent.Properties["Application"].ToString();
+            var message = logEvent.MessageTemplate.Text + "\r\n" + (logEvent.Exception?.Message ?? "");
+
+            _loggerClient.WriteLog(message, eventId, appName)
                 .GetAwaiter()
                 .GetResult();
         }

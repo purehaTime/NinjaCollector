@@ -17,6 +17,7 @@ namespace MainService.Controllers
         [HttpGet]
         public ActionResult Ping()
         {
+            _logger.Warning("test message");
             return Ok("pong !");
         }
     }

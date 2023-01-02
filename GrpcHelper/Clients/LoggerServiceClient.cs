@@ -20,20 +20,27 @@ namespace GrpcHelper.Clients
         public async Task WriteLog(string message, string? eventId, string? application)
         {
             var serverAddress = _serviceConfig.GetServiceAddress<Logger.LoggerClient>();
-            using var channel = GrpcChannel.ForAddress(serverAddress);
 
-            var client = new Logger.LoggerClient(channel);
-            var result = await client.WriteLogAsync(new LogModel
+            try
             {
-                Id = eventId,
-                Message = message,
-                Application = application,
-                Timestamp = Timestamp.FromDateTime(DateTime.Now),
-            });
+                using var channel = GrpcChannel.ForAddress(serverAddress);
 
-            if (!result.Success)
+                var client = new Logger.LoggerClient(channel);
+                var result = await client.WriteLogAsync(new LogModel
+                {
+                    Id = eventId,
+                    Message = message,
+                    Application = application,
+                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                });
+                if (!result.Success)
+                {
+                    _logger.Fatal("Connection to logger service is unavailable");
+                }
+            }
+            catch (Exception err)
             {
-                _logger.Fatal("Connection to logger service is unavailable");
+                _logger.Fatal($"Logger service has an error: {err.Message}");
             }
         }
     }
