@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcHelper.Interfaces;
 using GrpcHelper.LogService;
@@ -38,7 +39,7 @@ namespace GrpcHelper.Clients
                     _logger.Fatal("Connection to logger service is unavailable");
                 }
             }
-            catch (Exception err)
+            catch (RpcException err)
             {
                 _logger.Fatal($"Logger service has an error: {err.Message}");
             }

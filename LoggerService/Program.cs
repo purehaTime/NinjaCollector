@@ -1,6 +1,6 @@
 using GrpcHelper;
-using GrpcHelper.LogService;
 using LoggerService.Services;
+using Serilog;
 
 namespace LoggerService
 {
@@ -8,15 +8,23 @@ namespace LoggerService
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers();
-            builder.Services.AddGrpcHelper();
-            builder.Services.AddGrpc();
+            try
+            {
+                var builder = WebApplication.CreateBuilder(args);
 
-            var app = builder.Build();
+                builder.Services.AddGrpcHelper();
+                builder.Services.AddGrpc();
+                builder.Host.UseSerilog();
 
-            app.MapGrpcService<LogService>();
-            app.Run();
+                var app = builder.Build();
+
+                app.MapGrpcService<LogService>();
+                app.Run();
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+            }
         }
     }
 }

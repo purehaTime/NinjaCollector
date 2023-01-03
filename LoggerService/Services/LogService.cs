@@ -35,7 +35,7 @@ namespace LoggerService.Services
                 return new WriteResponse { Success = false };
             }
         }
-        
+
         public override Task<LogsResponse> GetLogs(LogsRequest request, ServerCallContext context)
         {
             return base.GetLogs(request, context);

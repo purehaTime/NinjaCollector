@@ -14,7 +14,6 @@ namespace MainService
             builder.Services.AddGrpcHelper();
             builder.Host.UseSerilog(LoggerSetup.Configure);
 
-
             var app = builder.Build();
 
             

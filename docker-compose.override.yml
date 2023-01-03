@@ -1,6 +1,9 @@
 version: '3.4'
 
 services:
+  storedb:
+    ports:
+      - "27017:27017"
   dbservice:
     container_name: dbservice
     environment:
@@ -21,6 +24,9 @@ services:
     ports:
       - "14000:90"
       - "14001:443"
+    depends_on:
+      - dbservice
+      - loggerservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -33,6 +39,8 @@ services:
     ports:
       - "14090:80"
       - "14091:443"
+    depends_on:
+      - dbservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
