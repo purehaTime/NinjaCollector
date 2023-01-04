@@ -12,7 +12,7 @@ namespace MainService
 
             builder.Services.AddControllers();
             builder.Services.AddGrpcHelper();
-            builder.Host.UseSerilog(LoggerSetup.Configure);
+            builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
 
             var app = builder.Build();
 

@@ -6,7 +6,7 @@ namespace Logger
 {
     public static class LoggerSetup
     {
-        public static Action<HostBuilderContext, LoggerConfiguration> Configure =>
+        public static Action<HostBuilderContext, LoggerConfiguration> ConfigureWithHttp =>
             (context, configuration) =>
             {
                 var httpLevelLogger = context.Configuration.GetSection("Logging:HttpLogger:LogLevel");

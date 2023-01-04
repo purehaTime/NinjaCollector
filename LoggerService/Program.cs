@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using GrpcHelper;
 using LoggerService.Services;
 using Serilog;
@@ -14,11 +15,13 @@ namespace LoggerService
 
                 builder.Services.AddGrpcHelper();
                 builder.Services.AddGrpc();
-                builder.Host.UseSerilog();
+                builder.Services.AddSingleton(Log.Logger);
+                //builder.Host.UseSerilog();
 
                 var app = builder.Build();
 
                 app.MapGrpcService<LogService>();
+                app.MapGet("/", () => "logger service");
                 app.Run();
             }
             catch (Exception err)
