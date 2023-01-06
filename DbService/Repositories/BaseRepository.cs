@@ -1,5 +1,4 @@
 ﻿using DbService.Interfaces;
-using Microsoft.VisualBasic;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
 
@@ -139,7 +138,7 @@ namespace DbService.Repositories
             }
             catch (Exception err)
             {
-                _logger.Error(err, $"Insert error. Details: {err.Message}");
+                _logger.Error(err, $"Delete error. Details: {err.Message}");
             }
 
             return null!;
@@ -156,7 +155,7 @@ namespace DbService.Repositories
             }
             catch (Exception err)
             {
-                _logger.Error(err, $"Insert error. Details: {err.Message}");
+                _logger.Error(err, $"DeleteMany error. Details: {err.Message}");
             }
 
             return null!;
@@ -164,11 +163,11 @@ namespace DbService.Repositories
 
         protected IMongoCollection<TEntity> InitCollection()
         {
-            var db = _mongoClient
+            var collection = _mongoClient
                 .GetDatabase(_dbName)
                 .GetCollection<TEntity>(_collectionName);
 
-            return db;
+            return collection;
         }
 
     }
