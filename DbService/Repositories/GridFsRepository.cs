@@ -11,14 +11,12 @@ namespace DbService.Repositories
         private readonly ILogger _logger;
         private readonly IMongoClient _mongoClient;
         private readonly string _dbName;
-        private readonly string _collectionName;
 
-        public GridFsRepository(IMongoClient client, string dbName, string collectionName, ILogger logger)
+        public GridFsRepository(IMongoClient client, string dbName, ILogger logger)
         {
             _logger = logger;
             _mongoClient = client;
             _dbName = dbName;
-            _collectionName = collectionName;
         }
         public async Task<byte[]> GetFileAsBytes(ObjectId id, GridFSDownloadOptions options, CancellationToken cToken)
         {
