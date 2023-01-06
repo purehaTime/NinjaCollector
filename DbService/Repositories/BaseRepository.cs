@@ -9,15 +9,26 @@ namespace DbService.Repositories
     {
 
         private readonly ILogger _logger;
+        private readonly IMongoClient _mongoClient;
+        private readonly string _dbName;
+        private readonly string _collectionName;
+
 
         public BaseRepository(IMongoClient client, string dbName, string collectionName, ILogger logger)
         {
             _logger = logger;
+            _mongoClient = client;
+            _dbName = dbName;
+            _collectionName = collectionName;
         }
 
-        public virtual Task<TEntity> Find(FilterDefinition<TEntity> filter, FindOptions options, CancellationToken cToken)
+        public virtual async Task<TEntity> Find(FilterDefinition<TEntity> filter, FindOptions options, CancellationToken cToken)
         {
-            throw new NotImplementedException();
+            var collection = InitCollection();
+
+            var result = await collection.Find(filter, options).FirstOrDefaultAsync(cToken);
+
+            return result;
         }
 
         public virtual Task<IEnumerable<TEntity>> FindMany(FilterDefinition<TEntity> filter, FindOptions options, CancellationToken cToken)
@@ -53,6 +64,15 @@ namespace DbService.Repositories
         public virtual Task<bool> DeleteMany(FilterDefinition<TEntity> filter, DeleteOptions options, CancellationToken cToken)
         {
             throw new NotImplementedException();
+        }
+
+        protected IMongoCollection<TEntity> InitCollection()
+        {
+            var db = _mongoClient
+                .GetDatabase(_dbName)
+                .GetCollection<TEntity>(_collectionName);
+
+            return db;
         }
 
     }

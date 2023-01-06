@@ -1,6 +1,4 @@
-﻿using LoggerService.Models;
-
-namespace LoggerService.Interfaces
+﻿namespace LoggerService.Interfaces
 {
     public interface IDatabase
     {
