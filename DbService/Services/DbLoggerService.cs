@@ -11,7 +11,6 @@ namespace DbService.Services
         {
             var mongoClient= new MongoClient("mongodb://StoreDb");
 
-
             var db = mongoClient.GetDatabase("logs");
             var coll = db.GetCollection<Log>("Log");
 

@@ -1,4 +1,6 @@
 using DbService.Services;
+using Logger;
+using Serilog;
 
 namespace DbService
 {
@@ -8,6 +10,7 @@ namespace DbService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddGrpc();
+            builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
             var app = builder.Build();
 
             app.MapGrpcService<DbLoggerService>();

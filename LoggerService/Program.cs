@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using GrpcHelper;
+using LoggerService.Interfaces;
 using LoggerService.Services;
 using Serilog;
 
@@ -16,7 +17,7 @@ namespace LoggerService
                 builder.Services.AddGrpcHelper();
                 builder.Services.AddGrpc();
                 builder.Services.AddSingleton(Log.Logger);
-                //builder.Host.UseSerilog();
+                builder.Services.AddScoped<IDatabase, DatabaseService>();
 
                 var app = builder.Build();
 

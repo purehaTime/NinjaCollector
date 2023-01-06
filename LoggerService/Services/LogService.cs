@@ -1,20 +1,19 @@
 ﻿using Grpc.Core;
-using GrpcHelper.DbService;
-using GrpcHelper.Interfaces;
 using GrpcHelper.LogService;
-using Newtonsoft.Json;
+using LoggerService.Interfaces;
+using LoggerService.Models;
 using ILogger = Serilog.ILogger;
 
 namespace LoggerService.Services
 {
     public class LogService : Logger.LoggerBase
     {
-        private IDatabaseServiceClient _dbClient;
+        private IDatabase _db;
         private ILogger _systemLog;
 
-        public LogService(IDatabaseServiceClient dbClient, ILogger systemLog)
+        public LogService(IDatabase db, ILogger systemLog)
         {
-            _dbClient = dbClient;
+            _db = db;
             _systemLog = systemLog;
         }
 
@@ -22,18 +21,22 @@ namespace LoggerService.Services
         {
             try
             {
-                var result = await _dbClient.WriteLogToDb(new DbLogModel
+                var result = await _db.Add(new Log
                 {
-                    Jsondata = JsonConvert.SerializeObject(request),
-                    Timestamp = request.Timestamp
+                    Id = request.Id,
+                    Message = request.Message,
+                    Timestamp = request.Timestamp.ToDateTime(),
+                    Application = request.Application
                 });
+
                 return new WriteResponse { Success = result };
             }
             catch (Exception err)
             {
-                _systemLog.Fatal($"Database logger has exception: {err.Message}");
+                _systemLog.Fatal($"Error while write log: {err.Message}");
                 return new WriteResponse { Success = false };
             }
+
         }
 
         public override Task<LogsResponse> GetLogs(LogsRequest request, ServerCallContext context)
