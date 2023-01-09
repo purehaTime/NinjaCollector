@@ -42,7 +42,7 @@ namespace GrpcHelper
             var mapping = new Dictionary<string, string>
             {
                 { nameof(Logger.LoggerClient), "ServiceAddress:LoggerService" },
-                { nameof(DatabaseLog.DatabaseLogClient), "ServiceAddress:DbService" }
+                { nameof(Database.DatabaseClient), "ServiceAddress:DbService" }
             };
 
             return mapping;

@@ -8,9 +8,9 @@ package database;
 service Database {
     rpc WriteLog(DbLogModel) returns (WriteLogResponse);
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
-    rpc AddPost(stream PostModel) return (Status);
-    rpc GetPost(PostRequest) return (stream PostModel);
-    rpc GetImages(ImageRequest) return (stream Image);
+    rpc AddPost(stream PostModel) returns (Status);
+    rpc GetPost(PostRequest) returns (stream PostModel);
+    rpc GetImages(ImageRequest) returns (stream Image);
 }
 
 message DbLogModel {
@@ -66,6 +66,6 @@ message ImageRequest {
   repeated string Tags = 1;
   int32 MaxWidth = 2;
   int32 MaxHeight = 3;
-  int32 MinWidth = 2;
-  int32 MinHeight = 3;
+  int32 MinWidth = 4;
+  int32 MinHeight = 5;
 }

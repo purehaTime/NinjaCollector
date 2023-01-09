@@ -1,7 +1,7 @@
 ﻿using Grpc.Net.Client;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
-using static GrpcHelper.DbService.DatabaseLog;
+using static GrpcHelper.DbService.Database;
 
 namespace GrpcHelper.Clients
 {
@@ -16,10 +16,10 @@ namespace GrpcHelper.Clients
 
         public async Task<bool> WriteLogToDb(DbLogModel? message)
         {
-            var serverAddress = _serviceConfig.GetServiceAddress<DatabaseLogClient>();
+            var serverAddress = _serviceConfig.GetServiceAddress<DatabaseClient>();
             using var channel = GrpcChannel.ForAddress(serverAddress);
 
-            var client = new DatabaseLogClient(channel);
+            var client = new DatabaseClient(channel);
             var result = await client.WriteLogAsync(message);
 
             return result.Success;
