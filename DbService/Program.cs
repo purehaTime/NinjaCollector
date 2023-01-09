@@ -1,4 +1,7 @@
+using DbService.Interfaces;
+using DbService.Repositories;
 using Logger;
+using MongoDB.Driver;
 using Serilog;
 
 namespace DbService
@@ -9,6 +12,11 @@ namespace DbService
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddGrpc();
+
+            var connectionString = builder.Configuration.GetConnectionString("mongodb");
+            builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
+            builder.Services.AddScoped<IGridFsRepository, GridFsRepository>();
+
             builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
             var app = builder.Build();
 

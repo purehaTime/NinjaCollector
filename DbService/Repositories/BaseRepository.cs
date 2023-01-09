@@ -13,7 +13,7 @@ namespace DbService.Repositories
         private readonly string _dbName;
         private readonly string _collectionName;
 
-
+        //possible better to rewrite string fields to another interface like IDatabaseConfig which will be setup by Iconfiguration
         public BaseRepository(IMongoClient client, string dbName, string collectionName, ILogger logger)
         {
             _logger = logger;
