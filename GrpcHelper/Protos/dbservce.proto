@@ -5,9 +5,12 @@ import "google/protobuf/timestamp.proto";
 
 package database;
 
-service DatabaseLog {
+service Database {
     rpc WriteLog(DbLogModel) returns (WriteLogResponse);
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
+    rpc AddPost(stream PostModel) return (Status);
+    rpc GetPost(PostRequest) return (stream PostModel);
+    rpc GetImages(ImageRequest) return (stream Image);
 }
 
 message DbLogModel {
@@ -25,4 +28,44 @@ message DbLogsRequest {
 
 message DbLogsResponse {
     DbLogModel filter = 1;
+}
+
+message Status {
+  bool success = 1;
+}
+
+message Image {
+  string Name  = 1;
+  string Description = 2;
+  string OriginalLink = 3;
+  bytes File = 4;
+  repeated string Tags = 5;
+}
+
+message PostModel {
+  string Title = 1;
+  string Description = 2;
+  string Group = 3;
+  string UserName = 4;
+  string Text = 5;
+  repeated Image Images = 6;
+  repeated string Tags = 7;
+  string Source = 8;
+  string OriginalLink = 9;
+  google.protobuf.Timestamp PostDate = 10;
+}
+
+message PostRequest {
+  repeated string Tags = 1;
+  string FromSource = 2;
+  string ByTitle = 3;
+  string ByUserName = 4;
+}
+
+message ImageRequest {
+  repeated string Tags = 1;
+  int32 MaxWidth = 2;
+  int32 MaxHeight = 3;
+  int32 MinWidth = 2;
+  int32 MinHeight = 3;
 }
