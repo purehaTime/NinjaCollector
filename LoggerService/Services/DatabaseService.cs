@@ -6,10 +6,10 @@ namespace LoggerService.Services
 {
     public class DatabaseService : IDatabase
     {
-        private IConfiguration _config;
+        private IDbConfiguration _config;
         private ILogger _logger;
 
-        public DatabaseService(IConfiguration config, ILogger logger)
+        public DatabaseService(IDbConfiguration config, ILogger logger)
         {
             _config = config;
             _logger = logger;
@@ -19,10 +19,7 @@ namespace LoggerService.Services
         {
             try
             {
-                var path = _config.GetSection("LiteDb:FileName")?.Value ?? "log.data";
-                var pass = _config.GetSection("LiteDb:Password")?.Value ?? new Guid().ToString();
-
-                using var db = new LiteDatabaseAsync($"Filename={path};Connection=shared;Password={pass}");
+                using var db = new LiteDatabaseAsync(_config.GetConnectionString());
                 var collection = db.GetCollection<TEntity>(nameof(TEntity) + "s");
                 await collection.InsertAsync(entity);
                 return true;
@@ -38,10 +35,7 @@ namespace LoggerService.Services
         {
             try
             {
-                var path = _config.GetSection("LiteDb:FileName")?.Value ?? "log.data";
-                var pass = _config.GetSection("LiteDb:Password")?.Value ?? new Guid().ToString();
-
-                using var db = new LiteDatabaseAsync($"Filename={path};Connection=shared;Password={pass}");
+                using var db = new LiteDatabaseAsync(_config.GetConnectionString());
                 var collection = db.GetCollection<TEntity>(nameof(TEntity) + "s");
                 var result =  await collection.FindAllAsync();
                 return result;

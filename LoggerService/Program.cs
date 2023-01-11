@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using GrpcHelper;
 using LoggerService.Interfaces;
 using LoggerService.Services;
@@ -14,9 +13,10 @@ namespace LoggerService
             {
                 var builder = WebApplication.CreateBuilder(args);
 
-                builder.Services.AddGrpcHelper();
+                builder.Services.AddGrpcHelper(builder.Configuration);
                 builder.Services.AddGrpc();
                 builder.Services.AddSingleton(Log.Logger);
+                builder.Services.AddSingleton<IDbConfiguration, DbConfiguration>();
                 builder.Services.AddScoped<IDatabase, DatabaseService>();
 
                 var app = builder.Build();

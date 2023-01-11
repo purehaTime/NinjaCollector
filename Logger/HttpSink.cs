@@ -1,6 +1,5 @@
-﻿using GrpcHelper;
+﻿using Grpc.Net.Client;
 using GrpcHelper.Clients;
-using Microsoft.Extensions.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -11,11 +10,12 @@ namespace Logger
         private HttpSinkOption _option;
         private LoggerServiceClient _loggerClient;
 
-        public HttpSink(HttpSinkOption option, IConfiguration config)
+        public HttpSink(HttpSinkOption option)
         {
             _option = option;
-            var serviceConfig = new ServiceConfiguration(config);
-            _loggerClient = new LoggerServiceClient(serviceConfig);
+            var channel = GrpcChannel.ForAddress(_option.ServerAddress);
+            var client = new GrpcHelper.LogService.Logger.LoggerClient(channel);
+            _loggerClient = new LoggerServiceClient(client);
         }
 
         public void Emit(LogEvent logEvent)

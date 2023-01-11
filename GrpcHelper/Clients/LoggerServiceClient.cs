@@ -9,25 +9,20 @@ namespace GrpcHelper.Clients
 {
     public class LoggerServiceClient : ILoggerServiceClient
     {
-        private IServiceConfiguration _serviceConfig;
-        private ILogger _logger;
+        private readonly ILogger _logger;
+        private readonly Logger.LoggerClient _client;
 
-        public LoggerServiceClient(IServiceConfiguration serviceConfig)
+        public LoggerServiceClient(Logger.LoggerClient client)
         {
-            _serviceConfig = serviceConfig;
             _logger = new LoggerConfiguration().CreateLogger();
+            _client = client;
         }
 
         public async Task WriteLog(string message, string? eventId, string? application)
         {
-            var serverAddress = _serviceConfig.GetServiceAddress<Logger.LoggerClient>();
-
             try
             {
-                using var channel = GrpcChannel.ForAddress(serverAddress);
-
-                var client = new Logger.LoggerClient(channel);
-                var result = await client.WriteLogAsync(new LogModel
+                var result = await _client.WriteLogAsync(new LogModel
                 {
                     Id = eventId,
                     Message = message,

@@ -11,12 +11,10 @@ namespace MainService
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            builder.Services.AddGrpcHelper();
+            builder.Services.AddGrpcHelper(builder.Configuration);
             builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
-
             var app = builder.Build();
 
-            
             app.MapControllers();
             app.Run();
         }

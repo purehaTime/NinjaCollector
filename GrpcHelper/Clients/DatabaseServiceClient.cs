@@ -1,4 +1,4 @@
-﻿using Grpc.Net.Client;
+﻿using Grpc.Core;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using static GrpcHelper.DbService.Database;
@@ -7,20 +7,67 @@ namespace GrpcHelper.Clients
 {
     public class DatabaseServiceClient : IDatabaseServiceClient
     {
-        private IServiceConfiguration _serviceConfig;
+        private Database.DatabaseClient _client;
 
-        public DatabaseServiceClient(IServiceConfiguration serviceConfig)
+        public DatabaseServiceClient(DatabaseClient client)
         {
-            _serviceConfig = serviceConfig;
+            _client = client;
         }
 
         public async Task<bool> WriteLogToDb(DbLogModel? message)
         {
-            var serverAddress = _serviceConfig.GetServiceAddress<DatabaseClient>();
-            using var channel = GrpcChannel.ForAddress(serverAddress);
+            var result = await _client.WriteLogAsync(message);
 
-            var client = new DatabaseClient(channel);
-            var result = await client.WriteLogAsync(message);
+            return result.Success;
+        }
+
+        public async Task<bool> AddPost(PostModel post)
+        {
+            var stream = _client.AddPost();
+            await stream.RequestStream.WriteAsync(post);
+            var result = await stream.ResponseAsync;
+            return result.Success;
+        }
+
+        public async Task<List<PostModel>> GetPosts(PostRequest request)
+        {
+            var stream = _client.GetPost(request);
+
+            var result = new List<PostModel>();
+            await foreach (var post in stream.ResponseStream.ReadAllAsync())
+            {
+                result.Add(post);
+            }
+
+            return result;
+        }
+
+        public async Task<List<Image>> GetImages(ImageRequest request)
+        {
+            var stream = _client.GetImages(request);
+
+            var result = new List<Image>();
+            await foreach (var post in stream.ResponseStream.ReadAllAsync())
+            {
+                result.Add(post);
+            }
+
+            return result;
+        }
+
+        public async Task<List<ParserSetting>> GetParserSettings(SettingsRequest request)
+        {
+            var result = await _client.GetSettingsAsync(request);
+
+            return result.ParserSetting.ToList();
+        }
+
+        public async Task<bool> SaveParserSettings(List<ParserSetting> settings)
+        {
+            var result = await _client.SaveSettingsAsync(new ParserSettings
+            {
+                ParserSetting = { settings }
+            });
 
             return result.Success;
         }
