@@ -13,6 +13,7 @@ namespace LoggerService.Services
         {
             _config = config;
             _logger = logger;
+
         }
         
         public async Task<bool> Add<TEntity>(TEntity entity)

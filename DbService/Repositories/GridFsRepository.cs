@@ -10,13 +10,13 @@ namespace DbService.Repositories
     {
         private readonly ILogger _logger;
         private readonly IMongoClient _mongoClient;
-        private readonly string _dbName;
+        private readonly IDbConfiguration _dbConfig;
 
-        public GridFsRepository(IMongoClient client, string dbName, ILogger logger)
+        public GridFsRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
         {
             _logger = logger;
             _mongoClient = client;
-            _dbName = dbName;
+            _dbConfig = dbConfig;
         }
         public async Task<byte[]> GetFileAsBytes(ObjectId id, GridFSDownloadOptions options, CancellationToken cToken)
         {
@@ -90,7 +90,7 @@ namespace DbService.Repositories
         protected GridFSBucket InitGridFs()
         {
             var db = _mongoClient
-                .GetDatabase(_dbName);
+                .GetDatabase(_dbConfig.DatabaseName);
 
             return new GridFSBucket(db);
         }

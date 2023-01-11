@@ -23,7 +23,7 @@ namespace LoggerService.Services
             {
                 var result = await _db.Add(new Log
                 {
-                    Id = request.Id,
+                    EventId = request.Id,
                     Message = request.Message,
                     Timestamp = request.Timestamp.ToDateTime(),
                     Application = request.Application

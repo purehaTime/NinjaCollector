@@ -10,16 +10,13 @@ namespace DbService.Repositories
 
         private readonly ILogger _logger;
         private readonly IMongoClient _mongoClient;
-        private readonly string _dbName;
-        private readonly string _collectionName;
+        private readonly IDbConfiguration _dbConfig;
 
-        //possible better to rewrite string fields to another interface like IDatabaseConfig which will be setup by Iconfiguration
-        public BaseRepository(IMongoClient client, string dbName, string collectionName, ILogger logger)
+        public BaseRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
         {
             _logger = logger;
             _mongoClient = client;
-            _dbName = dbName;
-            _collectionName = collectionName;
+            _dbConfig = dbConfig;
         }
 
         public virtual async Task<TEntity> Find(FilterDefinition<TEntity> filter, FindOptions options, CancellationToken cToken)
@@ -164,8 +161,8 @@ namespace DbService.Repositories
         protected IMongoCollection<TEntity> InitCollection()
         {
             var collection = _mongoClient
-                .GetDatabase(_dbName)
-                .GetCollection<TEntity>(_collectionName);
+                .GetDatabase(_dbConfig.DatabaseName)
+                .GetCollection<TEntity>(nameof(TEntity));
 
             return collection;
         }
