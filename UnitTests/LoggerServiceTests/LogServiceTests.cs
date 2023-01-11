@@ -12,10 +12,10 @@ namespace UnitTests.LoggerServiceTests
 {
     public class LogServiceTests : BaseTest
     {
-        private Mock<IDatabase> _dbMock;
-        private Mock<ILogger> _loggerMock;
+        private Mock<IDatabase> _dbMock = null!;
+        private Mock<ILogger> _loggerMock = null!;
 
-        private LogService _logService;
+        private LogService _logService = null!;
 
         [SetUp]
         public void Setup()
