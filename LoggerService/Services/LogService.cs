@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcHelper.LogService;
 using LoggerService.Interfaces;
 using LoggerService.Models;
@@ -33,15 +34,34 @@ namespace LoggerService.Services
             }
             catch (Exception err)
             {
-                _systemLog.Fatal($"Error while write log: {err.Message}");
+                _systemLog.Fatal(err, $"Error while write log: {err.Message}");
                 return new WriteResponse { Success = false };
             }
 
         }
 
-        public override Task<LogsResponse> GetLogs(LogsRequest request, ServerCallContext context)
+        public override async Task<LogsResponse> GetLogs(LogsRequest request, ServerCallContext context)
         {
-            return base.GetLogs(request, context);
+            try
+            {
+                var result = new LogsResponse();
+                var logs = await _db.GetAll<Log>();
+
+                result.Logs.AddRange(logs.Select(s => new LogModel
+                {
+                    Message = s.Message,
+                    Timestamp = Timestamp.FromDateTime(s.Timestamp),
+                    Application = s.Application,
+                    Id = s.EventId,
+                }));
+
+                return result;
+            }
+            catch (Exception err)
+            {
+                _systemLog.Fatal(err, $"Error while getting log: {err.Message}");
+                return null!;
+            }
         }
     }
 }

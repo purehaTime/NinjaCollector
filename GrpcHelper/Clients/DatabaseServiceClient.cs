@@ -7,7 +7,7 @@ namespace GrpcHelper.Clients
 {
     public class DatabaseServiceClient : IDatabaseServiceClient
     {
-        private Database.DatabaseClient _client;
+        private readonly DatabaseClient _client;
 
         public DatabaseServiceClient(DatabaseClient client)
         {
