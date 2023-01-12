@@ -55,6 +55,17 @@ namespace GrpcHelper.Clients
             return result;
         }
 
+        public async Task<bool> AddImages(List<Image> images)
+        {
+            var stream = _client.AddImages();
+            await stream.RequestStream.WriteAsync(new ImageModel
+            {
+                Images = { images }
+            });
+            var result = await stream.ResponseAsync;
+            return result.Success;
+        }
+
         public async Task<List<ParserSetting>> GetParserSettings(SettingsRequest request)
         {
             var result = await _client.GetSettingsAsync(request);

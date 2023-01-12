@@ -11,6 +11,7 @@ service Database {
     rpc AddPost(stream PostModel) returns (Status);
     rpc GetPost(PostRequest) returns (stream PostModel);
     rpc GetImages(ImageRequest) returns (stream Image);
+    rpc AddImages(stream ImageModel) returns (Status);
     rpc GetSettings(SettingsRequest) returns (ParserSettings);
     rpc SaveSettings(ParserSettings) returns (Status);
 }
@@ -70,6 +71,10 @@ message ImageRequest {
   int32 MaxHeight = 3;
   int32 MinWidth = 4;
   int32 MinHeight = 5;
+}
+
+message ImageModel {
+  repeated Image Images = 1;
 }
 
 message SettingsRequest {

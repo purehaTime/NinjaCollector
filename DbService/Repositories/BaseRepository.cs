@@ -27,6 +27,7 @@ namespace DbService.Repositories
                 var result = await collection
                     .Find(filter, options)
                     .FirstOrDefaultAsync(cToken);
+
                 return result;
             }
             catch(Exception err)
