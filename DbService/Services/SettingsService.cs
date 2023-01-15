@@ -1,6 +1,5 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
-using DbService.Repositories;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
 
@@ -8,11 +7,11 @@ namespace DbService.Services
 {
     public class SettingsService : ISettingsService
     {
-        private SettingsRepository _repository;
+        private IRepository<ParserSettings> _repository;
 
         private ILogger _logger;
 
-        public SettingsService(SettingsRepository settingsRepository, ILogger logger)
+        public SettingsService(IRepository<ParserSettings> settingsRepository, ILogger logger)
         {
             _repository = settingsRepository;
             _logger = logger;

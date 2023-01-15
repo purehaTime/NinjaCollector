@@ -10,6 +10,6 @@ namespace DbService.Interfaces
 
         public Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id);
 
-        public Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags);
+        public Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags, PosterSettings poster);
     }
 }

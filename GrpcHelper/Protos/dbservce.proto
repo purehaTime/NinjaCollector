@@ -14,6 +14,7 @@ service Database {
     rpc AddImages(stream ImageModel) returns (Status);
     rpc GetSettings(SettingsRequest) returns (ParserSettings);
     rpc SaveSettings(ParserSettings) returns (Status);
+    rpc SaveHistory(HistoryModel) returns (Status);
 }
 
 message DbLogModel {
@@ -95,4 +96,11 @@ message ParserSetting {
 
 message ParserSettings {
   repeated ParserSetting ParserSetting = 1;
+}
+
+message HistoryModel {
+    int32 EntityId = 1;
+    string Source = 2;
+    string ForGroup = 3
+    google.protobuf.Timestamp PostDate = 4;
 }
