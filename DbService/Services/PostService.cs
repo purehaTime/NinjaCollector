@@ -1,5 +1,6 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
+using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
 
 namespace DbService.Services
@@ -20,14 +21,27 @@ namespace DbService.Services
             _logger = logger;
         }
 
-        public Task<Post> GetPostByTags(List<string> tags, PosterSettings poster)
+        public async Task<Post> GetPostByTags(List<string> tags, PosterSettings poster)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Post>.Filter.AnyIn(x => x.Tags, tags);
+            var posts = (await _postRepository.FindMany(filter, null!, CancellationToken.None)).ToList();
+
+            var historyIds = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Service, poster.ForGroup);
+            var filterPost = posts.FirstOrDefault(w => historyIds.All(a => a != w.Id));
+
+            return filterPost!;
         }
 
-        public Task<bool> SavePost(Post post)
+        public async Task<bool> SavePost(Post post)
         {
-            throw new NotImplementedException();
+            var result = await _postRepository.Insert(post, null!, CancellationToken.None);
+
+            if (!result)
+            {
+                _logger.Error($"Can't save post from {post.GroupName}");
+            }
+
+            return result;
         }
     }
 }

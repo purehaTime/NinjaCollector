@@ -101,6 +101,6 @@ message ParserSettings {
 message HistoryModel {
     int32 EntityId = 1;
     string Source = 2;
-    string ForGroup = 3
+    string ForGroup = 3;
     google.protobuf.Timestamp PostDate = 4;
 }

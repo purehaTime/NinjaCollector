@@ -9,10 +9,10 @@ namespace UnitTests.LoggerService
 {
     public class DbConfigurationTests : BaseTest
     {
-        private Mock<IConfiguration> _configurationMock;
-        private Mock<IConfigurationSection> _configSectionMock;
+        private Mock<IConfiguration> _configurationMock = null!;
+        private Mock<IConfigurationSection> _configSectionMock = null!;
 
-        private IDbConfiguration _dbConfig;
+        private IDbConfiguration _dbConfig = null!;
 
 
         [SetUp]

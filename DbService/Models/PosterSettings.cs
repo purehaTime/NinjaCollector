@@ -1,9 +1,11 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DbService.Models
 {
     public class PosterSettings
     {
+        [BsonId]
         public ObjectId Id { get; set; }
         public string Name { get; set; } = null!;
         public string ForGroup { get; set; } = null!;

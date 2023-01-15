@@ -1,5 +1,6 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
@@ -59,6 +60,22 @@ namespace DbService.Services
 
             var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
             return (image, stream);
+        }
+
+        public async Task<List<(Image image, MemoryStream stream)>> GetImagesForPost(ObjectId postId)
+        {
+            var filter = Builders<Image>.Filter.Eq(e => e.Id, postId);
+            var images = await _imageRepository.FindMany(filter, null!, CancellationToken.None);
+
+            var results = new List<(Image image, MemoryStream strem)>();
+
+            foreach (var image in images)
+            {
+                var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
+                results.Add((image, stream));
+            }
+
+            return results;
         }
 
         public async Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags, PosterSettings poster)
