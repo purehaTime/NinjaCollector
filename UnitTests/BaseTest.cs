@@ -1,4 +1,5 @@
 using AutoFixture;
+using MongoDB.Bson;
 using NUnit.Framework.Internal.Commands;
 
 namespace UnitTests
@@ -15,7 +16,8 @@ namespace UnitTests
         [SetUp]
         public void BaseSetup()
         {
-             // Empty by design ;)
+            Fixture.Register<byte[], MemoryStream>(data => new MemoryStream(data));
+            Fixture.Register<ObjectId>(ObjectId.GenerateNewId);
         }
     }
 }

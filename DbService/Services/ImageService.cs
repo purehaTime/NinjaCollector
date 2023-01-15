@@ -1,6 +1,5 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
@@ -21,21 +20,20 @@ namespace DbService.Services
             _historyService = historyService;
             _logger = logger;
         }
-        public async Task<ObjectId> SaveImage(MemoryStream image, string description, List<string> tags, string directLink, int width, int height)
-        {
-            var fileName = new Guid().ToString();
-            var fileId = await _gridFsRepository.AddFileAsStream(image, fileName, null!, CancellationToken.None);
 
-            if (fileId == null)
+        public async Task<bool> SaveImage(MemoryStream imageStream, string description, List<string> tags, string directLink, int width, int height)
+        {
+            var saved = await InsertFile(imageStream);
+
+            if (saved.Id == ObjectId.Empty)
             {
-                _logger.Error("Cant save image to gridFS");
-                return ObjectId.Empty;
+                return false;
             }
 
             var model = new Image
             {
-                GridFsId = fileId.Value,
-                Name = fileName,
+                GridFsId = saved.Id,
+                Name = saved.fileName,
                 Tags = tags,
                 Description = description,
                 OriginalLink = directLink,
@@ -43,14 +41,22 @@ namespace DbService.Services
                 Height = height
             };
 
-            var result = await _imageRepository.Insert(model, null!, CancellationToken.None);
+            return await InsertImage(model);
+        }
 
-            if (!result)
+        public async Task<bool> SaveImage(MemoryStream imageStream, Image image)
+        {
+            var saved = await InsertFile(imageStream);
+
+            if (saved.Id == ObjectId.Empty)
             {
-                _logger.Error("Cant save image to Image repository");
+                return false;
             }
 
-            return fileId.Value;
+            image.GridFsId = saved.Id;
+            image.Name = saved.fileName;
+
+            return await InsertImage(image);
         }
 
         public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
@@ -96,6 +102,32 @@ namespace DbService.Services
             }
 
             return results;
+        }
+
+        private async Task<bool> InsertImage(Image model)
+        {
+            var result = await _imageRepository.Insert(model, null!, CancellationToken.None);
+
+            if (!result)
+            {
+                _logger.Error("Cant save image to Image repository");
+            }
+
+            return result;
+        }
+
+        private async Task<(ObjectId Id, string fileName)> InsertFile(MemoryStream stream)
+        {
+            var fileName = new Guid().ToString();
+            var fileId = await _gridFsRepository.AddFileAsStream(stream, fileName, null!, CancellationToken.None);
+
+            if (fileId == null || fileId == ObjectId.Empty)
+            {
+                _logger.Error("Cant save image to gridFS");
+                return (ObjectId.Empty, fileName);
+            }
+
+            return (fileId.Value, fileName);
         }
     }
 }
