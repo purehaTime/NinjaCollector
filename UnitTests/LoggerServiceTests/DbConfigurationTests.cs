@@ -5,7 +5,7 @@ using LoggerService.Services;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
-namespace UnitTests.LoggerService
+namespace UnitTests.LoggerServiceTests
 {
     public class DbConfigurationTests : BaseTest
     {

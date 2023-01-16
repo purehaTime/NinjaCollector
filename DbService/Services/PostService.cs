@@ -26,8 +26,8 @@ namespace DbService.Services
             var filter = Builders<Post>.Filter.AnyIn(x => x.Tags, tags);
             var posts = (await _postRepository.FindMany(filter, null!, CancellationToken.None)).ToList();
 
-            var historyIds = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Service, poster.ForGroup);
-            var filterPost = posts.FirstOrDefault(w => historyIds.All(a => a != w.Id));
+            var histories = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Service, poster.ForGroup);
+            var filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
 
             return filterPost!;
         }

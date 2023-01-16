@@ -19,7 +19,7 @@ namespace DbService.Services
         
         public async Task<List<ParserSettings>> GetSettings(string source)
         {
-            var filter = Builders<ParserSettings>.Filter.Eq("Source", source);
+            var filter = Builders<ParserSettings>.Filter.Eq(e => e.Source, source);
             var results = await _repository.FindMany(filter, null!, CancellationToken.None);
 
             _logger.Information($"Get settings for source: {source}");

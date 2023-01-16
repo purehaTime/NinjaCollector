@@ -28,16 +28,16 @@ namespace DbService.Services
             return result;
         }
 
-        public async Task<IEnumerable<ObjectId>> GetHistory(IEnumerable<ObjectId> entities, string service,
+        public async Task<IEnumerable<History>> GetHistory(IEnumerable<ObjectId> entities, string service,
             string forGroup)
         {
             var historyFilter = Builders<History>.Filter
                 .Where(w => entities.Any(a => a == w.EntityId));
             historyFilter &= Builders<History>.Filter.Eq(e => e.Service, service);
             historyFilter &= Builders<History>.Filter.Eq(e => e.ForGroup, forGroup);
-            var history = await _historyRepository.FindMany(historyFilter, null!, CancellationToken.None);
+            var histories = await _historyRepository.FindMany(historyFilter, null!, CancellationToken.None);
 
-            return history.Select(s => s.EntityId);
+            return histories;
         }
     }
 }

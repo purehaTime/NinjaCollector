@@ -90,10 +90,10 @@ namespace DbService.Services
 
             var images = (await _imageRepository.FindMany(filter, null!, CancellationToken.None)).ToList();
 
-            var historyIds = await _historyService.GetHistory(images.Select(s => s.Id), poster.Service, poster.ForGroup);
+            var histories = await _historyService.GetHistory(images.Select(s => s.Id), poster.Service, poster.ForGroup);
 
             var results = new List<(Image image, MemoryStream strem)>();
-            var filteredImages = images.Where(w => historyIds.All(a => a != w.Id));
+            var filteredImages = images.Where(w => histories.All(a => a.EntityId != w.Id));
 
             foreach (var image in filteredImages)
             {

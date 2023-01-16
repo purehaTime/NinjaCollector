@@ -7,7 +7,7 @@ namespace DbService.Interfaces
     {
         public Task<bool> SaveHistory(History history);
 
-        public Task<IEnumerable<ObjectId>> GetHistory(IEnumerable<ObjectId> entities, string service,
+        public Task<IEnumerable<History>> GetHistory(IEnumerable<ObjectId> entities, string service,
             string forGroup);
     }
 }

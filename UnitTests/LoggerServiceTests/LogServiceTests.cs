@@ -3,7 +3,6 @@ using FluentAssertions;
 using GrpcHelper.LogService;
 using LoggerService.Interfaces;
 using LoggerService.Services;
-using LoggerService.Models;
 using Moq;
 using Serilog;
 using Log = LoggerService.Models.Log;
