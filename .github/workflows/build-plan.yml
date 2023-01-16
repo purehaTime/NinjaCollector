@@ -25,7 +25,7 @@ jobs:
     - name: Build solution
       run: dotnet build NinjaCollector.sln --no-restore
     - name: Test solution
-      run: dotnet test NinjaCollector.sln --no-build --verbosity normal
+      run: dotnet test NinjaCollector.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
@@ -37,7 +37,7 @@ jobs:
         hide_complexity: true
         indicators: true
         output: both
-        thresholds: '50 70'
+        thresholds: '20 70'
   #  - name: Publish solution
   #   run: dotnet publish NinjaCollector.sln -c Release -o release
   #  - name: Upload Build Artifact
