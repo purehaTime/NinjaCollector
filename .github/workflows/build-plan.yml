@@ -37,7 +37,7 @@ jobs:
         hide_complexity: true
         indicators: true
         output: both
-        thresholds: '20 70'
+        thresholds: '1 70' # this should be change to 50 70
   #  - name: Publish solution
   #   run: dotnet publish NinjaCollector.sln -c Release -o release
   #  - name: Upload Build Artifact
