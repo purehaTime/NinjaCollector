@@ -61,7 +61,7 @@ namespace DbService.Services
 
         public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
         {
-            var filter = Builders<Image>.Filter.Eq("Id", id);
+            var filter = Builders<Image>.Filter.Eq(e => e.Id, id);
             var image = await _imageRepository.Find(filter, null!, CancellationToken.None);
 
             var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
