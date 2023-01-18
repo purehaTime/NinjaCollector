@@ -7,32 +7,53 @@ namespace DbService.Services
 {
     public class SettingsService : ISettingsService
     {
-        private IRepository<ParserSettings> _repository;
+        private IRepository<ParserSettings> _parserRepository;
+        private IRepository<PosterSettings> _posterRepository;
 
         private ILogger _logger;
 
-        public SettingsService(IRepository<ParserSettings> settingsRepository, ILogger logger)
+        public SettingsService(IRepository<ParserSettings> parserRepository, IRepository<PosterSettings> posterRepository, ILogger logger)
         {
-            _repository = settingsRepository;
+            _parserRepository = parserRepository;
+            _posterRepository = posterRepository;
             _logger = logger;
         }
         
-        public async Task<List<ParserSettings>> GetSettings(string source)
+        public async Task<List<ParserSettings>> GetParserSettings(string source)
         {
             var filter = Builders<ParserSettings>.Filter.Eq(e => e.Source, source);
-            var results = await _repository.FindMany(filter, null!, CancellationToken.None);
+            var results = await _parserRepository.FindMany(filter, null!, CancellationToken.None);
 
-            _logger.Information($"Get settings for source: {source}");
             return results.ToList();
         }
 
-        public async Task<bool> SaveSettings(ParserSettings settings)
+        public async Task<bool> SaveParserSettings(ParserSettings settings)
         {
-            var result = await _repository.Insert(settings, null!, CancellationToken.None);
+            var result = await _parserRepository.Insert(settings, null!, CancellationToken.None);
 
             if (!result)
             {
-                 _logger.Error($"Cant save settings for {settings.Source}");
+                 _logger.Error($"Cant save settings for parser {settings.Source}");
+            }
+            return result;
+        }
+
+        public async Task<List<PosterSettings>> GetPosterSettings(string service, string forGroup)
+        {
+            var filter = Builders<PosterSettings>.Filter.Eq(e => e.Service, service);
+            filter &= Builders<PosterSettings>.Filter.Eq(e => e.ForGroup, forGroup);
+            var results = await _posterRepository.FindMany(filter, null!, CancellationToken.None);
+
+            return results.ToList();
+        }
+
+        public async Task<bool> SavePosterSettings(PosterSettings settings)
+        {
+            var result = await _posterRepository.Insert(settings, null!, CancellationToken.None);
+
+            if (!result)
+            {
+                _logger.Error($"Cant save settings for poster {settings.Service}");
             }
             return result;
         }

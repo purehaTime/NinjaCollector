@@ -22,11 +22,11 @@ namespace DbService
             builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
 
             builder.Services.AddScoped<IGridFsRepository, GridFsRepository>();
-            builder.Services.AddScoped<IRepository<ParserSettings>, SettingsRepository>();
+            builder.Services.AddScoped<IRepository<ParserSettings>, ParserSettingsRepository>();
             builder.Services.AddScoped<IRepository<Image>, ImageRepository>();
             builder.Services.AddScoped<IRepository<Post>, PostRepository>();
             builder.Services.AddScoped<IRepository<History>, HistoryRepository>();
-            builder.Services.AddScoped<IRepository<PosterSettings>, PosterRepository>();
+            builder.Services.AddScoped<IRepository<PosterSettings>, PosterSettingsRepository>();
 
             builder.Services.AddScoped<ISettingsService, SettingsService>();
             builder.Services.AddScoped<IHistoryService, HistoryService>();

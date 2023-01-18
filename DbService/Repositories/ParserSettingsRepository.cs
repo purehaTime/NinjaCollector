@@ -5,9 +5,9 @@ using ILogger = Serilog.ILogger;
 
 namespace DbService.Repositories
 {
-    public class SettingsRepository : BaseRepository<ParserSettings>
+    public class ParserSettingsRepository : BaseRepository<ParserSettings>
     {
-        public SettingsRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
+        public ParserSettingsRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
             : base(client, dbConfig, logger)
         {
 
