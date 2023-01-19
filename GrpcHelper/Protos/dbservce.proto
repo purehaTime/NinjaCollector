@@ -12,8 +12,10 @@ service Database {
     rpc GetPost(PostRequest) returns (stream PostModel);
     rpc GetImages(ImageRequest) returns (stream Image);
     rpc AddImages(stream ImageModel) returns (Status);
-    rpc GetSettings(SettingsRequest) returns (ParserSettings);
-    rpc SaveSettings(ParserSettings) returns (Status);
+    rpc GetParserSettings(ParserSettingsRequest) returns (ParserSettings);
+    rpc GetPosterSettings(PosterSettingsRequest) returns (PosterSettings);
+    rpc SaveParserSettings(ParserSettingsModel) returns (Status);
+    rpc SavePosterSettings(PosterSettingsModel) returns (Status);
     rpc SaveHistory(HistoryModel) returns (Status);
 }
 
@@ -78,11 +80,16 @@ message ImageModel {
   repeated Image Images = 1;
 }
 
-message SettingsRequest {
+message ParserSettingsRequest {
   string Source = 1;
 }
 
-message ParserSetting {
+message PosterSettingsRequest {
+  string Service = 1;
+  string ForGroup  = 2;
+}
+
+message ParserSettingsModel {
     string Id = 1;
     string Description = 2;
     string Source = 3;
@@ -94,8 +101,21 @@ message ParserSetting {
     int32 JobInterval = 9;
 }
 
+message PosterSettingsModel {
+    string Name = 1;
+    string ForGroup = 2;
+    string Service = 3;
+    int32 TimeInterval = 4;
+    bool MixRandom = 5;
+    repeated string Tags = 6;
+}
+
 message ParserSettings {
-  repeated ParserSetting ParserSetting = 1;
+  repeated ParserSettingsModel ParserSetting = 1;
+}
+
+message PosterSettings {
+  repeated PosterSettingsModel PosterSettings = 1;
 }
 
 message HistoryModel {

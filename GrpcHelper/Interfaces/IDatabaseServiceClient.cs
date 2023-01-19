@@ -9,7 +9,9 @@ namespace GrpcHelper.Interfaces
         public Task<List<PostModel>> GetPosts(PostRequest request);
         public Task<List<Image>> GetImages(ImageRequest request);
         public Task<bool> AddImages(List<Image> images);
-        public Task<List<ParserSetting>> GetParserSettings(SettingsRequest request);
-        public Task<bool> SaveParserSettings(List<ParserSetting> settings);
+        public Task<List<ParserSettingsModel>> GetParserSettings(ParserSettingsRequest request);
+        public Task<bool> SaveParserSettings(ParserSettingsModel settings);
+        public Task<List<PosterSettingsModel>> GetPosterSettings(PosterSettingsRequest request);
+        public Task<bool> SavePosterSettings(PosterSettingsModel settings);
     }
 }

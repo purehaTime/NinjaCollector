@@ -9,6 +9,7 @@ using Serilog;
 
 namespace UnitTests.DatabaseService
 {
+    [TestFixture]
     public class SettingsServiceTests : BaseTest
     {
         private Mock<ILogger> _loggerMock;

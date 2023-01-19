@@ -7,6 +7,7 @@ using Moq;
 
 namespace UnitTests.LoggerServiceTests
 {
+    [TestFixture]
     public class DbConfigurationTests : BaseTest
     {
         private Mock<IConfiguration> _configurationMock = null!;

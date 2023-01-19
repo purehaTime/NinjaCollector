@@ -12,7 +12,7 @@ namespace DbService.Repositories
         private readonly IMongoClient _mongoClient;
         private readonly IDbConfiguration _dbConfig;
 
-        public BaseRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
+        protected BaseRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
         {
             _logger = logger;
             _mongoClient = client;

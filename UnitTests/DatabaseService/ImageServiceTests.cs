@@ -12,6 +12,7 @@ using Serilog;
 
 namespace UnitTests.DatabaseService
 {
+    [TestFixture]
     public class ImageServiceTests : BaseTest
     {
         private Mock<IGridFsRepository> _gridFsMock;

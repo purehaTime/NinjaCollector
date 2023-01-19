@@ -10,6 +10,7 @@ using Serilog;
 
 namespace UnitTests.DatabaseService
 {
+    [TestFixture]
     public class HistoryServiceTests : BaseTest
     {
 

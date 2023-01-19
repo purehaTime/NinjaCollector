@@ -17,7 +17,7 @@ namespace GrpcHelper.Clients
             _client = client;
         }
 
-        public async Task WriteLog(string message, string? eventId, string? application)
+        public async Task<bool> WriteLog(string message, string? eventId, string? application)
         {
             try
             {
@@ -28,15 +28,20 @@ namespace GrpcHelper.Clients
                     Application = application,
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 });
+
                 if (!result.Success)
                 {
                     _logger.Fatal("Connection to logger service is unavailable");
                 }
+
+                return result.Success;
             }
             catch (RpcException err)
             {
                 _logger.Fatal($"Logger service has an error: {err.Message}");
             }
+
+            return false;
         }
     }
 }

@@ -9,6 +9,7 @@ using Log = LoggerService.Models.Log;
 
 namespace UnitTests.LoggerServiceTests
 {
+    [TestFixture]
     public class LogServiceTests : BaseTest
     {
         private Mock<IDatabase> _dbMock = null!;

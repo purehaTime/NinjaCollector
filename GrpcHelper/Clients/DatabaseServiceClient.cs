@@ -66,19 +66,30 @@ namespace GrpcHelper.Clients
             return result.Success;
         }
 
-        public async Task<List<ParserSetting>> GetParserSettings(SettingsRequest request)
+        public async Task<List<ParserSettingsModel>> GetParserSettings(ParserSettingsRequest request)
         {
-            var result = await _client.GetSettingsAsync(request);
+            var result = await _client.GetParserSettingsAsync(request);
 
             return result.ParserSetting.ToList();
         }
 
-        public async Task<bool> SaveParserSettings(List<ParserSetting> settings)
+        public async Task<bool> SaveParserSettings(ParserSettingsModel settings)
         {
-            var result = await _client.SaveSettingsAsync(new ParserSettings
-            {
-                ParserSetting = { settings }
-            });
+            var result = await _client.SaveParserSettingsAsync(settings);
+
+            return result.Success;
+        }
+
+        public async Task<List<PosterSettingsModel>> GetPosterSettings(PosterSettingsRequest request)
+        {
+            var result = await _client.GetPosterSettingsAsync(request);
+
+            return result.PosterSettings_.ToList();
+        }
+
+        public async Task<bool> SavePosterSettings(PosterSettingsModel settings)
+        {
+            var result = await _client.SavePosterSettingsAsync(settings);
 
             return result.Success;
         }
