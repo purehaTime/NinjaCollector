@@ -18,7 +18,7 @@ namespace DbService
             builder.Services.AddGrpcHelper(builder.Configuration);
 
             var connectionString = builder.Configuration.GetConnectionString("mongodb");
-            builder.Services.AddSingleton<IDbConfiguration, IDbConfiguration>();
+            builder.Services.AddSingleton<IDbConfiguration, DbConfiguration>();
             builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
 
             builder.Services.AddScoped<IGridFsRepository, GridFsRepository>();
