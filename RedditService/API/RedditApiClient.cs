@@ -1,6 +1,5 @@
 ﻿using Reddit.Controllers;
 using RedditService.Interfaces;
-using RedditService.Model;
 
 namespace RedditService.API
 {
@@ -13,30 +12,20 @@ namespace RedditService.API
             _client = client;
         }
 
-        public async Task<Content> GetLastPost(string subReddit)
+        public async Task<Post> GetLastPost(string subReddit)
         {
             var sub = await _client.GetSubreddit(subReddit);
             var post = await _client.GetLastPost(sub);
 
-            return new Content
-            {
-                Description = post.Listing.SelfText,
-                Title = post.Title
-            };
+            return post;
         }
 
-        public async Task<List<Content>> GetPostsUntilNow(string subReddit, DateTime fromDate)
+        public async Task<IEnumerable<Post>> GetPostsUntilNow(string subReddit, DateTime fromDate)
         {
             var sub = await _client.GetSubreddit(subReddit);
-
             var posts = await _client.GetPostsBetweenDates(sub, fromDate, DateTime.UtcNow);
 
-            var comments = posts.Take(50).Select(s => s.Comments.Comment?.About());
-
-            return comments.Select(s => new Content
-            {
-                Title = s.Author,
-            }).ToList();
+            return posts;
         }
     }
 }

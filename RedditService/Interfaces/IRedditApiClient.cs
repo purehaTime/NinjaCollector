@@ -1,10 +1,10 @@
-﻿using RedditService.Model;
+﻿using Reddit.Controllers;
 
 namespace RedditService.Interfaces
 {
     public interface IRedditApiClient
     {
-        public Task<Content> GetLastPost(string subReddit);
+        public Task<Post> GetLastPost(string subReddit);
 
         /// <summary>
         /// Get posts between dates
@@ -12,7 +12,7 @@ namespace RedditService.Interfaces
         /// <param name="subReddit"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        public Task<List<Content>> GetPostsUntilNow(string subReddit, DateTime fromDate);
+        public Task<IEnumerable<Post>> GetPostsUntilNow(string subReddit, DateTime fromDate);
 
     }
 }

@@ -19,14 +19,16 @@ namespace RedditService
                 builder.Services.AddGrpc();
                 builder.Services.AddGrpcHelper(builder.Configuration);
 
+                builder.Services.AddHttpClient(); //direct
+                builder.Services.AddHttpClient<IRedditSession, RedditSessionService>(); //typed
 
                 builder.Services.AddScoped<IRedditAsyncClient, RedditAsyncClient>();
                 builder.Services.AddScoped<IRedditApiClient, RedditApiClient>();
+                builder.Services.AddScoped<IFileDownloadService, FileDownloadService>();
+                builder.Services.AddScoped<IParserGalleryService, ParserGalleryService>();
 
                 builder.Services.AddSingleton<IRedditConfig, RedditConfigService>();
                 builder.Services.AddSingleton<IRedditSession, RedditSessionService>();
-                builder.Services.AddSingleton<IRestClient, RestClient>();
-                builder.Services.AddSingleton<IRestRequest, RestRequest>();
 
                 builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
 
@@ -35,8 +37,7 @@ namespace RedditService
 
                 app.MapGet("/", () => "Hello World!");
 
-                app.MapGet("/test", async (IRedditApiClient client) => await client.GetLastPost("Pikabu"));
-                app.MapGet("/test1", async (IRedditApiClient client) => await client.GetPostsUntilNow("Pikabu", DateTime.Today));
+
 
                 app.Run();
             }

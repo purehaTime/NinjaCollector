@@ -1,8 +1,9 @@
-﻿using RedditService.Interfaces;
-using RestSharp.Authenticators;
-using RestSharp;
+﻿using System.Net.Http.Headers;
+using RedditService.Interfaces;
 using RedditService.Model;
 using ILogger = Serilog.ILogger;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace RedditService.Services
 {
@@ -11,19 +12,16 @@ namespace RedditService.Services
         private DateTime _sessionDateStart;
         private string _accessToken;
         private IRedditConfig _config;
-        private IRestClient _restClient;
-        private IRestRequest _restRequest;
         private ILogger _logger;
+        private HttpClient _httpClient;
 
         private readonly string _url = "https://www.reddit.com/api/v1/access_token";
 
-        public RedditSessionService(IRedditConfig config, IRestClient restClient, IRestRequest request, ILogger logger)
+        public RedditSessionService(HttpClient httpClient, IRedditConfig config, ILogger logger)
         {
             _config = config;
-            _restClient = restClient;
-            _restRequest = request;
-            _restClient.BaseUrl = new Uri(_url);
             _logger = logger;
+            _httpClient = httpClient;
         }
         /// <summary>
         /// For script mode - token automatically expires after one day
@@ -34,19 +32,26 @@ namespace RedditService.Services
             if (DateTime.UtcNow - _sessionDateStart > TimeSpan.FromDays(0.99))
             {
                 var config = _config.GetRedditConfig();
-                _restClient.Authenticator = new HttpBasicAuthenticator(config.ClientId, config.AppSecret);
 
-                _restRequest.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                var basicAuthHeader = Convert.ToBase64String(Encoding.Default.GetBytes(config.ClientId + ":" + config.AppSecret));
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("grant_type", "password"),
+                    new KeyValuePair<string, string>("username", config.UserName),
+                    new KeyValuePair<string, string>("password", config.Password)
+                });
 
-                _restRequest.AddParameter("grant_type", "password");
-                _restRequest.AddParameter("username", config.UserName);
-                _restRequest.AddParameter("password", config.Password);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
 
                 _logger.Information("start retrieval new access token");
-                var response = await _restClient.PostAsync<OAuthToken>(_restRequest);
+                var tokenResponse = await _httpClient.PostAsync(_url, formContent);
+                var tokenJson = await tokenResponse.Content.ReadAsStringAsync();
+
+                var token = JsonConvert.DeserializeObject<OAuthToken>(tokenJson);
+
                 _sessionDateStart = DateTime.UtcNow;
-                _accessToken = response.access_token;
-                _logger.Information($"access token retrieval expires: {response.expires_in}");
+                _accessToken = token.access_token;
+                _logger.Information($"access token retrieval expires: {token.expires_in}");
             }
 
             return _accessToken;

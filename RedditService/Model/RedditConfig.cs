@@ -2,9 +2,9 @@
 {
     public class RedditConfig
     {
-        public string UserName { get; set; } = null!;
-        public string Password { get; set; } = null!;
-        public string ClientId { get; set; } = null!;
-        public string AppSecret { get; set; } = null!;
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string ClientId { get; set; }
+        public string AppSecret { get; set; }
     }
 }
