@@ -2,6 +2,9 @@
 
 namespace RedditService.Model
 {
+    /// <summary>
+    /// reddit types
+    /// </summary>
     public class JsonContainer
     {
         [JsonProperty("status")]
@@ -29,12 +32,39 @@ namespace RedditService.Model
     public class JsonImage
     {
         [JsonProperty("y")]
-        public long Height { get; set; }
+        public int Height { get; set; }
 
         [JsonProperty("x")]
-        public long Width { get; set; }
+        public int Width { get; set; }
 
         [JsonProperty("u")]
         public string Url { get; set; }
+    }
+
+    public class ImageDescription
+    {
+        [JsonProperty("caption")]
+        public string Caption { get; set; }
+
+        [JsonProperty("url")]
+        public string Link { get; set; }
+
+        [JsonProperty("media_id")]
+        public string MediaId { get; set; }
+
+        [JsonProperty("id")]
+        public long Id { get; set; }
+    }
+
+    public class PreviewImage
+    {
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("width")]
+        public int Width { get; set; }
+
+        [JsonProperty("height")]
+        public int Height { get; set; }
     }
 }

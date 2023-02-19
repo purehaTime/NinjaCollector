@@ -37,8 +37,6 @@ namespace RedditService
 
                 app.MapGet("/", () => "Hello World!");
 
-
-
                 app.Run();
             }
             catch (Exception err)

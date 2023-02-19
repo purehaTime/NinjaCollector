@@ -4,6 +4,6 @@ namespace RedditService.Interfaces
 {
     public interface IParserGalleryService
     {
-        public Task<List<JsonImage>> GetImageLinks(string urlToPost);
+        public Task<IEnumerable<Image>> GetImageLinks(string urlToGallery);
     }
 }
