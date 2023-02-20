@@ -27,5 +27,13 @@ namespace RedditService.API
 
             return posts;
         }
+
+        public async Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate)
+        {
+            var sub = await _client.GetSubreddit(subReddit);
+            var posts = await _client.GetPostsBetweenDates(sub, fromDate, toDate);
+
+            return posts;
+        }
     }
 }

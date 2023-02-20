@@ -14,5 +14,7 @@ namespace RedditService.Interfaces
         /// <returns></returns>
         public Task<IEnumerable<Post>> GetPostsUntilNow(string subReddit, DateTime fromDate);
 
+        Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate);
+
     }
 }

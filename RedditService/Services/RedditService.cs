@@ -1,81 +1,40 @@
 ﻿using RedditService.Interfaces;
 using RedditService.Model;
-using System.Collections.Concurrent;
-using Reddit.Controllers;
 
 namespace RedditService.Services
 {
     public class RedditService : IRedditService
     {
         private readonly IRedditApiClient _apiClient;
-        private readonly IParserGalleryService _galleryService;
-        private readonly IFileDownloadService _fileDownload;
-        public RedditService(IRedditApiClient apiClient, IParserGalleryService galleryService, IFileDownloadService fileDownload)
+        private readonly IParserService _parserService;
+
+        public RedditService(IRedditApiClient apiClient, IParserService parserService)
         {
             _apiClient = apiClient;
-            _galleryService = galleryService;
-            _fileDownload = fileDownload;
+            _parserService = parserService;
         }
+
         public async Task<Content> GetLastPost(string subReddit)
         {
             var post = await _apiClient.GetLastPost(subReddit);
 
-            var images = await ParseImages(post);
-
-            var content = new Content
-            {
-                Images = images,
-                Created = post.Created,
-                Title = post.Title,
-                Text = post.Listing.SelfText,
-                UserName = post.Author,
-                OriginalLink = post.Permalink,
-                SubredditName = post.Subreddit,
-                Description = post.Listing.LinkFlairText
-            };
+            var content = await _parserService.ParsePost(post);
 
             return content;
         }
 
-        private async Task<List<ImageContainer>> ParseImages(Post post)
+        public async Task<IEnumerable<Content>> GetPostsUntilNow(string subReddit, DateTime fromDate)
         {
-            var imageLink = post.Listing.URL;
+            var posts = await _apiClient.GetPostsBetweenDates(subReddit, fromDate, DateTime.UtcNow);
 
-            var images = new ConcurrentBag<ImageContainer>();
-            if (imageLink.Contains("reddit.com/gallery"))
+            var contents = new List<Content>();
+            foreach (var post in posts) //don't wanna spam reddit, so what it is not a parallel
             {
-                var parsedImages = await _galleryService.GetImageLinks(imageLink);
-                await Parallel.ForEachAsync(parsedImages, async (image, ct) =>
-                {
-                    var data = await _fileDownload.GetFile(image.DirectLink);
-                    images.Add(new ImageContainer
-                    {
-                        Data = data,
-                        Image = image
-                    });
-                });
-            }
-            else if (imageLink.Contains("i.redd.it"))
-            {
-                var preview = post.Listing.Preview;
-                var source = preview.SelectToken("images.[*].source");
-                var resultParse = source.ToObject<PreviewImage>();
-                var imageData = await _fileDownload.GetFile(imageLink);
-                images.Add(new ImageContainer
-                {
-                    Data = imageData,
-                    Image = new Image
-                    {
-                        DirectLink = imageLink,
-                        Width = resultParse.Width,
-                        Height = resultParse.Height,
-                        Name = post.Fullname,
-                    }
-                });
-
+                var parsed = await _parserService.ParsePost(post);
+                contents.Add(parsed);
             }
 
-            return images.ToList();
+            return contents;
         }
     }
 }

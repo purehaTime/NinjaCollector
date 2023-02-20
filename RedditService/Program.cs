@@ -26,6 +26,8 @@ namespace RedditService
                 builder.Services.AddScoped<IRedditApiClient, RedditApiClient>();
                 builder.Services.AddScoped<IFileDownloadService, FileDownloadService>();
                 builder.Services.AddScoped<IParserGalleryService, ParserGalleryService>();
+                builder.Services.AddScoped<IRedditService, Services.RedditService>();
+                builder.Services.AddScoped<IParserService, ParserService>();
 
                 builder.Services.AddSingleton<IRedditConfig, RedditConfigService>();
                 builder.Services.AddSingleton<IRedditSession, RedditSessionService>();
