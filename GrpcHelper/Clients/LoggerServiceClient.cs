@@ -23,7 +23,7 @@ namespace GrpcHelper.Clients
             {
                 var result = await _client.WriteLogAsync(new LogModel
                 {
-                    Id = eventId,
+                    Id = eventId ?? string.Empty,
                     Message = message,
                     Application = application,
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),

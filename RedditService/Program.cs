@@ -1,16 +1,19 @@
+using System.ComponentModel.DataAnnotations;
 using GrpcHelper;
 using Logger;
 using RedditService.API;
 using RedditService.Interfaces;
 using RedditService.Services;
-using RestSharp;
+using RedditService.Workers;
 using Serilog;
+using Worker;
+using Worker.ServiceExtension;
 
 namespace RedditService
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
@@ -32,14 +35,17 @@ namespace RedditService
                 builder.Services.AddSingleton<IRedditConfig, RedditConfigService>();
                 builder.Services.AddSingleton<IRedditSession, RedditSessionService>();
 
-                builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
+                builder.Services.AddWorker<ParserWorker>();
 
+                builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
 
                 var app = builder.Build();
 
                 app.MapGet("/", () => "Hello World!");
 
-                app.Run();
+                await app.RunWorker<ParserWorker>();
+
+                await app.RunAsync();
             }
             catch (Exception err)
             {

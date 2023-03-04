@@ -7,9 +7,9 @@ namespace DbService.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string ForGroup { get; set; } = null!;
-        public string Service { get; set; } = null!;
+        public string Name { get; set; }
+        public string ForGroup { get; set; }
+        public string Service { get; set; }
 
         /// <summary>
         /// in minutes
@@ -21,6 +21,6 @@ namespace DbService.Models
         /// </summary>
         public bool MixRandom { get; set; }
 
-        public IEnumerable<string> Tags { get; set; } = null!;
+        public IEnumerable<string> Tags { get; set; }
     }
 }

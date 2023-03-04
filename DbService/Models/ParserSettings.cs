@@ -7,8 +7,8 @@ namespace DbService.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        public string Description { get; set; } = null!;
-        public string Source { get; set; } = null!;
+        public string Description { get; set; }
+        public string Source { get; set; }
 
         /// <summary>
         /// How much posts will be upload (more 0 - until end of source)
@@ -16,7 +16,7 @@ namespace DbService.Models
         /// </summary>
         public int PostsCount { get; set; }
 
-        public string LastLoadPostId { get; set; } = null!;
+        public string LastLoadPostId { get; set; }
 
         /// <summary>
         /// upload posts from last post id and previous posts by PostCount

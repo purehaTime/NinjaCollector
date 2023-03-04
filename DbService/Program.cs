@@ -36,8 +36,8 @@ namespace DbService
             builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
             var app = builder.Build();
 
+            app.MapGrpcService<Services.DbService>();
             app.MapGet("/", () => "Database service");
-
 
             app.Run();
         }

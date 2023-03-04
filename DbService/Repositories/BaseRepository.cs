@@ -163,7 +163,7 @@ namespace DbService.Repositories
         {
             var collection = _mongoClient
                 .GetDatabase(_dbConfig.DatabaseName)
-                .GetCollection<TEntity>(nameof(TEntity));
+                .GetCollection<TEntity>(typeof(TEntity).Name);
 
             return collection;
         }
