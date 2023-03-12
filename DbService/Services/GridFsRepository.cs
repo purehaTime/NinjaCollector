@@ -4,15 +4,15 @@ using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using ILogger = Serilog.ILogger;
 
-namespace DbService.Repositories
+namespace DbService.Services
 {
-    public class GridFsRepository : IGridFsRepository
+    public class GridFsService : IGridFsService
     {
         private readonly ILogger _logger;
         private readonly IMongoClient _mongoClient;
         private readonly IDbConfiguration _dbConfig;
 
-        public GridFsRepository(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
+        public GridFsService(IMongoClient client, IDbConfiguration dbConfig, ILogger logger)
         {
             _logger = logger;
             _mongoClient = client;

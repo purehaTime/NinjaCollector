@@ -1,7 +1,7 @@
 ﻿using Reddit;
-using Reddit.Controllers;
 using RedditService.Interfaces;
-using ILogger = Serilog.ILogger;
+using Post = Reddit.Controllers.Post;
+using Subreddit = Reddit.Controllers.Subreddit;
 
 namespace RedditService.API
 {
@@ -9,13 +9,11 @@ namespace RedditService.API
     {
         private readonly IRedditSession _session;
         private readonly IRedditConfig _config;
-        private readonly ILogger _logger;
 
-        public RedditAsyncClient(IRedditSession session, IRedditConfig config, ILogger logger)
+        public RedditAsyncClient(IRedditSession session, IRedditConfig config)
         {
             _session = session;
             _config = config;
-            _logger = logger;
         }
 
         public async Task<Subreddit> GetSubreddit(string subredditName)
@@ -26,13 +24,6 @@ namespace RedditService.API
             return subreddit;
         }
 
-        public async Task<IEnumerable<Post>> GetPostsBetweenDates(Subreddit subreddit, DateTime fromDate, DateTime toDate)
-        {
-            var posts = await Task.Run(() => subreddit.Posts.New.Where(w => w.Created >= fromDate && w.Created <= toDate));
-
-            return posts;
-        }
-
         public async Task<Post> GetLastPost(Subreddit subreddit)
         {
             var post = await Task.Run(() => subreddit.Posts.New.First());
@@ -40,12 +31,47 @@ namespace RedditService.API
             return post;
         }
 
+        public async Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> skipFilter ,Func<Post, bool> takeFilter)
+        {
+            var afterFullname = "";
+            var posts = new List<Post>();
+
+            while (true)
+            {
+                var newPosts = await Task.Run(() => subreddit.Posts.GetNew(afterFullname));
+
+                if (newPosts.Count == 0)
+                {
+                    break;
+                }
+
+                if (skipFilter != null)
+                {
+                    newPosts = newPosts.SkipWhile(skipFilter).ToList();
+                }
+
+                if (takeFilter != null)
+                {
+                    newPosts = newPosts.TakeWhile(takeFilter).ToList();
+                }
+
+                afterFullname = posts.LastOrDefault()?.Fullname ?? "";
+                if (newPosts.Last()?.Fullname == afterFullname)
+                {
+                    break;
+                }
+
+                posts.AddRange(newPosts);
+            }
+
+            return posts;
+        }
+
         private async Task<RedditClient> GetRedditClient()
         {
             var configs = _config.GetRedditConfig();
             var token = await _session.GetAccessToken();
 
-            _logger.Information("Create new reddit client");
             return new RedditClient(configs.ClientId, null, configs.AppSecret, token);
         }
     }

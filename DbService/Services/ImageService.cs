@@ -8,26 +8,26 @@ namespace DbService.Services
 {
     public class ImageService : IImageService
     {
-        private readonly IGridFsRepository _gridFsRepository;
+        private readonly IGridFsService _gridFsService;
         private readonly IRepository<Image> _imageRepository;
         private readonly IHistoryService _historyService;
         private readonly ILogger _logger;
 
-        public ImageService(IGridFsRepository gridRepository, IRepository<Image> imageRepository, IHistoryService historyService, ILogger logger)
+        public ImageService(IGridFsService gridService, IRepository<Image> imageRepository, IHistoryService historyService, ILogger logger)
         {
-            _gridFsRepository = gridRepository;
+            _gridFsService = gridService;
             _imageRepository = imageRepository;
             _historyService = historyService;
             _logger = logger;
         }
 
-        public async Task<bool> SaveImage(MemoryStream imageStream, string description, List<string> tags, string directLink, int width, int height)
+        public async Task<(bool, ObjectId)> SaveImage(MemoryStream imageStream, string description, List<string> tags, string directLink, int width, int height)
         {
             var saved = await InsertFile(imageStream);
 
             if (saved.Id == ObjectId.Empty)
             {
-                return false;
+                return (false, ObjectId.Empty);
             }
 
             var model = new Image
@@ -38,25 +38,38 @@ namespace DbService.Services
                 Description = description,
                 OriginalLink = directLink,
                 Width = width,
-                Height = height
+                Height = height,
+                Id = ObjectId.GenerateNewId()
             };
 
-            return await InsertImage(model);
+            var result = await InsertImage(model);
+
+            return (result, model.Id);
         }
 
-        public async Task<bool> SaveImage(MemoryStream imageStream, Image image)
+        public async Task<(bool, ObjectId)> SaveImage(byte[] imageBytes, string description, List<string> tags, string directLink, int width, int height)
         {
-            var saved = await InsertFile(imageStream);
+            var saved = await InsertFile(imageBytes);
 
             if (saved.Id == ObjectId.Empty)
             {
-                return false;
+                return (false, ObjectId.Empty);
             }
 
-            image.GridFsId = saved.Id;
-            image.Name = saved.fileName;
+            var model = new Image
+            {
+                GridFsId = saved.Id,
+                Name = saved.fileName,
+                Tags = tags,
+                Description = description,
+                OriginalLink = directLink,
+                Width = width,
+                Height = height,
+            };
 
-            return await InsertImage(image);
+            var result = await InsertImage(model);
+
+            return (result, saved.Id);
         }
 
         public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
@@ -64,7 +77,7 @@ namespace DbService.Services
             var filter = Builders<Image>.Filter.Eq(e => e.Id, id);
             var image = await _imageRepository.Find(filter, null!, CancellationToken.None);
 
-            var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
+            var stream = await _gridFsService.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
             return (image, stream);
         }
 
@@ -77,7 +90,7 @@ namespace DbService.Services
 
             foreach (var image in images)
             {
-                var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
+                var stream = await _gridFsService.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
                 results.Add((image, stream));
             }
 
@@ -97,7 +110,7 @@ namespace DbService.Services
 
             foreach (var image in filteredImages)
             {
-                var stream = await _gridFsRepository.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
+                var stream = await _gridFsService.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
                 results.Add((image, stream));
             }
 
@@ -119,7 +132,21 @@ namespace DbService.Services
         private async Task<(ObjectId Id, string fileName)> InsertFile(MemoryStream stream)
         {
             var fileName = new Guid().ToString();
-            var fileId = await _gridFsRepository.AddFileAsStream(stream, fileName, null!, CancellationToken.None);
+            var fileId = await _gridFsService.AddFileAsStream(stream, fileName, null!, CancellationToken.None);
+
+            if (fileId == null || fileId == ObjectId.Empty)
+            {
+                _logger.Error("Cant save image to gridFS");
+                return (ObjectId.Empty, fileName);
+            }
+
+            return (fileId.Value, fileName);
+        }
+
+        private async Task<(ObjectId Id, string fileName)> InsertFile(byte[] bytes)
+        {
+            var fileName = new Guid().ToString();
+            var fileId = await _gridFsService.AddFileAsBytes(bytes, fileName, null!, CancellationToken.None);
 
             if (fileId == null || fileId == ObjectId.Empty)
             {

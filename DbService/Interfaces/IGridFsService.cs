@@ -3,7 +3,7 @@ using MongoDB.Driver.GridFS;
 
 namespace DbService.Interfaces
 {
-    public interface IGridFsRepository
+    public interface IGridFsService
     {
         Task<byte[]> GetFileAsBytes(ObjectId id, GridFSDownloadOptions options, CancellationToken cToken);
         Task<MemoryStream> GetFileAsStream(ObjectId id, GridFSDownloadOptions options, CancellationToken cToken);

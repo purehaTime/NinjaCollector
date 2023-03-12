@@ -5,7 +5,7 @@ namespace Worker
     public interface IWorker
     {
         Task<List<Settings>> Init();
-        Task Run(Settings setting);
+        Task<Settings> Run(Settings setting);
         void GetStatus();
     }
 }

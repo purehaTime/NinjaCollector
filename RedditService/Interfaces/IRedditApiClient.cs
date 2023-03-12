@@ -5,16 +5,10 @@ namespace RedditService.Interfaces
     public interface IRedditApiClient
     {
         public Task<Post> GetLastPost(string subReddit);
-
-        /// <summary>
-        /// Get posts between dates
-        /// </summary>
-        /// <param name="subReddit"></param>
-        /// <param name="fromDate"></param>
-        /// <returns></returns>
-        public Task<IEnumerable<Post>> GetPostsUntilNow(string subReddit, DateTime fromDate);
-
         Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate);
+        Task<IEnumerable<Post>> GetPostsFromPostIdUntilPostId(string subReddit, string fromPostId, string untilPostId);
+        Task<IEnumerable<Post>> GetPostsFromPostIdUntilDate(string subReddit, string fromPostId, DateTime untilDate);
+        Task<IEnumerable<Post>> GetPostsFromDateUntilPostId(string subReddit, DateTime fromDate, string untilPostId);
 
     }
 }

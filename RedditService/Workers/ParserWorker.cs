@@ -1,9 +1,12 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using RedditService.Interfaces;
+using RedditService.Model;
 using Worker;
 using Worker.Model;
+using ILogger = Serilog.ILogger;
 
 namespace RedditService.Workers
 {
@@ -11,11 +14,13 @@ namespace RedditService.Workers
     {
         private IRedditService _redditService;
         private IDatabaseServiceClient _dbClient;
+        private ILogger _logger;
 
-        public ParserWorker(IRedditService redditService, IDatabaseServiceClient dbClient)
+        public ParserWorker(IRedditService redditService, IDatabaseServiceClient dbClient, ILogger logger)
         {
             _redditService = redditService;
             _dbClient = dbClient;
+            _logger = logger;
         }
 
         /// <summary>
@@ -24,8 +29,6 @@ namespace RedditService.Workers
         /// <returns></returns>
         public async Task<List<Settings>> Init()
         {
-            await Task.Delay(1);
-
             var settings = await _dbClient.GetParserSettings(new ParserSettingsRequest
             {
                 Source = "reddit",
@@ -39,39 +42,99 @@ namespace RedditService.Workers
             {
                 result = settings.Select(s => new Settings
                 {
-                    Counts = 0,
-                    Timeout = s.Interval,
-                    Hold = 1000,
+                    Counts = s.PostsCount,
+                    Timeout = s.Timeout,
+                    Hold = s.Hold,
                     ApiName = s.Source,
-                    RetryAfterErrorCount = 4,
+                    RetryAfterErrorCount = 3,
+                    Id = s.Id,
+                    ByLastPostId = s.StartFromPastPost,
+                    TagsForPosts = s.TagsForPost.ToList(),
                 }).ToList();
             }
 
             return result;
         }
 
-        public async Task Run(Settings settings)
+        public async Task<Settings> Run(Settings settings)
         {
-            var post = await _redditService.GetLastPost(settings.ForGroup);
+            var contents = new List<Content>();
 
-            await _dbClient.AddPost(new PostModel
+            var posts = settings.ByLastPostId 
+                ? await _redditService.GetPostsUntilPostId(settings.ForGroup, settings.UntilPostId)
+                : await _redditService.GetPostsBetweenDates(settings.ForGroup, settings.FromDate ?? DateTime.UtcNow, settings.UntilDate ?? DateTime.MinValue);
+
+            contents.AddRange(posts);
+
+            var savedResult = await _dbClient.AddPosts(new PostModel
             {
-                Description = post.Description ?? "",
-                Group = settings.ForGroup,
-                Text = post.Text,
-                OriginalLink = post.OriginalLink,
-                Source = "reddit",
-                Title = post.Title,
-                UserName = post.UserName,
-                PostDate = Timestamp.FromDateTime(post.Created),
-                Images = {  new List<Image>() },
-                Tags = { "test" }
+                Posts =
+                {
+                    contents.Select(s => new Post
+                    {
+                        Description = s.Description ?? "",
+                        Group = settings.ForGroup ?? "",
+                        Text = s.Text ?? "",
+                        OriginalLink = s.OriginalLink ?? "",
+                        Source = "reddit",
+                        Title = s.Title,
+                        UserName = s.UserName ?? "",
+                        PostDate = Timestamp.FromDateTime(s.Created),
+                        Images = { s.Images.Select(img => ImageMapper(img, settings.TagsForPosts)) },
+                        Tags = { settings.TagsForPosts }
+                    })
+                }
             });
+
+            if (!savedResult)
+            {
+            }
+
+            if (settings.ContinueMonitoring)
+            {
+                settings.ByLastPostId = true;
+                if (contents.Count > 0)
+                {
+                    settings.UntilPostId = contents.First().Id;
+                }
+                else
+                {
+                    settings.FromDate = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                settings.Disabled = true;
+            }
+
+            await UpdateSettings(settings);
+
+            return settings;
         }
 
         public void GetStatus()
         {
             throw new NotImplementedException();
+        }
+
+        private async Task UpdateSettings(Settings oldSettings)
+        {
+
+            var result = await _dbClient.SaveParserSettings(new ParserSettingsModel
+            {
+                Id = oldSettings.Id ?? "",
+                TagsForPost = { oldSettings.TagsForPosts },
+                Timeout = oldSettings.Timeout,
+                Hold = oldSettings.Hold,
+                Source = "reddit",
+                LastPostId = oldSettings.UntilPostId,
+                StartFromPastPost = oldSettings.ByLastPostId,
+            });
+
+            if (!result)
+            {
+                _logger.Error($"Can't save settings for reddit. Settings id: {oldSettings.Id}");
+            }
         }
 
         private Settings GetDefaultSettings()
@@ -83,7 +146,28 @@ namespace RedditService.Workers
                 Counts = 0,
                 Hold = 2000,
                 Timeout = 3000,
-                RetryAfterErrorCount = 3
+                RetryAfterErrorCount = 3,
+                ByLastPostId = true,
+                FromDate = DateTime.UtcNow - TimeSpan.FromDays(1),
+                UntilPostId = null,
+                ContinueMonitoring = true,
+                FromPostId = null,
+                TagsForPosts = new List<string>(),
+                Disabled = false,
+            };
+        }
+
+        private GrpcHelper.DbService.Image ImageMapper(ImageContainer image, IEnumerable<string> tags)
+        {
+            return new GrpcHelper.DbService.Image
+            {
+                Description = image.Image.Description,
+                OriginalLink = image.Image.DirectLink,
+                Name = image.Image.Name,
+                Width = image.Image.Width,
+                Height = image.Image.Height,
+                Tags = { tags },
+                File = ByteString.CopyFrom(image.Data),
             };
         }
     }

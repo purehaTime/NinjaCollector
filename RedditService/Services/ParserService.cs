@@ -27,6 +27,7 @@ namespace RedditService.Services
 
             var content = new Content
             {
+                Id = post.Listing.Id,
                 Images = images,
                 Created = post.Created,
                 Title = post.Title,

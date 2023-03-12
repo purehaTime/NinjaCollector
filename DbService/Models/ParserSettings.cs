@@ -31,11 +31,21 @@ namespace DbService.Models
         /// <summary>
         /// Load posts from (or LastLoadPostId if StartFromLastLoadPost is true) now until time post (in hours)
         /// </summary>
-        public int Interval { get; set; }
+        public int Timeout { get; set; }
 
         /// <summary>
         /// how often run job (in seconds)
         /// </summary>
         public int JobInterval { get; set; }
+
+        public IEnumerable<string> TagsForPost { get; set; }
+
+        /// <summary>
+        /// Hold in seconds before first run
+        /// </summary>
+        public int Hold { get; set; }
+
+        public DateTime FromDate { get; set; }
+        public DateTime UntilDate { get; set; }
     }
 }

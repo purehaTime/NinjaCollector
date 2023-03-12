@@ -5,7 +5,9 @@ namespace RedditService.Interfaces
     public interface IRedditAsyncClient
     {
         Task<Subreddit> GetSubreddit(string subreddit);
-        Task<IEnumerable<Post>> GetPostsBetweenDates(Subreddit subreddit, DateTime fromDate, DateTime toDate);
         Task<Post> GetLastPost(Subreddit subreddit);
+
+        Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> skipFilter,
+            Func<Post, bool> takeFilter);
     }
 }

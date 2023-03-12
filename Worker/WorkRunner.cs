@@ -1,4 +1,5 @@
-﻿using Worker.Model;
+﻿using Serilog;
+using Worker.Model;
 
 namespace Worker
 {
@@ -6,26 +7,38 @@ namespace Worker
     {
         private static List<Work> _workers = new();
 
-        public static void RunWorker(Func<Task> work, Settings settings)
-        {
-            var ct = new CancellationTokenSource();
-            
-            var task = Task.Run(() => Worker(work, settings), ct.Token);
-
-            _workers.Add(new Work
-            {
-                Token = ct,
-                TaskId = task.Id,
-                GroupName = settings.ApiName
-            });
-        }
-
         public static IReadOnlyCollection<Work> GetWorkers()
         {
             return _workers.AsReadOnly();
         }
 
-        private static async Task Worker(Func<Task> work, Settings settings)
+        public static async Task RunWorker(IWorker worker, Settings setting, ILogger logger)
+        {
+            var allSettings = new List<Settings>();
+            if (setting == null)
+            {
+                allSettings = await worker.Init();
+            }
+            else
+            {
+                allSettings.Add(setting);
+            }
+
+            foreach (var settings in allSettings)
+            {
+                var ct = new CancellationTokenSource();
+                var task = Task.Run(() => Worker(worker, settings, logger), ct.Token);
+                _workers.Add(new Work
+                {
+                    Token = ct,
+                    TaskId = task.Id,
+                    GroupName = settings.ForGroup
+                });
+            }
+        }
+
+
+        public static async Task Worker(IWorker work, Settings settings, ILogger logger)
         {
             //timeout
             await Task.Delay(settings.Hold);
@@ -37,22 +50,30 @@ namespace Worker
             {
                 if (errorCounter == settings.RetryAfterErrorCount)
                 {
-                    Console.WriteLine($"task {Task.CurrentId} was stopped die to lots of error");
+                    logger.Error($"task {Task.CurrentId} was stopped die to lots of error");
                 }
 
                 try
                 {
-                    await work();
+                    settings = await work.Run(settings);
+                    if (settings.Disabled)
+                    {
+                        break;
+                    }
+
                     counter++;
-                    await Task.Delay(settings.Timeout);
+
                 }
                 catch (Exception err)
                 {
-                    Console.WriteLine($"Worker error for TaskId: {Task.CurrentId}");
-                    Console.WriteLine(err.Message);
+                    logger.Error(err, $"Worker error for TaskId: {Task.CurrentId}");
                     errorCounter++;
                 }
+
+                await Task.Delay(settings.Timeout);
             }
+
+            logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");
         }
     }
 

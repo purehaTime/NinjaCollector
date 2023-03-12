@@ -5,10 +5,11 @@ namespace DbService.Interfaces
 {
     public interface IImageService
     {
-        public Task<bool> SaveImage(MemoryStream image, string description, List<string> tags, string directLink,
+        public Task<(bool Status, ObjectId SavedImage)> SaveImage(MemoryStream image, string description, List<string> tags, string directLink,
             int width, int height);
 
-        public Task<bool> SaveImage(MemoryStream imageStream, Image image);
+        public Task<(bool Status, ObjectId SavedImage)> SaveImage(byte[] imageBytes, string description, List<string> tags,
+            string directLink, int width, int height);
 
         public Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id);
 

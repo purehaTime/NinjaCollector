@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using Serilog;
+using Worker.Model;
 
 namespace Worker.ServiceExtension
 {
@@ -9,13 +12,18 @@ namespace Worker.ServiceExtension
         {
             var scope = application.ApplicationServices.CreateScope();
             var worker = scope.ServiceProvider.GetRequiredService<TWorker>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
-            var settings = await worker.Init();
+            await WorkRunner.RunWorker(worker, null, logger);
+        }
 
-            foreach (var setting in settings) // possible change to parallel foreach
-            {
-                WorkRunner.RunWorker(() => worker.Run(setting), setting);
-            }
+        public static async Task RunWorker<TWorker>(this IApplicationBuilder application, Settings settings) where TWorker : class, IWorker
+        {
+            var scope = application.ApplicationServices.CreateScope();
+            var worker = scope.ServiceProvider.GetRequiredService<TWorker>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+
+            await WorkRunner.RunWorker(worker, settings, logger);
         }
     }
 }

@@ -8,10 +8,11 @@ package database;
 service Database {
     rpc WriteLog(DbLogModel) returns (WriteLogResponse);
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
-    rpc AddPost(stream PostModel) returns (Status);
-    rpc GetPost(PostRequest) returns (stream PostModel);
-    rpc GetImages(ImageRequest) returns (stream Image);
-    rpc AddImages(stream ImageModel) returns (Status);
+    rpc AddPost(Post) returns (Status);
+    rpc AddPosts(PostModel) returns (Status);
+    rpc GetPosts(PostRequest) returns (PostModel);
+    rpc GetImages(ImageRequest) returns (ImageModel);
+    rpc AddImages(ImageModel) returns (Status);
     rpc GetParserSettings(ParserSettingsRequest) returns (ParserSettings);
     rpc GetPosterSettings(PosterSettingsRequest) returns (PosterSettings);
     rpc SaveParserSettings(ParserSettingsModel) returns (Status);
@@ -20,8 +21,8 @@ service Database {
 }
 
 message DbLogModel {
-    string jsondata = 2;
-    google.protobuf.Timestamp timestamp = 5;
+    string jsondata = 1;
+    google.protobuf.Timestamp timestamp = 2;
 }
 
 message WriteLogResponse {
@@ -44,21 +45,28 @@ message Image {
   string Name  = 1;
   string Description = 2;
   string OriginalLink = 3;
-  bytes File = 4;
-  repeated string Tags = 5;
+  int32 Width = 4;
+  int32 Height = 5;
+  bytes File = 6;
+  repeated string Tags = 7;
+}
+
+message Post {
+  string postId = 1;
+  string Title = 2;
+  string Description = 3;
+  string Group = 4;
+  string UserName = 5;
+  string Text = 6;
+  repeated Image Images = 7;
+  repeated string Tags = 8;
+  string Source = 9;
+  string OriginalLink = 10;
+  google.protobuf.Timestamp PostDate = 11;
 }
 
 message PostModel {
-  string Title = 1;
-  string Description = 2;
-  string Group = 3;
-  string UserName = 4;
-  string Text = 5;
-  repeated Image Images = 6;
-  repeated string Tags = 7;
-  string Source = 8;
-  string OriginalLink = 9;
-  google.protobuf.Timestamp PostDate = 10;
+  repeated Post Posts = 1;
 }
 
 message PostRequest {
@@ -97,8 +105,13 @@ message ParserSettingsModel {
     string LastPostId = 5;
     bool StartFromPastPost = 6;
     bool ByUpdate = 7;
-    int32 Interval = 8;
+    int32 Timeout = 8;
     int32 JobInterval = 9;
+    int32 Hold = 10;
+    repeated string TagsForPost = 11;
+    google.protobuf.Timestamp FromDate = 12;
+    google.protobuf.Timestamp UntilDate = 13;
+
 }
 
 message PosterSettingsModel {

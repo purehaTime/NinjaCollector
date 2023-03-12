@@ -1,9 +1,10 @@
 ﻿using DbService.Interfaces;
-using DbService.Models;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
 using MongoDB.Bson;
 using ParserSettings = DbService.Models.ParserSettings;
+using Post = DbService.Models.Post;
 using Status = GrpcHelper.DbService.Status;
 
 namespace DbService.Services
@@ -22,32 +23,33 @@ namespace DbService.Services
             _image = image;
             _history = history;
         }
+        
 
-        public override async Task<Status> AddPost(IAsyncStreamReader<PostModel> requestStream, ServerCallContext context)
+        public override async Task<Status> AddPost(GrpcHelper.DbService.Post post, ServerCallContext context)
         {
-            var posts = requestStream.ReadAllAsync();
-            var isSuccess = true;
-
-            await Parallel.ForEachAsync(posts, async (post, ct) =>
+            var result = await _post.SavePost(new Post
             {
-                var result = await _post.SavePost(new Post
-                {
-                    Description = post.Description,
-                    GroupName = post.Group,
-                    Images = null,
-                    OriginalLink = post.OriginalLink,
-                    UserName = post.UserName,
-                    PostDate = post.PostDate.ToDateTime(),
-                    Source = post.Source,
-                    Tags = post.Tags,
-                    Text = post.Text,
-                    Title = post.Title,
-                });
-
-                isSuccess = result && isSuccess;
+                PostId = post.PostId,
+                Description = post.Description,
+                GroupName = post.Group,
+                Images = null,
+                OriginalLink = post.OriginalLink,
+                UserName = post.UserName,
+                PostDate = post.PostDate.ToDateTime(),
+                Source = post.Source,
+                Tags = post.Tags,
+                Text = post.Text,
+                Title = post.Title,
             });
 
-            return new Status { Success = isSuccess };
+            return new Status { Success = result };
+        }
+
+        public override async Task<Status> AddPosts(PostModel posts, ServerCallContext context)
+        {
+            var result = await _post.SavePosts(posts);
+
+            return new Status { Success = result };
         }
 
         public override async Task<Status> SaveParserSettings(ParserSettingsModel request, ServerCallContext context)
@@ -57,12 +59,14 @@ namespace DbService.Services
                Description = request.Description,
                Source = request.Source,
                ByUpdate = request.ByUpdate,
-               Interval = request.Interval,
-               Id = ObjectId.Parse(request.Id),
+               Timeout = request.Timeout,
+               Id = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id),
                LastLoadPostId = request.LastPostId,
                StartFromLastLoadPost = request.StartFromPastPost,
                JobInterval = request.JobInterval,
                PostsCount = request.PostsCount,
+               TagsForPost = request.TagsForPost,
+               
             });
             
             return new Status
@@ -82,12 +86,16 @@ namespace DbService.Services
                      Description = s.Description,
                      Id = s.Id.ToString(),
                      ByUpdate = s.ByUpdate,
-                     Interval = s.Interval,
+                     Timeout = s.Timeout,
                      JobInterval = s.JobInterval,
                      LastPostId = s.LastLoadPostId,
                      PostsCount = s.PostsCount,
                      Source = s.Source,
                      StartFromPastPost = s.StartFromLastLoadPost,
+                     TagsForPost = { s.TagsForPost },
+                     Hold = s.Hold,
+                     FromDate = Timestamp.FromDateTime(s.FromDate),
+                     UntilDate = Timestamp.FromDateTime(s.UntilDate)
                  } ) }
             };
         }
