@@ -81,7 +81,6 @@ namespace RedditService.Services
                         }
                     });
                 }
-
             }
 
             return images.ToList();

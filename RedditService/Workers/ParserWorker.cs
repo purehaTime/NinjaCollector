@@ -119,11 +119,6 @@ namespace RedditService.Workers
             return settings;
         }
 
-        public void GetStatus()
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task UpdateSettings(Settings oldSettings)
         {
 
@@ -149,7 +144,7 @@ namespace RedditService.Workers
             return new Settings
             {
                 ApiName = "reddit",
-                ForGroup = "gonewild",
+                ForGroup = "games",
                 Counts = 0,
                 Hold = 2000,
                 Timeout = 30000,

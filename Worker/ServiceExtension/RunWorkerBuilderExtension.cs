@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using Serilog;
 using Worker.Model;
 
@@ -14,7 +13,8 @@ namespace Worker.ServiceExtension
             var worker = scope.ServiceProvider.GetRequiredService<TWorker>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
-            await WorkRunner.RunWorker(worker, null, logger);
+            WorkRunner.InitLogger(logger);
+            await WorkRunner.RunWorker(worker, null);
         }
 
         public static async Task RunWorker<TWorker>(this IApplicationBuilder application, Settings settings) where TWorker : class, IWorker
@@ -23,7 +23,8 @@ namespace Worker.ServiceExtension
             var worker = scope.ServiceProvider.GetRequiredService<TWorker>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
-            await WorkRunner.RunWorker(worker, settings, logger);
+            WorkRunner.InitLogger(logger);
+            await WorkRunner.RunWorker(worker, settings);
         }
     }
 }

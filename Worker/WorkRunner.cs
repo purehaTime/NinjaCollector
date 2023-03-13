@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Serilog.Core;
 using Worker.Model;
 
 namespace Worker
@@ -6,13 +7,31 @@ namespace Worker
     internal static class WorkRunner
     {
         private static List<Work> _workers = new();
+        private static ILogger _logger = Logger.None;
+
+        public static void InitLogger(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public static IReadOnlyCollection<Work> GetWorkers()
         {
             return _workers.AsReadOnly();
         }
 
-        public static async Task RunWorker(IWorker worker, Settings setting, ILogger logger)
+        public static async Task RestartWorker(IWorker worker)
+        {
+            foreach (var work in _workers)
+            {
+                work.Token.Cancel();
+            }
+            _workers.Clear();
+
+            await RunWorker(worker, null);
+
+        }
+
+        public static async Task RunWorker(IWorker worker, Settings setting)
         {
             var allSettings = new List<Settings>();
             if (setting == null)
@@ -27,18 +46,17 @@ namespace Worker
             foreach (var settings in allSettings)
             {
                 var ct = new CancellationTokenSource();
-                var task = Task.Run(() => Worker(worker, settings, logger), ct.Token);
+                var task = Task.Run(() => Worker(worker, settings), ct.Token);
                 _workers.Add(new Work
                 {
                     Token = ct,
                     TaskId = task.Id,
-                    GroupName = settings.ForGroup
+                    Settings = settings
                 });
             }
         }
 
-
-        public static async Task Worker(IWorker work, Settings settings, ILogger logger)
+        private static async Task Worker(IWorker work, Settings settings)
         {
             //timeout
             await Task.Delay(settings.Hold);
@@ -50,7 +68,7 @@ namespace Worker
             {
                 if (errorCounter == settings.RetryAfterErrorCount)
                 {
-                    logger.Error($"task {Task.CurrentId} was stopped die to lots of error");
+                    _logger.Error($"task {Task.CurrentId} was stopped die to lots of error");
                 }
 
                 try
@@ -66,14 +84,14 @@ namespace Worker
                 }
                 catch (Exception err)
                 {
-                    logger.Error(err, $"Worker error for TaskId: {Task.CurrentId}");
+                    _logger.Error(err, $"Worker error for TaskId: {Task.CurrentId}");
                     errorCounter++;
                 }
 
                 await Task.Delay(settings.Timeout);
             }
 
-            logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");
+            _logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");
         }
     }
 

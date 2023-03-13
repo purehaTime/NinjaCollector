@@ -6,6 +6,5 @@ namespace Worker
     {
         Task<List<Settings>> Init();
         Task<Settings> Run(Settings setting);
-        void GetStatus();
     }
 }
