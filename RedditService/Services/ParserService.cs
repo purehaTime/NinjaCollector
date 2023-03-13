@@ -60,23 +60,27 @@ namespace RedditService.Services
                     });
                 });
             }
-            else if (imageLink.Contains("i.redd.it"))
+            else if (post.Listing.Preview != null)
             {
                 var preview = post.Listing.Preview;
                 var source = preview.SelectToken("images.[*].source");
                 var resultParse = source.ToObject<PreviewImage>();
-                var imageData = await _fileDownloadService.GetFile(imageLink);
-                images.Add(new ImageContainer
+
+                if (resultParse != null)
                 {
-                    Data = imageData,
-                    Image = new Image
+                    var imageData = await _fileDownloadService.GetFile(imageLink);
+                    images.Add(new ImageContainer
                     {
-                        DirectLink = imageLink,
-                        Width = resultParse.Width,
-                        Height = resultParse.Height,
-                        Name = post.Fullname,
-                    }
-                });
+                        Data = imageData,
+                        Image = new Image
+                        {
+                            DirectLink = imageLink,
+                            Width = resultParse.Width,
+                            Height = resultParse.Height,
+                            Name = post.Fullname,
+                        }
+                    });
+                }
 
             }
 

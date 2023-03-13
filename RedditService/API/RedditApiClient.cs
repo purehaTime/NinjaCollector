@@ -23,7 +23,7 @@ namespace RedditService.API
         public async Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate)
         {
             var sub = await _client.GetSubreddit(subReddit);
-            var posts = await _client.GetPostsByFilter(sub, post => post.Created <= fromDate, post => post.Created >= toDate);
+            var posts = await _client.GetPostsByFilter(sub, post => post.Created >= fromDate, post => post.Created >= toDate);
 
             return posts;
         }

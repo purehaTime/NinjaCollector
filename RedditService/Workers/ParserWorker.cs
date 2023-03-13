@@ -50,6 +50,10 @@ namespace RedditService.Workers
                     Id = s.Id,
                     ByLastPostId = s.StartFromPastPost,
                     TagsForPosts = s.TagsForPost.ToList(),
+                    ForGroup = s.Group,
+                    FromDate = s.FromDate.ToDateTime(),
+                    UntilDate = s.UntilDate.ToDateTime(),
+                    FromPostId = s.LastPostId,
                 }).ToList();
             }
 
@@ -60,7 +64,7 @@ namespace RedditService.Workers
         {
             var contents = new List<Content>();
 
-            var posts = settings.ByLastPostId 
+            var posts = settings.ByLastPostId && !string.IsNullOrEmpty(settings.UntilPostId)
                 ? await _redditService.GetPostsUntilPostId(settings.ForGroup, settings.UntilPostId)
                 : await _redditService.GetPostsBetweenDates(settings.ForGroup, settings.FromDate ?? DateTime.UtcNow, settings.UntilDate ?? DateTime.MinValue);
 
@@ -88,6 +92,9 @@ namespace RedditService.Workers
 
             if (!savedResult)
             {
+                settings.Disabled = true;
+                _logger.Error($"Can't save posts for {settings.ForGroup}");
+                return settings;
             }
 
             if (settings.ContinueMonitoring)
@@ -142,13 +149,14 @@ namespace RedditService.Workers
             return new Settings
             {
                 ApiName = "reddit",
-                ForGroup = "games",
+                ForGroup = "gonewild",
                 Counts = 0,
                 Hold = 2000,
-                Timeout = 3000,
+                Timeout = 30000,
                 RetryAfterErrorCount = 3,
-                ByLastPostId = true,
-                FromDate = DateTime.UtcNow - TimeSpan.FromDays(1),
+                ByLastPostId = false,
+                //FromDate = DateTime.UtcNow - TimeSpan.FromDays(2),
+                UntilDate = DateTime.UtcNow - TimeSpan.FromDays(1),
                 UntilPostId = null,
                 ContinueMonitoring = true,
                 FromPostId = null,

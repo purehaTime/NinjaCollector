@@ -101,16 +101,17 @@ message ParserSettingsModel {
     string Id = 1;
     string Description = 2;
     string Source = 3;
-    int32 PostsCount = 4;
-    string LastPostId = 5;
-    bool StartFromPastPost = 6;
-    bool ByUpdate = 7;
-    int32 Timeout = 8;
-    int32 JobInterval = 9;
-    int32 Hold = 10;
-    repeated string TagsForPost = 11;
-    google.protobuf.Timestamp FromDate = 12;
-    google.protobuf.Timestamp UntilDate = 13;
+    string Group = 4;
+    int32 PostsCount = 5;
+    string LastPostId = 6;
+    bool StartFromPastPost = 7;
+    bool ByUpdate = 8;
+    int32 Timeout = 9;
+    int32 JobInterval = 10;
+    int32 Hold = 11;
+    repeated string TagsForPost = 12;
+    google.protobuf.Timestamp FromDate = 13;
+    google.protobuf.Timestamp UntilDate = 14;
 
 }
 

@@ -66,7 +66,10 @@ namespace DbService.Services
                JobInterval = request.JobInterval,
                PostsCount = request.PostsCount,
                TagsForPost = request.TagsForPost,
-               
+               FromDate = request.FromDate.ToDateTime(),
+               Group = request.Group,
+               Hold = request.Hold,
+               UntilDate = request.UntilDate.ToDateTime(),
             });
             
             return new Status
@@ -86,6 +89,7 @@ namespace DbService.Services
                      Description = s.Description,
                      Id = s.Id.ToString(),
                      ByUpdate = s.ByUpdate,
+                     Group = s.Group,
                      Timeout = s.Timeout,
                      JobInterval = s.JobInterval,
                      LastPostId = s.LastLoadPostId,

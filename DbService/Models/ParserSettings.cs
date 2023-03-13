@@ -9,6 +9,7 @@ namespace DbService.Models
         public ObjectId Id { get; set; }
         public string Description { get; set; }
         public string Source { get; set; }
+        public string Group { get; set; }
 
         /// <summary>
         /// How much posts will be upload (more 0 - until end of source)

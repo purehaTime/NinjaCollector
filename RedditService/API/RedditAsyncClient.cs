@@ -38,6 +38,7 @@ namespace RedditService.API
 
             while (true)
             {
+                var filteredPost = new List<Post>();
                 var newPosts = await Task.Run(() => subreddit.Posts.GetNew(afterFullname));
 
                 if (newPosts.Count == 0)
@@ -47,21 +48,30 @@ namespace RedditService.API
 
                 if (skipFilter != null)
                 {
-                    newPosts = newPosts.SkipWhile(skipFilter).ToList();
+                    filteredPost = newPosts.SkipWhile(skipFilter).ToList();
+                }
+
+                if (filteredPost.Count == 0 && skipFilter != null)
+                {
+                    afterFullname = newPosts.LastOrDefault()?.Fullname ?? "";
+                    await Task.Delay(1000); // to prevent a spam reddit API
+                    continue;
                 }
 
                 if (takeFilter != null)
                 {
-                    newPosts = newPosts.TakeWhile(takeFilter).ToList();
+                    filteredPost = filteredPost.TakeWhile(takeFilter).ToList();
                 }
 
-                afterFullname = posts.LastOrDefault()?.Fullname ?? "";
-                if (newPosts.Last()?.Fullname == afterFullname)
+                if (filteredPost.Count == 0 || filteredPost.Last()?.Fullname == afterFullname)
                 {
                     break;
                 }
 
-                posts.AddRange(newPosts);
+                posts.AddRange(filteredPost);
+                afterFullname = posts.LastOrDefault()?.Fullname ?? "";
+
+                await Task.Delay(1000); // to prevent a spam reddit API
             }
 
             return posts;
