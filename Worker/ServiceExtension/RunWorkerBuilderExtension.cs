@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Worker.Grpc;
 using Worker.Model;
 
 namespace Worker.ServiceExtension
@@ -25,6 +27,11 @@ namespace Worker.ServiceExtension
 
             WorkRunner.InitLogger(logger);
             await WorkRunner.RunWorker(worker, settings);
+        }
+
+        public static void MapWorkerService(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGrpcService<WorkerService>();
         }
     }
 }

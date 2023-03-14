@@ -17,9 +17,15 @@ namespace Worker
             await WorkRunner.RestartWorker(_worker);
         }
 
-        public Task RestartWorker(int taskId)
+        public async Task RestartWorker(int taskId)
         {
-            throw new NotImplementedException();
+            var works = WorkRunner.GetWorkers();
+            var worker = works.FirstOrDefault(f => f.TaskId == taskId);
+            if (worker != null)
+            {
+                worker.Token.Cancel();
+                await WorkRunner.RunWorker(_worker, worker.Settings);
+            }
         }
 
         public async Task Run()

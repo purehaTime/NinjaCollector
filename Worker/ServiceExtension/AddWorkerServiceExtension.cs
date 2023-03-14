@@ -7,8 +7,9 @@ namespace Worker.ServiceExtension
     {
         public static void AddWorker<TWorker>(this IServiceCollection services) where TWorker : class, IWorker
         {
+            services.AddTransient<IWorker, TWorker>();
             services.AddTransient<TWorker>();
-            services.TryAddSingleton<IWorkService, WorkService>();
+            services.TryAddScoped<IWorkService, WorkService>();
         }
     }
 }

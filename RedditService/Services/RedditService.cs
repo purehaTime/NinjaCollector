@@ -1,4 +1,5 @@
-﻿using Reddit.Controllers;
+﻿using System.Collections.Concurrent;
+using Reddit.Controllers;
 using RedditService.Interfaces;
 using RedditService.Model;
 
@@ -49,12 +50,18 @@ namespace RedditService.Services
 
         private async Task<IEnumerable<Content>> ContentMapper(IEnumerable<Post> posts)
         {
-            var contents = new List<Content>();
-            foreach (var post in posts) //don't wanna spam reddit, so what it is not a parallel
+            var contents = new ConcurrentBag<Content>();
+
+            var options = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = 5
+            };
+
+            await Parallel.ForEachAsync(posts, options, async (post, token) =>
             {
                 var parsed = await _parserService.ParsePost(post);
                 contents.Add(parsed);
-            }
+            });
 
             return contents;
         }

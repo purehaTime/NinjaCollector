@@ -146,7 +146,7 @@ namespace RedditService.Workers
                 ApiName = "reddit",
                 ForGroup = "games",
                 Counts = 0,
-                Hold = 2000,
+                Hold = 200000,
                 Timeout = 30000,
                 RetryAfterErrorCount = 3,
                 ByLastPostId = false,

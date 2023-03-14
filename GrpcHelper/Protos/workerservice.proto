@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcHelper.WorkerService";
+import "google/protobuf/empty.proto";
+
+package worker;
+
+service Worker {
+    rpc GetWorkers(google.protobuf.Empty) returns (WorkerModel);
+    rpc RestartWorkers(google.protobuf.Empty) returns (Status);
+    rpc RestartWorker(WorkerRestart) returns (Status);
+}
+
+message Work {
+    string ApiService = 2;
+    string Group = 4;
+    int32 TaskId = 5;
+    string SettingsId = 6;
+}
+
+message WorkerRestart {
+    int32 TaskId = 1;
+}
+
+message WorkerModel {
+    repeated Work Workers = 1;
+}
+
+message Status {
+  bool success = 1;
+}
