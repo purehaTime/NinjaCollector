@@ -6,9 +6,9 @@ namespace GrpcHelper.Clients
 {
     public class WorkerServiceClient : IWorkerServiceClient
     {
-        private readonly Worker.WorkerClient _client;
+        private readonly WorkerService.WorkerService.WorkerServiceClient _client;
 
-        public WorkerServiceClient(Worker.WorkerClient client)
+        public WorkerServiceClient(WorkerService.WorkerService.WorkerServiceClient client)
         {
             _client = client;
         }

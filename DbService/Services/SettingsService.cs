@@ -1,5 +1,6 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
 
@@ -19,9 +20,13 @@ namespace DbService.Services
             _logger = logger;
         }
         
-        public async Task<List<ParserSettings>> GetParserSettings(string source)
+        public async Task<List<ParserSettings>> GetParserSettings(string source, ObjectId? settingsId)
         {
             var filter = Builders<ParserSettings>.Filter.Eq(e => e.Source, source);
+            if (settingsId != null)
+            {
+                filter &= Builders<ParserSettings>.Filter.Eq(e => e.Id, settingsId);
+            }
             var results = await _parserRepository.FindMany(filter, null!, CancellationToken.None);
 
             return results.ToList();

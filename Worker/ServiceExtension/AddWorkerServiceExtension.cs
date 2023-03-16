@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Worker.Interfaces;
 
 namespace Worker.ServiceExtension
 {
@@ -9,7 +10,7 @@ namespace Worker.ServiceExtension
         {
             services.AddTransient<IWorker, TWorker>();
             services.AddTransient<TWorker>();
-            services.TryAddScoped<IWorkService, WorkService>();
+            services.TryAddSingleton<IWorkService, WorkService>();
         }
     }
 }

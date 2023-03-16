@@ -29,8 +29,6 @@
 
         public DateTime? UntilDate { get; set; }
 
-        public bool UpdateFromDate { get; set; }
-
         public string FromPostId { get; set; }
 
         public string UntilPostId { get; set; }

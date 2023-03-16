@@ -80,7 +80,11 @@ namespace DbService.Services
 
         public override async Task<GrpcHelper.DbService.ParserSettings> GetParserSettings(ParserSettingsRequest request, ServerCallContext context)
         {
-            var response = await _settings.GetParserSettings(request.Source);
+            ObjectId? settingsId = string.IsNullOrEmpty(request.SettingsId)
+                ? null
+                : ObjectId.Parse(request.SettingsId);
+
+            var response = await _settings.GetParserSettings(request.Source, settingsId);
 
             return new GrpcHelper.DbService.ParserSettings
             {

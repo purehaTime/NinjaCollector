@@ -1,43 +1,81 @@
 ﻿using Serilog;
-using Worker.Model;
+using Worker.Interfaces;
 
 namespace Worker
 {
     public class WorkService : IWorkService
     {
-        private readonly IWorker _worker;
+        private readonly IEnumerable<IWorker> _workers;
+        private readonly ILogger _logger;
 
-        public WorkService(IWorker worker, ILogger logger)
+        public WorkService(IEnumerable<IWorker> workers, ILogger logger)
         {
-            _worker = worker;
-            WorkRunner.InitLogger(logger);
-        }
-        public async Task RestartWorkers()
-        {
-            await WorkRunner.RestartWorker(_worker);
+            _workers = workers;
+            _logger = logger;
         }
 
-        public async Task RestartWorker(int taskId)
+        public async Task RunWorkers()
         {
-            var works = WorkRunner.GetWorkers();
-            var worker = works.FirstOrDefault(f => f.TaskId == taskId);
-            if (worker != null)
+            await WorkEngine.RunWorkers(_workers);
+        }
+
+        public async Task RunWorker(IWorker worker)
+        {
+            try
             {
-                worker.Token.Cancel();
-                await WorkRunner.RunWorker(_worker, worker.Settings);
+                await WorkEngine.RunWorker(worker);
+            }
+            catch (Exception err)
+            {
+                _logger.Error($"error while start worker {worker.Name}", err);
             }
         }
 
-        public async Task Run()
+
+        public IReadOnlyCollection<Model.Worker> GetWorkers()
         {
-            await WorkRunner.RunWorker(_worker, null);
+            return WorkEngine.GetWorkers();
         }
 
-        public IReadOnlyCollection<Work> GetWorkers()
+        public async Task<bool> RestartWorkers()
         {
-            var works = WorkRunner.GetWorkers();
+            try
+            {
+                var workers = WorkEngine.GetWorkers();
+                WorkEngine.StopAll();
+                await WorkEngine.RunWorkers(workers.Select(s => s.WorkerInstance));
+            }
+            catch (Exception err)
+            {
+                _logger.Error("Can't restart workers.", err);
+                return false;
+            }
 
-            return works;
+            return true;
+        }
+
+        public async Task<bool> RestartWorker(int taskId, string settingId)
+        {
+            try
+            {
+                return await WorkEngine.RestartWorker(taskId, settingId);
+            }
+            catch (Exception err)
+            {
+                _logger.Error($"Can't restart work {taskId}", err);
+            }
+
+            return false;
+        }
+
+        public bool StopAll()
+        {
+            return WorkEngine.StopAll();
+        }
+
+        public bool StopWorker(int taskId)
+        {
+            return WorkEngine.StopWorker(taskId);
         }
     }
 }

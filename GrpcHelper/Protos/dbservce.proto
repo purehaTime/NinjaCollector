@@ -90,6 +90,7 @@ message ImageModel {
 
 message ParserSettingsRequest {
   string Source = 1;
+  string SettingsId = 2;
 }
 
 message PosterSettingsRequest {

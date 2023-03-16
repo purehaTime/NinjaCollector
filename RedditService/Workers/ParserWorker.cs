@@ -4,7 +4,7 @@ using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using RedditService.Interfaces;
 using RedditService.Model;
-using Worker;
+using Worker.Interfaces;
 using Worker.Model;
 using ILogger = Serilog.ILogger;
 
@@ -21,7 +21,10 @@ namespace RedditService.Workers
             _redditService = redditService;
             _dbClient = dbClient;
             _logger = logger;
+            Name = "Reddit_Parser";
         }
+
+        public string Name { get; }
 
         /// <summary>
         /// should be separate for different interface and class
@@ -58,6 +61,11 @@ namespace RedditService.Workers
             }
 
             return result;
+        }
+
+        public Task<Settings> LoadSettings(string settingsId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Settings> Run(Settings settings)

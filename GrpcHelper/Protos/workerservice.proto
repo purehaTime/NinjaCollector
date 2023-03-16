@@ -5,25 +5,30 @@ import "google/protobuf/empty.proto";
 
 package worker;
 
-service Worker {
+service WorkerService {
     rpc GetWorkers(google.protobuf.Empty) returns (WorkerModel);
     rpc RestartWorkers(google.protobuf.Empty) returns (Status);
     rpc RestartWorker(WorkerRestart) returns (Status);
 }
 
 message Work {
-    string ApiService = 2;
     string Group = 4;
     int32 TaskId = 5;
     string SettingsId = 6;
 }
 
+message Worker {
+    repeated Work Works = 1;
+    string WorkerName = 2;
+}
+
 message WorkerRestart {
     int32 TaskId = 1;
+    string SettingsId = 2;
 }
 
 message WorkerModel {
-    repeated Work Workers = 1;
+    repeated Worker Workers = 1;
 }
 
 message Status {

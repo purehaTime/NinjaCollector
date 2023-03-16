@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GrpcHelper.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using ILogger = Serilog.ILogger;
 
 namespace MainService.Controllers
@@ -9,7 +10,7 @@ namespace MainService.Controllers
     {
         private readonly ILogger _logger;
 
-        public PingController(ILogger logger)
+        public PingController(ILogger logger, IWorkerServiceClient client)
         {
             _logger = logger;
         }
@@ -18,6 +19,12 @@ namespace MainService.Controllers
         public ActionResult Ping()
         {
             _logger.Warning("test message");
+            return Ok("pong !");
+        }
+
+        [HttpGet]
+        public ActionResult Workers()
+        {
             return Ok("pong !");
         }
     }

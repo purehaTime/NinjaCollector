@@ -1,9 +1,7 @@
-﻿using Grpc.Net.Client;
-using GrpcHelper.Clients;
+﻿using GrpcHelper.Clients;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using GrpcHelper.LogService;
-using GrpcHelper.WorkerService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +19,7 @@ namespace GrpcHelper
 
             services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(configMapping, config)));
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(configMapping, config)));
-            services.AddGrpcClient<Worker.WorkerClient>(x => x.Address = new Uri("http://localhost:80"));
+            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>(x => x.Address = new Uri("http://localhost:80"));
         }
 
         public static IServiceCollection AddGrpsHelper<TService, TClass>(this IServiceCollection services) 

@@ -44,7 +44,7 @@ namespace RedditService
                 app.MapGet("/", () => "Hello World!");
 
                 app.MapWorkerService();
-                await app.RunWorker<ParserWorker>();
+                await app.RunWorkers();
 
                 await app.RunAsync();
             }
