@@ -65,11 +65,13 @@ namespace DbService.Services
                StartFromLastLoadPost = request.StartFromPastPost,
                JobInterval = request.JobInterval,
                PostsCount = request.PostsCount,
-               TagsForPost = request.TagsForPost,
+               Tags = request.Tags,
                FromDate = request.FromDate.ToDateTime(),
                Group = request.Group,
                Hold = request.Hold,
                UntilDate = request.UntilDate.ToDateTime(),
+               Disabled = request.Disabled,
+               ContinueMonitoring = request.ContinueMonitoring,
             });
             
             return new Status
@@ -100,10 +102,12 @@ namespace DbService.Services
                      PostsCount = s.PostsCount,
                      Source = s.Source,
                      StartFromPastPost = s.StartFromLastLoadPost,
-                     TagsForPost = { s.TagsForPost },
+                     Tags = { s.Tags },
                      Hold = s.Hold,
                      FromDate = Timestamp.FromDateTime(s.FromDate),
-                     UntilDate = Timestamp.FromDateTime(s.UntilDate)
+                     UntilDate = Timestamp.FromDateTime(s.UntilDate),
+                     Disabled = s.Disabled,
+                     ContinueMonitoring = s.ContinueMonitoring
                  } ) }
             };
         }

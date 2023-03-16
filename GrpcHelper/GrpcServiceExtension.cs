@@ -7,22 +7,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GrpcHelper
 {
-    public static class NetCoreServiceExtension
+    public static class GrpcServiceExtension
     {
+        private static Dictionary<string, string> _configMapping = CreateConfigMapping();
+
         public static void AddGrpcHelper(this IServiceCollection services, IConfiguration config)
         {
-            var configMapping = CreateConfigMapping();
+            
             
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
             services.AddScoped<IWorkerServiceClient, WorkerServiceClient>();
 
-            services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(configMapping, config)));
-            services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(configMapping, config)));
-            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>(x => x.Address = new Uri("http://localhost:80"));
+            services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(config)));
+            services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));
+
+            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
         }
 
-        public static IServiceCollection AddGrpsHelper<TService, TClass>(this IServiceCollection services) 
+        public static IServiceCollection AddGrpsHelper<TService, TClass>(this IServiceCollection services)
             where TService : class
             where TClass : class, TService
         {
@@ -30,10 +33,15 @@ namespace GrpcHelper
             return services;
         }
 
-        private static string GetUrl<TService>(Dictionary<string, string> mapping, IConfiguration config)
+        private static string GetUrl<TService>(IConfiguration config)
         {
             var serviceName = typeof(TService);
-            var isValid = mapping.TryGetValue(serviceName.Name, out var configKey);
+            return GetUrl(serviceName.Name, config);
+        }
+
+        private static string GetUrl(string name, IConfiguration config)
+        {
+            var isValid = _configMapping.TryGetValue(name, out var configKey);
             if (isValid)
             {
                 return config.GetSection(configKey)?.Value ?? "";
@@ -47,7 +55,8 @@ namespace GrpcHelper
             var mapping = new Dictionary<string, string>
             {
                 { nameof(Logger.LoggerClient), "ServiceAddress:LoggerService" },
-                { nameof(Database.DatabaseClient), "ServiceAddress:DbService" }
+                { nameof(Database.DatabaseClient), "ServiceAddress:DbService" },
+                { "RedditService", "ServiceAddress:RedditService" },
             };
 
             return mapping;

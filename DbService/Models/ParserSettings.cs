@@ -39,7 +39,7 @@ namespace DbService.Models
         /// </summary>
         public int JobInterval { get; set; }
 
-        public IEnumerable<string> TagsForPost { get; set; }
+        public IEnumerable<string> Tags { get; set; }
 
         /// <summary>
         /// Hold in seconds before first run
@@ -48,5 +48,7 @@ namespace DbService.Models
 
         public DateTime FromDate { get; set; }
         public DateTime UntilDate { get; set; }
+        public bool Disabled { get; set; }
+        public bool ContinueMonitoring { get; set; }
     }
 }

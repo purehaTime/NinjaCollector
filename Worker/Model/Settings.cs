@@ -23,7 +23,7 @@
 
         public int RetryAfterErrorCount { get; set; }
 
-        public List<string> TagsForPosts { get; set; }
+        public List<string> Tags { get; set; }
 
         public DateTime? FromDate { get; set; }
 

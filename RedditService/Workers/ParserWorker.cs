@@ -43,7 +43,7 @@ namespace RedditService.Workers
             };
             if (settings.Count > 0)
             {
-                result = settings.Select(s => new Settings
+                result = settings.Where(w => !w.Disabled).Select(s => new Settings
                 {
                     Counts = s.PostsCount,
                     Timeout = s.Timeout,
@@ -52,11 +52,12 @@ namespace RedditService.Workers
                     RetryAfterErrorCount = 3,
                     Id = s.Id,
                     ByLastPostId = s.StartFromPastPost,
-                    TagsForPosts = s.TagsForPost.ToList(),
+                    Tags = s.Tags.ToList(),
                     ForGroup = s.Group,
-                    FromDate = s.FromDate.ToDateTime(),
-                    UntilDate = s.UntilDate.ToDateTime(),
+                    FromDate = s.FromDate?.ToDateTime(),
+                    UntilDate = s.UntilDate?.ToDateTime(),
                     FromPostId = s.LastPostId,
+                    Disabled = s.Disabled,
                 }).ToList();
             }
 
@@ -78,67 +79,75 @@ namespace RedditService.Workers
 
             contents.AddRange(posts);
 
-            var savedResult = await _dbClient.AddPosts(new PostModel
+            if (contents.Count > 0)
             {
-                Posts =
+                var savedResult = await _dbClient.AddPosts(new PostModel
                 {
-                    contents.Select(s => new Post
+                    Posts =
                     {
-                        Description = s.Description ?? "",
-                        Group = settings.ForGroup ?? "",
-                        Text = s.Text ?? "",
-                        OriginalLink = s.OriginalLink ?? "",
-                        Source = "reddit",
-                        Title = s.Title,
-                        UserName = s.UserName ?? "",
-                        PostDate = Timestamp.FromDateTime(s.Created),
-                        Images = { s.Images.Select(img => ImageMapper(img, settings.TagsForPosts)) },
-                        Tags = { settings.TagsForPosts }
-                    })
-                }
-            });
+                        contents.Select(s => new Post
+                        {
+                            Description = s.Description ?? "",
+                            Group = settings.ForGroup ?? "",
+                            Text = s.Text ?? "",
+                            OriginalLink = s.OriginalLink ?? "",
+                            Source = "reddit",
+                            Title = s.Title,
+                            UserName = s.UserName ?? "",
+                            PostDate = Timestamp.FromDateTime(s.Created),
+                            Images = { s.Images.Select(img => ImageMapper(img, settings.Tags)) },
+                            Tags = { settings.Tags }
+                        })
+                    }
+                });
 
-            if (!savedResult)
-            {
-                settings.Disabled = true;
-                _logger.Error($"Can't save posts for {settings.ForGroup}");
-                return settings;
-            }
-
-            if (settings.ContinueMonitoring)
-            {
-                settings.ByLastPostId = true;
-                if (contents.Count > 0)
+                if (!savedResult)
                 {
-                    settings.UntilPostId = contents.First().Id;
+                    settings.Disabled = true;
+                    _logger.Error($"Can't save posts for {settings.ForGroup}");
+                    return settings;
+                }
+
+                if (settings.ContinueMonitoring)
+                {
+                    settings.ByLastPostId = true;
+                    if (contents.Count > 0)
+                    {
+                        settings.UntilPostId = contents.First().Id;
+                    }
+                    else
+                    {
+                        settings.FromDate = DateTime.UtcNow;
+                    }
                 }
                 else
                 {
-                    settings.FromDate = DateTime.UtcNow;
+                    settings.Disabled = true;
                 }
-            }
-            else
-            {
-                settings.Disabled = true;
-            }
 
-            await UpdateSettings(settings);
+                await UpdateSettings(settings);
+            }
 
             return settings;
         }
 
         private async Task UpdateSettings(Settings oldSettings)
         {
-
             var result = await _dbClient.SaveParserSettings(new ParserSettingsModel
             {
                 Id = oldSettings.Id ?? "",
-                TagsForPost = { oldSettings.TagsForPosts },
+                Tags = { oldSettings.Tags },
                 Timeout = oldSettings.Timeout,
                 Hold = oldSettings.Hold,
                 Source = "reddit",
                 LastPostId = oldSettings.UntilPostId,
                 StartFromPastPost = oldSettings.ByLastPostId,
+                Group = oldSettings.ForGroup,
+                Disabled = oldSettings.Disabled,
+                FromDate = Timestamp.FromDateTime(oldSettings.FromDate ?? DateTime.UtcNow),
+                UntilDate = Timestamp.FromDateTime(oldSettings.UntilDate ?? new DateTime()),
+                ContinueMonitoring = oldSettings.ContinueMonitoring,
+                
             });
 
             if (!result)
@@ -163,7 +172,7 @@ namespace RedditService.Workers
                 UntilPostId = null,
                 ContinueMonitoring = true,
                 FromPostId = null,
-                TagsForPosts = new List<string>(),
+                Tags = new List<string>(),
                 Disabled = false,
             };
         }

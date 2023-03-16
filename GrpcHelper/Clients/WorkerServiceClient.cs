@@ -8,9 +8,9 @@ namespace GrpcHelper.Clients
     {
         private readonly WorkerService.WorkerService.WorkerServiceClient _client;
 
-        public WorkerServiceClient(WorkerService.WorkerService.WorkerServiceClient client)
+        public WorkerServiceClient(IEnumerable<WorkerService.WorkerService.WorkerServiceClient> clients)
         {
-            _client = client;
+            _client = clients?.FirstOrDefault();
         }
         public async Task<WorkerModel> GetWorkers()
         {

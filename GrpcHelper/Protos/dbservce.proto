@@ -110,10 +110,11 @@ message ParserSettingsModel {
     int32 Timeout = 9;
     int32 JobInterval = 10;
     int32 Hold = 11;
-    repeated string TagsForPost = 12;
+    repeated string Tags = 12;
     google.protobuf.Timestamp FromDate = 13;
     google.protobuf.Timestamp UntilDate = 14;
-
+    bool Disabled = 15;
+    bool ContinueMonitoring = 16;
 }
 
 message PosterSettingsModel {

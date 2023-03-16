@@ -10,7 +10,7 @@ namespace Worker.ServiceExtension
         {
             services.AddTransient<IWorker, TWorker>();
             services.AddTransient<TWorker>();
-            services.TryAddSingleton<IWorkService, WorkService>();
+            services.TryAddTransient<IWorkService, WorkService>();
         }
     }
 }
