@@ -4,7 +4,7 @@ namespace GrpcHelper.Interfaces
 {
     public interface IDatabaseServiceClient
     {
-        public Task<bool> WriteLogToDb(DbLogModel? message);
+        public Task<bool> WriteLogToDb(DbLogModel message);
         public Task<bool> AddPost(Post post);
         public Task<bool> AddPosts(PostModel post);
         public Task<List<Post>> GetPosts(PostRequest request);

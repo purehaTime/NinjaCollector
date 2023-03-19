@@ -9,10 +9,12 @@ namespace MainService.Controllers
     public class PingController : ControllerBase
     {
         private readonly ILogger _logger;
+        private readonly IWorkerClientAggregator _clients;
 
-        public PingController(ILogger logger, IWorkerServiceClient client)
+        public PingController(ILogger logger, IWorkerClientAggregator clients)
         {
             _logger = logger;
+            _clients = clients;
         }
         
         [HttpGet]
@@ -25,7 +27,8 @@ namespace MainService.Controllers
         [HttpGet]
         public ActionResult Workers()
         {
-            return Ok("pong !");
+            var redditWorkers = _clients.Reddit.GetWorkers();
+            return Ok(redditWorkers);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GrpcHelper.Clients
             _client = client;
         }
 
-        public async Task<bool> WriteLogToDb(DbLogModel? message)
+        public async Task<bool> WriteLogToDb(DbLogModel message)
         {
             var result = await _client.WriteLogAsync(message);
             return result.Success;

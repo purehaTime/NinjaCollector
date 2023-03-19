@@ -46,7 +46,7 @@ namespace RedditService.Model
         [JsonProperty("caption")]
         public string Caption { get; set; }
 
-        [JsonProperty("url")]
+        [JsonProperty("outbound_url")]
         public string Link { get; set; }
 
         [JsonProperty("media_id")]

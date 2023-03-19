@@ -5,6 +5,5 @@ namespace GrpcHelper.Interfaces
     public interface IWorkerServiceClient
     {
         public Task<WorkerModel> GetWorkers();
-
     }
 }

@@ -1,8 +1,6 @@
 using AutoFixture;
 using Grpc.Core;
-using GrpcHelper.LogService;
 using MongoDB.Bson;
-using NUnit.Framework.Internal.Commands;
 
 namespace UnitTests
 {

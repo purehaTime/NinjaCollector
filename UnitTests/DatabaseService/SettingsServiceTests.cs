@@ -119,7 +119,7 @@ namespace UnitTests.DatabaseService
             _settingsService = new SettingsService(_parserRepositoryMock.Object, _posterRepositoryMock.Object,
                 _loggerMock.Object);
 
-            var result = _settingsService.GetParserSettings(source)
+            var result = _settingsService.GetParserSettings(source, null)
                 .GetAwaiter()
                 .GetResult();
 

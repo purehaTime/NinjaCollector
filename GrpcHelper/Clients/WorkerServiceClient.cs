@@ -8,14 +8,16 @@ namespace GrpcHelper.Clients
     {
         private readonly WorkerService.WorkerService.WorkerServiceClient _client;
 
-        public WorkerServiceClient(IEnumerable<WorkerService.WorkerService.WorkerServiceClient> clients)
+
+        public WorkerServiceClient(WorkerService.WorkerService.WorkerServiceClient client)
         {
-            _client = clients?.FirstOrDefault();
+            _client = client;
         }
+
         public async Task<WorkerModel> GetWorkers()
         {
-            var result = await _client.GetWorkersAsync(new Empty());
-            return result;
+            var response = await _client.GetWorkersAsync(new Empty());
+            return response;
         }
     }
 }

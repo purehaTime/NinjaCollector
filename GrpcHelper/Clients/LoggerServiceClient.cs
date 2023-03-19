@@ -17,7 +17,7 @@ namespace GrpcHelper.Clients
             _client = client;
         }
 
-        public async Task<bool> WriteLog(string message, string? eventId, string? application)
+        public async Task<bool> WriteLog(string message, string eventId, string application)
         {
             try
             {
