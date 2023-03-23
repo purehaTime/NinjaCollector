@@ -25,7 +25,7 @@ namespace UnitTests.RedditServiceTests
         }
 
         [Test]
-        public void GetLastPost_ShouldReturn_Post()
+        public void GetLastPost_ShouldReturn_Content()
         {
             var subName = Fixture.Create<string>();
             var post = Fixture.Create<Post>();
@@ -39,7 +39,7 @@ namespace UnitTests.RedditServiceTests
                 .GetResult();
 
             result.Should().NotBeNull();
-            result.Should().Be(post);
+            result.Should().Be(content);
         }
 
         [Test]
