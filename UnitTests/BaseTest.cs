@@ -1,6 +1,9 @@
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using Grpc.Core;
 using MongoDB.Bson;
+using Reddit.Controllers;
+
 
 namespace UnitTests
 {
@@ -18,6 +21,9 @@ namespace UnitTests
         {
             Fixture.Register<byte[], MemoryStream>(data => new MemoryStream(data));
             Fixture.Register<ObjectId>(ObjectId.GenerateNewId);
+            Fixture.Register<Dispatch>(() => null);
+
+            Fixture.Customize(new AutoMoqCustomization());
         }
 
         protected AsyncUnaryCall<T> GetAsyncUnaryCallSuccess<T>(T response)

@@ -6,5 +6,6 @@
         public string Password { get; set; }
         public string ClientId { get; set; }
         public string AppSecret { get; set; }
+        public int AntiSpamTimeout { get; set; }
     }
 }

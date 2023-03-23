@@ -7,6 +7,8 @@ namespace RedditService.Services
     {
         private readonly IConfiguration _appConfig;
 
+        private RedditConfig _cachedConfig;
+
         public RedditConfigService(IConfiguration appConfig)
         {
             _appConfig = appConfig;
@@ -14,7 +16,7 @@ namespace RedditService.Services
 
         public RedditConfig GetRedditConfig()
         {
-            var config = new RedditConfig
+            return _cachedConfig ??= new RedditConfig
             {
                 AppSecret = Environment.GetEnvironmentVariable("Reddit_AppSecret") ??
                             _appConfig.GetSection("Reddit:AppSecret").Value,
@@ -23,10 +25,17 @@ namespace RedditService.Services
                 Password = Environment.GetEnvironmentVariable("Reddit_Password") ??
                            _appConfig.GetSection("Reddit:Password").Value,
                 UserName = Environment.GetEnvironmentVariable("Reddit_UserName") ??
-                           _appConfig.GetSection("Reddit:UserName").Value
+                           _appConfig.GetSection("Reddit:UserName").Value,
+                AntiSpamTimeout = GetTimeout()
             };
+        }
 
-            return config;
+        private int GetTimeout()
+        {
+            return int.TryParse(Environment.GetEnvironmentVariable("Reddit_Timeout") ??
+                         _appConfig.GetSection("Reddit:Timeout").Value, out var timeout) 
+                ? timeout 
+                : 0;
         }
     }
 }

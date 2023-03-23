@@ -6,8 +6,8 @@ namespace RedditService.Interfaces
     {
         Task<Subreddit> GetSubreddit(string subreddit);
         Task<Post> GetLastPost(Subreddit subreddit);
+        Task<List<Post>> GetNewPosts(Subreddit subreddit, string afterFullName);
 
-        Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> skipFilter,
-            Func<Post, bool> takeFilter);
+        Task Hold();
     }
 }

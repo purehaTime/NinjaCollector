@@ -25,7 +25,7 @@ namespace MainService.Controllers
         }
 
         [HttpGet]
-        public ActionResult Workers()
+        public ActionResult Workers(string workerId)
         {
             var redditWorkers = _clients.Reddit.GetWorkers();
             return Ok(redditWorkers);

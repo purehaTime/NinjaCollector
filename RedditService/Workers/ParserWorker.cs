@@ -37,13 +37,9 @@ namespace RedditService.Workers
                 Source = "reddit",
             });
 
-            var result = new List<Settings>
-            {
-                GetDefaultSettings()
-            };
             if (settings.Count > 0)
             {
-                result = settings.Where(w => !w.Disabled).Select(s => new Settings
+                return settings.Where(w => !w.Disabled).Select(s => new Settings
                 {
                     Counts = s.PostsCount,
                     Timeout = s.Timeout,
@@ -61,7 +57,7 @@ namespace RedditService.Workers
                 }).ToList();
             }
 
-            return result;
+            return new List<Settings>{ GetDefaultSettings() };
         }
 
         public Task<Settings> LoadSettings(string settingsId)

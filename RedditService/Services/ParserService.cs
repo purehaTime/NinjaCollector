@@ -64,7 +64,7 @@ namespace RedditService.Services
             {
                 var preview = post.Listing.Preview;
                 var source = preview.SelectToken("images.[*].source");
-                var resultParse = source.ToObject<PreviewImage>();
+                var resultParse = source?.ToObject<PreviewImage>();
 
                 if (resultParse != null)
                 {

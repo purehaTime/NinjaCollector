@@ -27,54 +27,23 @@ namespace RedditService.API
         public async Task<Post> GetLastPost(Subreddit subreddit)
         {
             var post = await Task.Run(() => subreddit.Posts.New.First());
-
             return post;
         }
 
-        public async Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> skipFilter ,Func<Post, bool> takeFilter)
+        public async Task<List<Post>> GetNewPosts(Subreddit subreddit, string afterFullName)
         {
-            var afterFullname = "";
-            var posts = new List<Post>();
+            var newPosts = await Task.Run(() => subreddit.Posts.GetNew(afterFullName));
+            return newPosts;
+        }
 
-            while (true)
-            {
-                var filteredPost = new List<Post>();
-                var newPosts = await Task.Run(() => subreddit.Posts.GetNew(afterFullname));
-
-                if (newPosts.Count == 0)
-                {
-                    break;
-                }
-
-                if (skipFilter != null)
-                {
-                    filteredPost = newPosts.SkipWhile(skipFilter).ToList();
-                }
-
-                if (filteredPost.Count == 0 && skipFilter != null)
-                {
-                    afterFullname = newPosts.LastOrDefault()?.Fullname ?? "";
-                    await Task.Delay(1000); // to prevent a spam reddit API
-                    continue;
-                }
-
-                if (takeFilter != null)
-                {
-                    filteredPost = filteredPost.TakeWhile(takeFilter).ToList();
-                }
-
-                if (filteredPost.Count == 0 || filteredPost.Last()?.Fullname == afterFullname)
-                {
-                    break;
-                }
-
-                posts.AddRange(filteredPost);
-                afterFullname = posts.LastOrDefault()?.Fullname ?? "";
-
-                await Task.Delay(1000); // to prevent a spam reddit API
-            }
-
-            return posts;
+        /// <summary>
+        /// to prevent a spam reddit API.
+        /// </summary>
+        /// <returns></returns>
+        public async Task Hold()
+        {
+            var timeout = _config.GetRedditConfig();
+            await Task.Delay(timeout.AntiSpamTimeout);
         }
 
         private async Task<RedditClient> GetRedditClient()
