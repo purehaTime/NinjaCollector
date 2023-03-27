@@ -25,10 +25,14 @@ services:
       context: .
       dockerfile: LoggerService/Dockerfile
 
-
   redditservice:
     image: ${DOCKER_REGISTRY-}redditservice
     build:
       context: .
       dockerfile: RedditService/Dockerfile
 
+  authservice:
+    image: ${DOCKER_REGISTRY-}authservice
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile

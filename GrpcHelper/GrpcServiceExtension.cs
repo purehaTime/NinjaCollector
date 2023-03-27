@@ -13,11 +13,10 @@ namespace GrpcHelper
 
         public static void AddGrpcHelper(this IServiceCollection services, IConfiguration config)
         {
-            
-            
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
-            services.AddScoped<IWorkerServiceClient, WorkerServiceClient>();
+            //services.AddScoped<IWorkerServiceClient, WorkerServiceClient>();
+            services.AddScoped<IWorkerClientAggregator, WorkerClientAggregator>();
 
             services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(config)));
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));

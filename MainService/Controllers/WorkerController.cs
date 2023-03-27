@@ -6,22 +6,24 @@ namespace MainService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PingController : ControllerBase
+    public class WorkersController : ControllerBase
     {
         private readonly ILogger _logger;
         private readonly IWorkerClientAggregator _clients;
 
-        public PingController(ILogger logger, IWorkerClientAggregator clients)
+        public WorkersController(ILogger logger, IWorkerClientAggregator clients)
         {
             _logger = logger;
             _clients = clients;
         }
-        
+
         [HttpGet]
-        public ActionResult Ping()
+        public async Task<ActionResult> Workers(string workerId)
         {
-            _logger.Warning("test message");
-            return Ok("pong !");
+            var redditWorkers = await _clients.Reddit.GetWorkers();
+            return Ok(redditWorkers);
         }
+
+        
     }
 }

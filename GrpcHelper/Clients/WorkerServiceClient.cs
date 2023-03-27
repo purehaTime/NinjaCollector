@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.Interfaces;
 using GrpcHelper.WorkerService;
+using System.Threading.Tasks;
 
 namespace GrpcHelper.Clients
 {
@@ -18,6 +19,34 @@ namespace GrpcHelper.Clients
         {
             var response = await _client.GetWorkersAsync(new Empty());
             return response;
+        }
+
+        public async Task<bool> StopWorker(int taskId)
+        {
+            var response = await _client.StopWorkerAsync(new WorkerTaskId
+            {
+                TaskId = taskId,
+            });
+            return response.Success;
+        }
+
+        public async Task<bool> RestartWorker(int taskId)
+        {
+            var response = await _client.RestartWorkerAsync(new WorkerRestart
+            {
+                TaskId = taskId,
+                SettingsId = string.Empty
+            });
+            return response.Success;
+        }
+
+        public async Task<bool> StartWorker(string settingId)
+        {
+            var response = await _client.StartWorkerAsync(new WorkerSettingsId
+            {
+                SettingsId = settingId
+            });
+            return response.Success;
         }
     }
 }

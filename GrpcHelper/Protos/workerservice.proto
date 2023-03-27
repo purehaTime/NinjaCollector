@@ -9,6 +9,8 @@ service WorkerService {
     rpc GetWorkers(google.protobuf.Empty) returns (WorkerModel);
     rpc RestartWorkers(google.protobuf.Empty) returns (Status);
     rpc RestartWorker(WorkerRestart) returns (Status);
+    rpc StopWorker(WorkerTaskId) returns (Status);
+    rpc StartWorker(WorkerSettingsId) returns (Status);
 }
 
 message Work {
@@ -33,4 +35,12 @@ message WorkerModel {
 
 message Status {
   bool success = 1;
+}
+
+message WorkerTaskId {
+    int32 TaskId = 1;
+}
+
+message WorkerSettingsId {
+    string SettingsId = 1;
 }
