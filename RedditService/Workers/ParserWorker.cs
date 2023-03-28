@@ -32,37 +32,14 @@ namespace RedditService.Workers
         /// <returns></returns>
         public async Task<List<Settings>> Init()
         {
-            var settings = await _dbClient.GetParserSettings(new ParserSettingsRequest
-            {
-                Source = "reddit",
-            });
-
-            if (settings.Count > 0)
-            {
-                return settings.Where(w => !w.Disabled).Select(s => new Settings
-                {
-                    Counts = s.PostsCount,
-                    Timeout = s.Timeout,
-                    Hold = s.Hold,
-                    ApiName = s.Source,
-                    RetryAfterErrorCount = 3,
-                    Id = s.Id,
-                    ByLastPostId = s.StartFromPastPost,
-                    Tags = s.Tags.ToList(),
-                    ForGroup = s.Group,
-                    FromDate = s.FromDate?.ToDateTime(),
-                    UntilDate = s.UntilDate?.ToDateTime(),
-                    FromPostId = s.LastPostId,
-                    Disabled = s.Disabled,
-                }).ToList();
-            }
-
-            return new List<Settings>{ GetDefaultSettings() };
+            var settings = await GetSettings(null);
+            return settings.Count > 0 ? settings : new List<Settings>{ GetDefaultSettings() };
         }
 
-        public Task<Settings> LoadSettings(string settingsId)
+        public async Task<Settings> LoadSettings(string settingsId)
         {
-            throw new NotImplementedException();
+            var settings = await GetSettings(settingsId);
+            return settings.FirstOrDefault(f => f.Id == settingsId) ?? GetDefaultSettings();
         }
 
         public async Task<Settings> Run(Settings settings)
@@ -101,28 +78,20 @@ namespace RedditService.Workers
                 {
                     settings.Disabled = true;
                     _logger.Error($"Can't save posts for {settings.ForGroup}");
-                    return settings;
                 }
 
                 if (settings.ContinueMonitoring)
                 {
                     settings.ByLastPostId = true;
-                    if (contents.Count > 0)
-                    {
-                        settings.UntilPostId = contents.First().Id;
-                    }
-                    else
-                    {
-                        settings.FromDate = DateTime.UtcNow;
-                    }
-                }
-                else
-                {
-                    settings.Disabled = true;
-                }
+                    settings.UntilPostId = contents.First().Id;
 
-                await UpdateSettings(settings);
+                    await UpdateSettings(settings);
+                    return settings;
+                }
             }
+
+            settings.Disabled = true;
+            await UpdateSettings(settings);
 
             return settings;
         }
@@ -156,10 +125,10 @@ namespace RedditService.Workers
         {
             return new Settings
             {
-                ApiName = "reddit",
+                ApiName = Name,
                 ForGroup = "games",
                 Counts = 0,
-                Hold = 200000,
+                Hold = 20000,
                 Timeout = 30000,
                 RetryAfterErrorCount = 3,
                 ByLastPostId = false,
@@ -185,6 +154,32 @@ namespace RedditService.Workers
                 Tags = { tags },
                 File = ByteString.CopyFrom(image.Data),
             };
+        }
+
+        private async Task<List<Settings>> GetSettings(string settingsId)
+        {
+            var settings = await _dbClient.GetParserSettings(new ParserSettingsRequest
+            {
+                Source = Name,
+                SettingsId = settingsId ?? string.Empty,
+            });
+
+            return settings.Where(w => !w.Disabled).Select(s => new Settings
+            {
+                Counts = s.PostsCount,
+                Timeout = s.Timeout,
+                Hold = s.Hold,
+                ApiName = s.Source,
+                RetryAfterErrorCount = 3,
+                Id = s.Id,
+                ByLastPostId = s.StartFromPastPost,
+                Tags = s.Tags.ToList(),
+                ForGroup = s.Group,
+                FromDate = s.FromDate?.ToDateTime(),
+                UntilDate = s.UntilDate?.ToDateTime(),
+                FromPostId = s.LastPostId,
+                Disabled = s.Disabled,
+            }).ToList();
         }
     }
 }

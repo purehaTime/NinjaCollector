@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\authservice.proto" />
     <None Remove="Protos\workerservice.proto" />
   </ItemGroup>
 
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\dbservce.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\authservice.proto" GrpcServices="Both" />
     <Protobuf Include="Protos\workerservice.proto" GrpcServices="Both" />
     <Protobuf Include="Protos\logservice.proto" GrpcServices="Both" />
   </ItemGroup>

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcHelper.AuthService";
+
+package Auth;
+
+service Auth {
+    rpc Authorize(UserModel) returns (TokenModel);
+    rpc Authenticate(UserModel) returns (TokenModel);
+}
+
+message UserModel {
+    string userLogin = 1;
+    string userPassword = 2;
+}
+
+message TokenModel {
+    string Jwt = 1;
+}

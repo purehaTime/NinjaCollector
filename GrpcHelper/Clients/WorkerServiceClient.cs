@@ -1,7 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.Interfaces;
 using GrpcHelper.WorkerService;
-using System.Threading.Tasks;
 
 namespace GrpcHelper.Clients
 {
