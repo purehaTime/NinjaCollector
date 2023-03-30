@@ -52,6 +52,8 @@ namespace AuthService.Services
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = true,
                 ValidateAudience = true,
+                ValidAudience = _audience,
+                ValidIssuer = _issuer,
                 ClockSkew = TimeSpan.Zero
             });
             return result.IsValid;

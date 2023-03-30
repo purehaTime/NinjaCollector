@@ -8,16 +8,15 @@ namespace AuthService.Services
     {
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IDatabaseServiceClient _dbClient;
-        private readonly IConfiguration _config;
-        private readonly ILogger _logger;
+        private readonly Serilog.ILogger _logger;
         private readonly IPasswordHasher<string> _passwordHasher;
 
-        public AuthenticateService(IJwtTokenService jwtTokenService, IDatabaseServiceClient dbClient, IConfiguration config, IPasswordHasher<string> passwordHasher)
+        public AuthenticateService(IJwtTokenService jwtTokenService, IDatabaseServiceClient dbClient, IPasswordHasher<string> passwordHasher, Serilog.ILogger logger)
         {
             _jwtTokenService = jwtTokenService;
             _dbClient = dbClient;
-            _config = config;
             _passwordHasher = passwordHasher;
+            _logger = logger;
         }
 
         public async Task<bool> ValidateSession(string token)
@@ -29,15 +28,19 @@ namespace AuthService.Services
         public async Task<string> ValidateUser(string userName, string password)
         {
             var user = await _dbClient.GetUser(userName);
-            var passwordValidation = _passwordHasher.VerifyHashedPassword(userName, user.Password, password);
-
-            string token = null;
-            if (passwordValidation == PasswordVerificationResult.Success)
+            if (user.UserName != userName)
             {
-                token = _jwtTokenService.GetJwtToken(userName);
+                return string.Empty;
             }
 
-            return token;
+            var passwordValidation = _passwordHasher.VerifyHashedPassword(userName, user.Password, password);
+            if (passwordValidation == PasswordVerificationResult.Success)
+            {
+                _logger.Information($"{userName} successful login");
+                return _jwtTokenService.GetJwtToken(userName);
+            }
+
+            return string.Empty;
         }
     }
 }
