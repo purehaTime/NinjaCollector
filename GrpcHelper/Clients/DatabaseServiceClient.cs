@@ -72,5 +72,18 @@ namespace GrpcHelper.Clients
             var result = await _client.SavePosterSettingsAsync(settings);
             return result.Success;
         }
+
+        public async Task<bool> CreateUser(string userName, string password)
+        {
+            var result = await _client.AddUserAsync(new AddUserModel { UserName = userName, Password = password });
+
+            return result.Success;
+        }
+
+        public async Task<UserModel> GetUser(string userName)
+        {
+            var user = await _client.GetUserAsync(new UserRequest { UserName = userName });
+            return user;
+        }
     }
 }

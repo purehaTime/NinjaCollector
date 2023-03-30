@@ -2,6 +2,8 @@
 {
     public interface IJwtTokenService
     {
-        public string GetJwtToken(string userName, string password);
+        public string GetJwtToken(string userName);
+
+        public Task<bool> Verify(string token);
     }
 }

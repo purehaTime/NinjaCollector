@@ -1,6 +1,7 @@
 ﻿using DbService.Interfaces;
 using DbService.Models;
 using DbService.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ILogger = Serilog.ILogger;
 
@@ -25,8 +26,16 @@ namespace DbService.Services
             return user;
         }
 
-        public async Task<bool> CreateUser(User user)
+        public async Task<bool> CreateUser(string userName, string password)
         {
+            var user = new User
+            {
+                Id = ObjectId.GenerateNewId(),
+                Created = DateTime.UtcNow,
+                UserName = userName,
+                HashPassword = password
+            };
+            
             var result = await _userRepository.Insert(user, null!, CancellationToken.None);
             if (!result)
             {

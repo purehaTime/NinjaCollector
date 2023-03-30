@@ -18,8 +18,8 @@ namespace RedditService
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
-                builder.Services.AddControllers();
-                builder.Services.AddGrpc();
+                //builder.Services.AddControllers();
+                //builder.Services.AddGrpc();
                 builder.Services.AddGrpcHelper(builder.Configuration);
 
                 builder.Services.AddHttpClient(); //direct

@@ -15,15 +15,38 @@ namespace DbService.Services
         private IPostService _post;
         private IImageService _image;
         private IHistoryService _history;
+        private IUserService _userService;
 
-        public DbService(ISettingsService settings, IPostService post, IImageService image, IHistoryService history)
+        public DbService(ISettingsService settings, IPostService post, IImageService image, IHistoryService history, IUserService userService)
         {
             _settings = settings;
             _post = post;
             _image = image;
             _history = history;
+            _userService = userService;
         }
-        
+
+        public override async Task<Status> AddUser(AddUserModel request, ServerCallContext context)
+        {
+            var result = await _userService.CreateUser(request.UserName, request.Password);
+            return new Status { Success = result };
+        }
+
+        public override async Task<UserModel> GetUser(UserRequest request, ServerCallContext context)
+        {
+            var user = await _userService.GetUser(request.UserName);
+            if (user != null)
+            {
+                return new UserModel
+                {
+                    Id = user.Id.ToString(),
+                    UserName = user.UserName,
+                    Created = user.Created.ToTimestamp(),
+                    Password = user.HashPassword
+                };
+            }
+            return new UserModel();
+        }
 
         public override async Task<Status> AddPost(GrpcHelper.DbService.Post post, ServerCallContext context)
         {

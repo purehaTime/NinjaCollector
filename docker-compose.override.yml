@@ -7,6 +7,9 @@ services:
   
   dbservice:
     container_name: dbservice
+    ports:
+      - "14090:80"
+      - "14091:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -54,6 +57,10 @@ services:
 
   authservice:
     container_name: authservice
+    env_file: auth.env
+    ports:
+      - "14030:80"
+      - "14031:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

@@ -5,6 +5,6 @@ namespace DbService.Interfaces
     public interface IUserService
     {
         public Task<User> GetUser(string userName);
-        public Task<bool> CreateUser(User user);
+        public Task<bool> CreateUser(string userName, string password);
     }
 }

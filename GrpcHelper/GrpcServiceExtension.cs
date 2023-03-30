@@ -1,4 +1,5 @@
-﻿using GrpcHelper.Clients;
+﻿using GrpcHelper.AuthService;
+using GrpcHelper.Clients;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using GrpcHelper.LogService;
@@ -13,13 +14,15 @@ namespace GrpcHelper
 
         public static void AddGrpcHelper(this IServiceCollection services, IConfiguration config)
         {
+            services.AddGrpc();
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
-            //services.AddScoped<IWorkerServiceClient, WorkerServiceClient>();
             services.AddScoped<IWorkerClientAggregator, WorkerClientAggregator>();
+            services.AddScoped<IAuthServiceClient, AuthServiceClient>();
 
             services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(config)));
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));
+            services.AddGrpcClient<Auth.AuthClient>(x => x.Address = new Uri(GetUrl<Auth.AuthClient>(config)));
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
         }
@@ -55,6 +58,7 @@ namespace GrpcHelper
             {
                 { nameof(Logger.LoggerClient), "ServiceAddress:LoggerService" },
                 { nameof(Database.DatabaseClient), "ServiceAddress:DbService" },
+                { nameof(Auth.AuthClient), "ServiceAddress:AuthService" },
                 { "RedditService", "ServiceAddress:RedditService" },
             };
 

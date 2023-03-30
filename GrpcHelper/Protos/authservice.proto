@@ -5,15 +5,26 @@ option csharp_namespace = "GrpcHelper.AuthService";
 package Auth;
 
 service Auth {
-    rpc Authorize(UserModel) returns (TokenModel);
-    rpc Authenticate(UserModel) returns (TokenModel);
+    rpc Authorize(AuthorizeModel) returns (TokenModel);
+    rpc Authenticate(AuthenticateModel) returns (TokenModel);
+    rpc Validate(TokenModel) returns (Status);
 }
 
-message UserModel {
-    string userLogin = 1;
-    string userPassword = 2;
+message AuthorizeModel {
+    string UserLogin = 1;
+    string UserPassword = 2;
+    string Invite = 3;
+}
+
+message AuthenticateModel {
+    string UserLogin = 1;
+    string UserPassword = 2;
 }
 
 message TokenModel {
     string Jwt = 1;
+}
+
+message Status {
+    bool UserAuth = 1;
 }

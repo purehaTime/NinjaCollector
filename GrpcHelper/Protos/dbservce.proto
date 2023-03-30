@@ -18,6 +18,8 @@ service Database {
     rpc SaveParserSettings(ParserSettingsModel) returns (Status);
     rpc SavePosterSettings(PosterSettingsModel) returns (Status);
     rpc SaveHistory(HistoryModel) returns (Status);
+    rpc AddUser(AddUserModel) returns (Status);
+    rpc GetUser(UserRequest) returns (UserModel);
 }
 
 message DbLogModel {
@@ -139,4 +141,20 @@ message HistoryModel {
     string Source = 2;
     string ForGroup = 3;
     google.protobuf.Timestamp PostDate = 4;
+}
+
+message AddUserModel {
+    string UserName = 1;
+    string Password = 2;
+}
+
+message UserModel {
+    string id = 1;
+    string UserName = 2;
+    string Password = 3;
+    google.protobuf.Timestamp Created = 4;
+}
+
+message UserRequest {
+    string UserName = 1;
 }
