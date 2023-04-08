@@ -3,5 +3,113 @@
 }
 
 #register-radio:checked ~ .invite {
-    display: block;
+    display: flex;
+}
+
+body {
+    background: radial-gradient(black 15%, transparent 16%) 0 0,
+                radial-gradient(black 15%, transparent 16%) 8px 8px, 
+                radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 0 1px, 
+                radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 8px 9px;
+    background-color: #282828;
+    background-size: 16px 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: #89cd32;
+    font-size: 14px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 3px 3px 3px 3px #141414;
+    background-color: #333333;
+    margin: 10px;
+    padding: 10px 50px 10px 50px;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 7px 5px;
+}
+
+.submit {
+    display: flex;
+    flex-direction: row-reverse;
+    appearance: none;
+    backface-visibility: hidden;
+    background-color: #89cd32;
+    border-radius: 8px;
+    border-style: none;
+    box-shadow: #27ae60 0 2px 5px;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: normal;
+    line-height: 1.5;
+    outline: none;
+    overflow: hidden;
+    padding: 13px 20px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transform: translate3d(0, 0, 0);
+    transition: all .3s;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.submit:hover {
+    background-color: #89cd32;
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: .35s;
+}
+
+.submit:active {
+    transform: translateY(2px);
+    transition-duration: .35s;
+}
+
+.submit:hover {
+    box-shadow: #27ae60 0 6px 12px;
+}
+
+.input {
+    background-color: #505050;
+    color: #89cd32;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    vertical-align: baseline;
+    font-weight: 400;
+    line-height: 1.29;
+    letter-spacing: .16px;
+    border-radius: 0;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+    height: 30px;
+    border: none;
+    border-bottom: 1px solid #8d8d8d;
+    padding: 0 16px;
+    color: #161616;
+    transition: background-color 70ms cubic-bezier(.2, 0, .38, .9), outline 70ms cubic-bezier(.2, 0, .38, .9);
+    border-radius: 1px;
+}
+
+input:focus {
+    outline: 2px solid #27ae60;
+    outline-offset: -2px;
+}
+
+.center {
+    text-align: center;
 }
