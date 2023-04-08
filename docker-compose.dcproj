@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>c8dace50-79fd-42ea-838d-72774bba2391</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/ping</DockerServiceUrl>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/</DockerServiceUrl>
     <DockerServiceName>mainservice</DockerServiceName>
     <DockerComposeProjectName>ninjacompose</DockerComposeProjectName>
   </PropertyGroup>

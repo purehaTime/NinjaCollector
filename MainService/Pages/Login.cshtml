@@ -1,0 +1,42 @@
+﻿@page "/Auth"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model MainService.Pages.LoginModel
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Auth</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="styles/auth.css" rel="stylesheet" />
+    </head>
+
+    <body>
+    <h3>Auth</h3>
+
+    <div>
+        <form method="post" asp-antiforgery="true">
+            <label for="register-radio">Register</label>
+            <input type="radio" value="register" id="register-radio" asp-for="RadioButton">
+            <label for="login-radio">Login</label>
+            <input type="radio" value="login" id="login-radio" asp-for="RadioButton" checked />
+            <div>
+                <label for="login">Login</label>
+                <input type="text" id="login" asp-for="Auth.UserLogin"/>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" asp-for="Auth.Password"/>
+            </div>
+            <div class="invite">
+                <label for="invite">Invite</label>
+                <input type="text" id="invite" asp-for="Auth.Invite"/>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    </body>
+</html>

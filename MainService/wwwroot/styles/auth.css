@@ -1,0 +1,7 @@
+﻿.invite {
+    display: none
+}
+
+#register-radio:checked ~ .invite {
+    display: block;
+}

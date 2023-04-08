@@ -17,7 +17,7 @@ namespace AuthService.Services
                           _config.GetSection("invites").GetChildren().Select(s => s.Value);
             var key = invites.FirstOrDefault(f => f == invite);
 
-            return string.IsNullOrEmpty(key);
+            return !string.IsNullOrEmpty(key);
         }
     }
 }
