@@ -1,12 +1,4 @@
-﻿.invite {
-    display: none
-}
-
-#register-radio:checked ~ .invite {
-    display: flex;
-}
-
-body {
+﻿body {
     background: radial-gradient(black 15%, transparent 16%) 0 0,
                 radial-gradient(black 15%, transparent 16%) 8px 8px, 
                 radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 0 1px, 
@@ -17,14 +9,16 @@ body {
     justify-content: center;
     flex-direction: column;
     color: #89cd32;
-    font-size: 14px;
+    font-size: 14pt;
+    display: flex;
+    align-items: center;
 }
 
 .main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 3px 3px 3px 3px #141414;
+    box-shadow: 0 0 3px 3px #141414;
     background-color: #333333;
     margin: 10px;
     padding: 10px 50px 10px 50px;
@@ -35,6 +29,7 @@ body {
     justify-content: space-between;
     align-content: center;
     padding: 7px 5px;
+    align-items: center;
 }
 
 .submit {
@@ -45,9 +40,8 @@ body {
     background-color: #89cd32;
     border-radius: 8px;
     border-style: none;
-    box-shadow: #27ae60 0 2px 5px;
+    box-shadow: #89cd32 0 2px 5px;
     box-sizing: border-box;
-    color: #fff;
     cursor: pointer;
     display: inline-block;
     letter-spacing: normal;
@@ -80,7 +74,7 @@ body {
 }
 
 .submit:hover {
-    box-shadow: #27ae60 0 6px 12px;
+    box-shadow: #89cd32 0 6px 12px;
 }
 
 .input {
@@ -100,16 +94,32 @@ body {
     border: none;
     border-bottom: 1px solid #8d8d8d;
     padding: 0 16px;
-    color: #161616;
     transition: background-color 70ms cubic-bezier(.2, 0, .38, .9), outline 70ms cubic-bezier(.2, 0, .38, .9);
     border-radius: 1px;
 }
 
 input:focus {
-    outline: 2px solid #27ae60;
+    outline: 2px solid #89cd32;
     outline-offset: -2px;
 }
 
 .center {
     text-align: center;
+}
+
+.reverse {
+    flex-direction: row-reverse;
+}
+
+.label {
+    font-size: 14pt;
+    padding: 0 10px 0 0;
+}
+
+.invite {
+    display: none
+}
+
+#register-radio:checked ~ .invite {
+    display: flex;
 }

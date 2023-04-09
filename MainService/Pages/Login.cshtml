@@ -9,6 +9,7 @@
         <title>Auth</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="styles/normalize.css" rel="stylesheet" />
         <link href="styles/auth.css" rel="stylesheet" />
     </head>
 <!--font color #DAA513-->
@@ -22,18 +23,18 @@
                 <label for="login-radio">Login</label>
                 <input type="radio" value="login" id="login-radio" asp-for="RadioButton" checked />
                 <div class="line">
-                    <label for="login">Login</label>
+                    <label for="login" class="label">Login</label>
                     <input type="text" id="login" asp-for="Auth.UserLogin" class="input" />
                 </div>
                 <div class="line">
-                    <label for="password">Password</label>
+                    <label for="password" class="label">Password</label>
                     <input type="password" id="password" asp-for="Auth.Password" class="input" />
                 </div>
                 <div class="line invite">
-                    <label for="invite">Invite</label>
+                    <label for="invite" class="label">Invite</label>
                     <input type="text" id="invite" asp-for="Auth.Invite" class="input" />
                 </div>
-                <div class="line">
+                <div class="line reverse">
                     <button type="submit" class="submit">Submit</button>
                 </div>
             </form>

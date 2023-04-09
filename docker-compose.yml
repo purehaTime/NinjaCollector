@@ -4,7 +4,6 @@ services:
 
   storedb:
     image: mongo:6.0.3
-    restart: always
     container_name: 'StoreDb'
  
   dbservice:

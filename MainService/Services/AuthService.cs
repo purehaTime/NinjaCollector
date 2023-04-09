@@ -1,8 +1,6 @@
-﻿using System.Security.Claims;
-using GrpcHelper.AuthService;
+﻿using GrpcHelper.AuthService;
 using GrpcHelper.Interfaces;
 using MainService.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 
 namespace MainService.Services
 {
@@ -28,12 +26,6 @@ namespace MainService.Services
             if (!string.IsNullOrEmpty(result))
             {
                 _contextAccessor.HttpContext?.Response.Cookies.Append("session", result);
-                var claimsIdentity = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, userLogin),
-                    new Claim("Jti", Guid.NewGuid().ToString()),
-                });
-                //await _contextAccessor.HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
                 return true;
             }
 
