@@ -25,7 +25,10 @@ namespace MainService.Services
 
             if (!string.IsNullOrEmpty(result))
             {
-                _contextAccessor.HttpContext?.Response.Cookies.Append("session", result);
+                _contextAccessor.HttpContext?.Response.Cookies.Append("session", result, new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(5)
+                });
                 return true;
             }
 

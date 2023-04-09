@@ -1,4 +1,4 @@
-﻿<button class="button" @onclick="Action">@Content</button>
+﻿<button class="button" @onclick="Action">@ChildContent</button>
 
 @code {
 
@@ -6,5 +6,5 @@
     public EventCallback Action { get; set; }
 
     [Parameter]
-    public RenderFragment Content { get; set; }
+    public RenderFragment ChildContent { get; set; }
 }

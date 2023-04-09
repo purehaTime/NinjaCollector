@@ -27,11 +27,16 @@ namespace MainService
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 
-            builder.Services.AddAntiforgery(options => { 
-                options.HeaderName = "x-xsrf-token";
-                options.Cookie.Name = "x-xsrf-token";
+            builder.Services.AddAntiforgery(opt => {
+                opt.Cookie.Name = "x-xsrf-token";
+                opt.Cookie.Expiration = TimeSpan.FromMinutes(5);
             });
-            //builder.Services.AddAuthentication("Cookies").AddCookie();
+
+            builder.Services.AddAuthentication("Cookies").AddCookie(opt =>
+            {
+                opt.Cookie.Name = "session";
+                opt.Cookie.Expiration = TimeSpan.FromMinutes(5);
+            });
 
             var app = builder.Build();
 
@@ -45,7 +50,7 @@ namespace MainService
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict,
                 HttpOnly = HttpOnlyPolicy.Always,
-                Secure = CookieSecurePolicy.Always
+                Secure = CookieSecurePolicy.Always,
             });
 
             app.UseHttpsRedirection();
