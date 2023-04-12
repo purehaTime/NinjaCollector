@@ -35,6 +35,9 @@ services:
 
   loggerservice:
     container_name: loggerservice
+    ports:
+      - "80"
+      - "443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -46,6 +49,9 @@ services:
 
   redditservice:
     env_file: reddit_settings.env
+    ports:
+      - "80"
+      - "443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

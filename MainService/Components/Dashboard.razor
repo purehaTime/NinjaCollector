@@ -1,12 +1,18 @@
 ﻿@page "/"
+@using MainService.Models
+@using MainService.Interfaces
+@inject IWorkerService<RedditStatusModel> RedditStatus
 @inherits LayoutComponentBase
+
 <h2 class="center">Dashboard</h2>
 
 
 <AuthorizeView>
     <Authorized>
-        <p role="status">Current count: @currentCount</p>
-        <Button Action="IncrementCount">Click me</Button>
+        @if (_reditModel != null)
+        {
+            <StatusTable Status="@_reditModel"/>
+        }
     </Authorized>
     <NotAuthorized>
         You are not authorized!
@@ -14,13 +20,16 @@
 </AuthorizeView>
 
 @code {
+    private RedditStatusModel _reditModel;
 
-
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        currentCount++;
+        //_reditModel = await RedditStatus.GetStatus();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _reditModel = await RedditStatus.GetStatus();
     }
 
 }

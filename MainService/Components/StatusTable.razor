@@ -1,9 +1,32 @@
-﻿<h3>StatusTable</h3>
+﻿@using MainService.Models
+
+<div>@Status.Name</div>
+<table>
+    <tr>
+
+    </tr>
+    @foreach (var row in Status.Works)
+    {
+        <tr>
+            <td>@row.WorkerName</td>
+            <td>@row.Group</td>
+            <td>@row.SettingsId</td>
+            <td>@row.TaskId</td>
+            <td><Button Action="OnStop">Stop</Button></td>
+            <td><Button Action="OnDelete">Delete</Button></td>
+        </tr>
+    }
+</table>
+
+
 
 @code {
 
-    [Parameter]
-    public string Header { get; set; }
-    
 
+    [Parameter]
+    public StatusModel Status { get; set; }
+
+    public EventCallback OnDelete { get; set; }
+    public EventCallback OnStop { get; set; }
+    public EventCallback OnStart { get; set; }
 }
