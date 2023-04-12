@@ -1,5 +1,6 @@
-﻿<h3>Input</h3>
+﻿<input type="text" @bind-value="@InputValue" class="input"/>
 
 @code {
-
+    [Parameter]
+    public string InputValue { get; set; }
 }

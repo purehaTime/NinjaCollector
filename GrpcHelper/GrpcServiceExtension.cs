@@ -18,6 +18,7 @@ namespace GrpcHelper
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
             services.AddScoped<IWorkerClientAggregator, WorkerClientAggregator>();
+            services.AddScoped<IWorkerClientFactory, WorkerClientFactory>();
             services.AddScoped<IAuthServiceClient, AuthServiceClient>();
 
             services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(config)));

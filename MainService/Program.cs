@@ -2,6 +2,7 @@ using GrpcHelper;
 using Logger;
 using MainService.Interfaces;
 using MainService.Middleware;
+using MainService.Models;
 using MainService.Providers;
 using MainService.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,15 +27,10 @@ namespace MainService
 
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IWorkerService<RedditStatusModel>, RedditStatusService>();
 
             builder.Services.AddAntiforgery(opt => {
                 opt.Cookie.Name = "x-xsrf-token";
-                opt.Cookie.Expiration = TimeSpan.FromMinutes(5);
-            });
-
-            builder.Services.AddAuthentication("Cookies").AddCookie(opt =>
-            {
-                opt.Cookie.Name = "session";
                 opt.Cookie.Expiration = TimeSpan.FromMinutes(5);
             });
 
@@ -59,8 +55,6 @@ namespace MainService
             app.UseAuthMiddleware();
 
             app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
 
             app.MapRazorPages();
             app.MapBlazorHub();

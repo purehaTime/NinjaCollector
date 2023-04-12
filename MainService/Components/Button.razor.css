@@ -4,18 +4,17 @@
     appearance: none;
     backface-visibility: hidden;
     background-color: #89cd32;
-    border-radius: 8px;
+    border-radius: 2px;
     border-style: none;
-    box-shadow: #27ae60 0 2px 5px;
+    box-shadow: #89cd32 0 2px 4px;
     box-sizing: border-box;
-    color: #fff;
     cursor: pointer;
     display: inline-block;
     letter-spacing: normal;
     line-height: 1.5;
     outline: none;
     overflow: hidden;
-    padding: 13px 20px;
+    padding: 10px 25px;
     position: relative;
     text-align: center;
     text-decoration: none;
@@ -26,6 +25,7 @@
     touch-action: manipulation;
     vertical-align: top;
     white-space: nowrap;
+    color: #333333;
 }
 
 .button:hover {
@@ -41,5 +41,5 @@
     }
 
 .button:hover {
-        box-shadow: #27ae60 0 6px 12px;
-    }
+        box-shadow: #89cd32 0 3px 6px;
+}

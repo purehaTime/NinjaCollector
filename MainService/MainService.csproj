@@ -10,9 +10,11 @@
 
   <ItemGroup>
     <None Remove="Components\Button.razor.css" />
+    <None Remove="Components\Input.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\Input.razor.css" />
     <Content Include="Components\Button.razor.css" />
   </ItemGroup>
 
