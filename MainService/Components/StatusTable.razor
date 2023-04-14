@@ -3,7 +3,11 @@
 <div>@Status.Name</div>
 <table>
     <tr>
-
+        <td>Worker name</td>
+        <td>Group name</td>
+        <td>Settings Id</td>
+        <td>Task Id</td>
+        <td>stop action</td>
     </tr>
     @foreach (var row in Status.Works)
     {
@@ -12,11 +16,11 @@
             <td>@row.Group</td>
             <td>@row.SettingsId</td>
             <td>@row.TaskId</td>
-            <td><Button Action="OnStop">Stop</Button></td>
-            <td><Button Action="OnDelete">Delete</Button></td>
+            <td><Button Action="async () => await OnStop.InvokeAsync(row.TaskId)">Stop</Button></td>
         </tr>
     }
 </table>
+
 
 
 
@@ -26,7 +30,9 @@
     [Parameter]
     public StatusModel Status { get; set; }
 
-    public EventCallback OnDelete { get; set; }
-    public EventCallback OnStop { get; set; }
+    [Parameter]
+    public EventCallback<int> OnStop { get; set; }
+
+    [Parameter]
     public EventCallback OnStart { get; set; }
 }

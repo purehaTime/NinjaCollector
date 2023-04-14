@@ -9,6 +9,7 @@ using RedditService.Workers;
 using Serilog;
 using Worker.Interfaces;
 using Worker.Model;
+using Filter = Worker.Model.Filter;
 
 namespace UnitTests.RedditServiceTests
 {
@@ -79,7 +80,7 @@ namespace UnitTests.RedditServiceTests
         public void Run_ShouldReturn_UpdatedSettings_WithLastPostId()
         {
             var subName = Fixture.Create<string>();
-
+            var filter = Fixture.Create<Filter>();
             var settings = Fixture.Build<Settings>()
                 .With(w => w.ByLastPostId, true)
                 .With(w => w.ForGroup, subName)
@@ -87,15 +88,15 @@ namespace UnitTests.RedditServiceTests
                 .With(w => w.FromDate, DateTime.UtcNow)
                 .With(w => w.UntilDate, DateTime.UtcNow)
                 .With(w => w.Disabled, false)
+                .With(w => w.Filters, filter)
                 .Create();
-
 
             var contents = Fixture.Build<Content>()
                 .With(w => w.Created, DateTime.UtcNow)
                 .CreateMany(5)
                 .ToList();
 
-            _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>()))
+            _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>(), filter))
                 .ReturnsAsync(contents);
 
             _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<PostModel>())).ReturnsAsync(true);
@@ -105,8 +106,8 @@ namespace UnitTests.RedditServiceTests
                 .GetAwaiter()
                 .GetResult();
 
-            _redditServiceMock.Verify(v => v.GetPostsUntilPostId(subName, It.IsAny<string>()), Times.Once);
-            _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.Never);
+            _redditServiceMock.Verify(v => v.GetPostsUntilPostId(subName, It.IsAny<string>(), filter), Times.Once);
+            _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>(), filter), Times.Never);
 
             result.Should().NotBeNull();
             result.UntilPostId.Should().Be(contents.First().Id);
@@ -117,6 +118,7 @@ namespace UnitTests.RedditServiceTests
         public void Run_ShouldReturn_UpdatedSettings_WithDisabled()
         {
             var subName = Fixture.Create<string>();
+            var filter = Fixture.Create<Filter>();
 
             var settings = Fixture.Build<Settings>()
                 .With(w => w.ByLastPostId, true)
@@ -125,16 +127,15 @@ namespace UnitTests.RedditServiceTests
                 .With(w => w.FromDate, DateTime.UtcNow)
                 .With(w => w.UntilDate, DateTime.UtcNow)
                 .With(w => w.Disabled, false)
+                .With(w => w.Filters, filter)
                 .Create();
-
-            var dt = DateTime.UtcNow.ToUniversalTime();
 
             var contents = Fixture.Build<Content>()
                 .With(w => w.Created, DateTime.UtcNow)
                 .CreateMany(5)
                 .ToList();
 
-            _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>()))
+            _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>(), filter))
                 .ReturnsAsync(contents);
 
             _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<PostModel>())).ReturnsAsync(true);
@@ -144,8 +145,8 @@ namespace UnitTests.RedditServiceTests
                 .GetAwaiter()
                 .GetResult();
 
-            _redditServiceMock.Verify(v => v.GetPostsUntilPostId(subName, It.IsAny<string>()), Times.Once);
-            _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.Never);
+            _redditServiceMock.Verify(v => v.GetPostsUntilPostId(subName, It.IsAny<string>(), filter), Times.Once);
+            _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>(), filter), Times.Never);
 
             result.Should().NotBeNull();
             result.UntilPostId.Should().NotBe(contents.First().Id);

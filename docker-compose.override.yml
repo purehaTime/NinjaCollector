@@ -6,19 +6,21 @@ services:
       - "27017:27017"
   
   dbservice:
-    container_name: dbservice
+    container_name: DbService
     ports:
-      - "80"
-      - "443"
+      - "127.0.0.1:14010:80"
+      - "127.0.0.1:14011:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+    depends_on:
+      - storedb
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   mainservice:
-    container_name: ninjacollector
+    container_name: NinjaCollector
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -34,10 +36,10 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   loggerservice:
-    container_name: loggerservice
+    container_name: LoggerService
     ports:
-      - "80"
-      - "443"
+      - "127.0.0.1:14090:80"
+      - "127.0.0.1:14091:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -48,25 +50,29 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   redditservice:
+    container_name: RedditService
     env_file: reddit_settings.env
+    restart: always
     ports:
-      - "80"
-      - "443"
+      - "127.0.0.1:14030:80"
+      - "127.0.0.1:14031:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
     depends_on:
       - dbservice
+      - loggerservice
+      - authservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   authservice:
-    container_name: authservice
+    container_name: AuthService
     env_file: auth.env
     ports:
-      - "80"
-      - "443"
+      - "127.0.0.1:14020:80"
+      - "127.0.0.1:14021:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

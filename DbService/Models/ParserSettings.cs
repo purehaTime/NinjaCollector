@@ -50,5 +50,18 @@ namespace DbService.Models
         public DateTime UntilDate { get; set; }
         public bool Disabled { get; set; }
         public bool ContinueMonitoring { get; set; }
+        public Filter Filters { get; set; }
+
+    }
+
+    public class Filter {
+
+        public bool IgnoreVideo { get; set; }
+        public bool IgnoreRepost { get; set; }
+        public List<string> IgnoreWords { get; set; }
+        public List<string> IgnoreAuthors { get; set; }
+        public List<string> IgnoreTitles { get; set; }
+        public List<string> IgnoreDescriptions { get; set; }
+
     }
 }

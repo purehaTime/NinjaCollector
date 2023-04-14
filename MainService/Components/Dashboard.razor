@@ -1,35 +1,13 @@
 ﻿@page "/"
-@using MainService.Models
-@using MainService.Interfaces
-@inject IWorkerService<RedditStatusModel> RedditStatus
-@inherits LayoutComponentBase
 
 <h2 class="center">Dashboard</h2>
 
 
 <AuthorizeView>
     <Authorized>
-        @if (_reditModel != null)
-        {
-            <StatusTable Status="@_reditModel"/>
-        }
+        <Status></Status>
     </Authorized>
     <NotAuthorized>
         You are not authorized!
     </NotAuthorized>
 </AuthorizeView>
-
-@code {
-    private RedditStatusModel _reditModel;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        //_reditModel = await RedditStatus.GetStatus();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        _reditModel = await RedditStatus.GetStatus();
-    }
-
-}

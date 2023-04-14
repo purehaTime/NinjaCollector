@@ -2,6 +2,7 @@
 using RedditService.Interfaces;
 using RedditService.Model;
 using System.Collections.Concurrent;
+using Worker.Model;
 
 namespace RedditService.Services
 {
@@ -9,16 +10,18 @@ namespace RedditService.Services
     {
         private readonly IParserGalleryService _galleryService;
         private readonly IFileDownloadService _fileDownloadService;
+        private readonly IFilterService _filterService;
 
-        public ParserService(IParserGalleryService galleryService, IFileDownloadService fileDownloadService)
+        public ParserService(IParserGalleryService galleryService, IFileDownloadService fileDownloadService, IFilterService filterService)
         {
             _galleryService = galleryService;
             _fileDownloadService = fileDownloadService;
+            _filterService = filterService;
         }
 
-        public async Task<Content> ParsePost(Post post)
+        public async Task<Content> ParsePost(Post post, Filter filter)
         {
-            if (post.Listing.Domain == "v.redd.it") //ignore video posts
+            if (!_filterService.IsValid(post, filter)) 
             {
                 return null;
             }

@@ -38,5 +38,7 @@
         public bool ContinueMonitoring { get; set; }
 
         public bool Disabled { get; set; }
+
+        public Filter Filters { get; set; }
     }
 }

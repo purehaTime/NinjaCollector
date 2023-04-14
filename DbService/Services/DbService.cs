@@ -1,11 +1,14 @@
 ﻿using DbService.Interfaces;
+using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
 using MongoDB.Bson;
+using Filter = DbService.Models.Filter;
 using ParserSettings = DbService.Models.ParserSettings;
 using Post = DbService.Models.Post;
 using Status = GrpcHelper.DbService.Status;
+using FilterRequest = GrpcHelper.DbService.Filter;
 
 namespace DbService.Services
 {
@@ -95,6 +98,7 @@ namespace DbService.Services
                UntilDate = request.UntilDate.ToDateTime(),
                Disabled = request.Disabled,
                ContinueMonitoring = request.ContinueMonitoring,
+               Filters = FilterRequestMapping(request.Filters)
             });
             
             return new Status
@@ -130,8 +134,35 @@ namespace DbService.Services
                      FromDate = Timestamp.FromDateTime(s.FromDate),
                      UntilDate = Timestamp.FromDateTime(s.UntilDate),
                      Disabled = s.Disabled,
-                     ContinueMonitoring = s.ContinueMonitoring
+                     ContinueMonitoring = s.ContinueMonitoring,
+                     Filters = FilterMapping(s.Filters),
                  } ) }
+            };
+        }
+
+        private Filter FilterRequestMapping(FilterRequest filter)
+        {
+            return new Filter
+            {
+                IgnoreRepost = filter.IgnoreRepost,
+                IgnoreVideo = filter.IgnoreVideo,
+                IgnoreAuthors = filter.IgnoreAuthors.ToList(),
+                IgnoreDescriptions = filter.IgnoreDescriptions.ToList(),
+                IgnoreTitles = filter.IgnoreTitles.ToList(),
+                IgnoreWords = filter.IgnoreWords.ToList(),
+            };
+        }
+
+        private FilterRequest FilterMapping(Filter filter)
+        {
+            return new FilterRequest
+            {
+                IgnoreRepost = filter.IgnoreRepost,
+                IgnoreVideo = filter.IgnoreVideo,
+                IgnoreAuthors = { filter.IgnoreAuthors },
+                IgnoreDescriptions = { filter.IgnoreDescriptions },
+                IgnoreTitles = { filter.IgnoreTitles },
+                IgnoreWords = { filter.IgnoreWords },
             };
         }
     }

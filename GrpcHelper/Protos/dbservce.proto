@@ -117,6 +117,7 @@ message ParserSettingsModel {
     google.protobuf.Timestamp UntilDate = 14;
     bool Disabled = 15;
     bool ContinueMonitoring = 16;
+    Filter Filters = 17;
 }
 
 message PosterSettingsModel {
@@ -157,4 +158,13 @@ message UserModel {
 
 message UserRequest {
     string UserName = 1;
+}
+
+message Filter {
+    bool IgnoreVideo = 1;
+    bool IgnoreRepost = 2;
+    repeated string IgnoreWords = 3;
+    repeated string IgnoreAuthors = 4;
+    repeated string IgnoreTitles = 5;
+    repeated string IgnoreDescriptions = 6;
 }

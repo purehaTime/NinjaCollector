@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoFixture;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -7,14 +8,16 @@ using RedditService.Interfaces;
 using RedditService.Model;
 using RedditService.Services;
 using RestSharp;
+using Worker.Model;
 
-namespace UnitTests.RedditService
+namespace UnitTests.RedditServiceTests
 {
     [TestFixture]
     public class ParserServiceTests : BaseTest
     {
         private Mock<IParserGalleryService> _parserGalleryServiceMock;
         private Mock<IFileDownloadService> _fileDownloadServiceMock;
+        private Mock<IFilterService> _filterServiceMock;
 
         private IParserService _parserService;
 
@@ -24,8 +27,9 @@ namespace UnitTests.RedditService
         {
             _parserGalleryServiceMock = new Mock<IParserGalleryService>();
             _fileDownloadServiceMock = new Mock<IFileDownloadService>();
+            _filterServiceMock = new Mock<IFilterService>();
 
-            _parserService = new ParserService(_parserGalleryServiceMock.Object, _fileDownloadServiceMock.Object);
+            _parserService = new ParserService(_parserGalleryServiceMock.Object, _fileDownloadServiceMock.Object, _filterServiceMock.Object);
         }
 
         [Test]
@@ -35,7 +39,10 @@ namespace UnitTests.RedditService
             var post = Fixture.Create<Post>();
             post.Listing.Domain = link;
 
-            var result = _parserService.ParsePost(post)
+            var filter = Fixture.Create<Filter>();
+            _filterServiceMock.Setup(s => s.IsValid(post, filter)).Returns(false);
+
+            var result = _parserService.ParsePost(post, filter)
                 .GetAwaiter()
                 .GetResult();
 
@@ -50,13 +57,14 @@ namespace UnitTests.RedditService
             post.Listing.URL = link;
 
             var images = Fixture.CreateMany<Image>(5);
-
+            var filter = Fixture.Create<Filter>();
             var bytes = Fixture.Create<byte[]>();
 
+            _filterServiceMock.Setup(s => s.IsValid(post, filter)).Returns(true);
             _parserGalleryServiceMock.Setup(s => s.GetImageLinks(link)).ReturnsAsync(images);
             _fileDownloadServiceMock.Setup(s => s.GetFile(It.IsAny<string>())).ReturnsAsync(bytes);
 
-            var result = _parserService.ParsePost(post)
+            var result = _parserService.ParsePost(post, filter)
                 .GetAwaiter()
                 .GetResult();
 
@@ -74,13 +82,15 @@ namespace UnitTests.RedditService
         {
             var link = "test.com";
             var bytes = Fixture.Create<byte[]>();
+            var filter = Fixture.Create<Filter>();
             var post = Fixture.Create<Post>();
             post.Listing.URL = link;
             post.Listing.Preview = JObject.Parse("{\"images\":[{\"source\":{\"url\":\"https://test.com\",\"width\":32,\"height\":64}}]}");
 
             _fileDownloadServiceMock.Setup(s => s.GetFile(It.IsAny<string>())).ReturnsAsync(bytes);
+            _filterServiceMock.Setup(s => s.IsValid(post, filter)).Returns(true);
 
-            var result = _parserService.ParsePost(post)
+            var result = _parserService.ParsePost(post, filter)
                 .GetAwaiter()
                 .GetResult();
 

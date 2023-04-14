@@ -1,4 +1,5 @@
-﻿using Google.Protobuf;
+﻿using System.Runtime.CompilerServices;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
@@ -6,6 +7,7 @@ using RedditService.Interfaces;
 using RedditService.Model;
 using Worker.Interfaces;
 using Worker.Model;
+using Filter = Worker.Model.Filter;
 using ILogger = Serilog.ILogger;
 
 namespace RedditService.Workers
@@ -45,10 +47,11 @@ namespace RedditService.Workers
         public async Task<Settings> Run(Settings settings)
         {
             var contents = new List<Content>();
+            var filter = settings.Filters;
 
             var posts = settings.ByLastPostId && !string.IsNullOrEmpty(settings.UntilPostId)
-                ? await _redditService.GetPostsUntilPostId(settings.ForGroup, settings.UntilPostId)
-                : await _redditService.GetPostsBetweenDates(settings.ForGroup, settings.FromDate ?? DateTime.UtcNow, settings.UntilDate ?? DateTime.MinValue);
+                ? await _redditService.GetPostsUntilPostId(settings.ForGroup, settings.UntilPostId, filter)
+                : await _redditService.GetPostsBetweenDates(settings.ForGroup, settings.FromDate ?? DateTime.UtcNow, settings.UntilDate ?? DateTime.MinValue, filter);
 
             contents.AddRange(posts);
 
@@ -139,6 +142,7 @@ namespace RedditService.Workers
                 FromPostId = null,
                 Tags = new List<string>(),
                 Disabled = false,
+                Filters = new Filter()
             };
         }
 
@@ -179,7 +183,22 @@ namespace RedditService.Workers
                 UntilDate = s.UntilDate?.ToDateTime(),
                 FromPostId = s.LastPostId,
                 Disabled = s.Disabled,
+                ContinueMonitoring = s.ContinueMonitoring,
+                Filters = FilterMapping(s.Filters)
             }).ToList();
+        }
+
+        public Filter FilterMapping(GrpcHelper.DbService.Filter map)
+        {
+            return new Filter
+            {
+                IgnoreVideo = map.IgnoreVideo,
+                IgnoreRepost = map.IgnoreRepost,
+                IgnoreAuthors = map.IgnoreAuthors.ToList(),
+                IgnoreDescriptions = map.IgnoreDescriptions.ToList(),
+                IgnoreTitles = map.IgnoreTitles.ToList(),
+                IgnoreWords = map.IgnoreWords.ToList()
+            };
         }
     }
 }

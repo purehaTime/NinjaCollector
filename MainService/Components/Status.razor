@@ -1,0 +1,20 @@
+﻿@using MainService.Models
+@using MainService.Interfaces
+@inject IWorkerService<RedditStatusModel> RedditStatus
+@inherits LayoutComponentBase
+
+@if (_reditModel != null)
+{
+    <StatusTable Status="@_reditModel" OnStop="async taskId => await RedditStatus.StopWorker(taskId)" />
+}
+
+
+@code {
+    private RedditStatusModel _reditModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _reditModel = await RedditStatus.GetStatus();
+    }
+
+}
