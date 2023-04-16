@@ -20,17 +20,17 @@ namespace RedditService.Services
                 valid &= !IsRepost(post);
             }
 
-            if (filter.IgnoreWords.Count > 0)
+            if (filter.IgnoreWords?.Count > 0)
             {
                 valid &= !IsIgnoreByWord(post.Listing.SelfText, filter.IgnoreWords.ToList());
             }
 
-            if (filter.IgnoreTitles.Count > 0)
+            if (filter.IgnoreTitles?.Count > 0)
             {
                 valid &= !IsIgnoreByWord(post.Listing.Title, filter.IgnoreTitles.ToList());
             }
 
-            if (filter.IgnoreAuthors.Count > 0)
+            if (filter.IgnoreAuthors?.Count > 0)
             {
                 valid &= !IsIgnoreByWord(post.Listing.Author, filter.IgnoreAuthors.ToList());
             }

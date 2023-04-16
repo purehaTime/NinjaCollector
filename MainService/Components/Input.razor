@@ -1,6 +1,17 @@
-﻿<input type="text" @bind-value="@InputValue" class="input"/>
+﻿<div>
+    <label for="@Id">@Label</label>
+    <input @bind-value="@InputValue" class="input" id="@Id" type="@Type" />
+</div>
 
 @code {
     [Parameter]
     public string InputValue { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    private string Id => Guid.NewGuid().ToString();
 }
