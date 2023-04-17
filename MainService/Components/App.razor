@@ -3,11 +3,8 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Dashboard)">
                 <NotAuthorized>
-                    You are not authorized (This is a custom message)
+                    You are not authorized !
                 </NotAuthorized>
-                <Authorizing>
-                    You are getting authorized (This is a custom message)
-                </Authorizing>
             </AuthorizeRouteView>
         </Found>
         <NotFound>

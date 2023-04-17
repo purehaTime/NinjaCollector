@@ -142,15 +142,18 @@ namespace DbService.Services
 
         private Filter FilterRequestMapping(FilterRequest filter)
         {
-            return new Filter
-            {
-                IgnoreRepost = filter.IgnoreRepost,
-                IgnoreVideo = filter.IgnoreVideo,
-                IgnoreAuthors = filter.IgnoreAuthors.ToList(),
-                IgnoreDescriptions = filter.IgnoreDescriptions.ToList(),
-                IgnoreTitles = filter.IgnoreTitles.ToList(),
-                IgnoreWords = filter.IgnoreWords.ToList(),
-            };
+            var result = filter == null ? null :
+                new Filter
+                {
+                    IgnoreRepost = filter.IgnoreRepost,
+                    IgnoreVideo = filter.IgnoreVideo,
+                    IgnoreAuthors = filter.IgnoreAuthors.ToList(),
+                    IgnoreDescriptions = filter.IgnoreDescriptions.ToList(),
+                    IgnoreTitles = filter.IgnoreTitles.ToList(),
+                    IgnoreWords = filter.IgnoreWords.ToList(),
+                };
+
+            return result;
         }
 
         private FilterRequest FilterMapping(Filter filter)
