@@ -1,4 +1,7 @@
-﻿namespace MainService.Middleware
+﻿using GrpcHelper.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MainService.Middleware
 {
     public class AuthMiddleware
     {
@@ -9,13 +12,22 @@
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IAuthServiceClient authClient)
         {
             if (context.Request.Path != "/Auth")
             {
-                if (!context.Request.Cookies.TryGetValue("session", out var token))
+                context.Request.Cookies.TryGetValue("session", out var token);
+                if (token == null )
                 {
                     context.Response.Redirect("/Auth");
+                    return;
+                }
+
+                var isValidToken = await authClient.Verify(token ?? "");
+                if (!isValidToken)
+                {
+                    context.Response.Redirect("/Auth");
+                    return;
                 }
             }
 

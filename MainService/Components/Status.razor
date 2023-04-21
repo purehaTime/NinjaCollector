@@ -7,6 +7,10 @@
 {
     <StatusTable Status="@_redditModel" OnStop="async taskId => await RedditStatus.StopWorker(taskId)" />
 }
+else
+{
+    <h5>Loading...</h5>
+}
 
 
 @code {
@@ -16,5 +20,4 @@
     {
         _redditModel = await RedditStatus.GetStatus();
     }
-
 }
