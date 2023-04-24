@@ -1,13 +1,13 @@
 ﻿@using MainService.Models
 
 <div>@Status.Name</div>
-<table>
-    <tr>
-        <td>Worker name</td>
-        <td>Group name</td>
-        <td>Settings Id</td>
-        <td>Task Id</td>
-        <td>stop action</td>
+<table class="table">
+    <tr class="t-head">
+        <th>Worker name</th>
+        <th>Group name</th>
+        <th>Settings Id</th>
+        <th>Task Id</th>
+        <th>stop action</th>
     </tr>
     @foreach (var row in Status.Works)
     {
