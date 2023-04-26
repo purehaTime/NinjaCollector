@@ -31,6 +31,7 @@ services:
       - dbservice
       - loggerservice
       - authservice
+      - redditservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -52,10 +53,9 @@ services:
   redditservice:
     container_name: RedditService
     env_file: reddit_settings.env
-    restart: always
     ports:
-      - "127.0.0.1:14030:80"
-      - "127.0.0.1:14031:443"
+      - "14030:80"
+      - "14031:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

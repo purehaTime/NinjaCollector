@@ -17,17 +17,18 @@ namespace Worker
 
         public static async Task RunWorkers(IEnumerable<IWorker> workers)
         {
-            foreach (var worker in workers)
+            await Parallel.ForEachAsync(workers, async (worker, ct) =>
             {
                 await RunWorker(worker);
-            }
+            });
         }
 
         public static async Task RunWorker(IWorker worker)
         {
+            Console.WriteLine("start load setting");
             var settings = await worker.Init();
             var works = new List<Work>();
-
+            Console.WriteLine("settings loaded");
             foreach (var setting in settings)
             {
                 var ct = new CancellationTokenSource();
@@ -38,6 +39,7 @@ namespace Worker
                     TaskId = task.Id,
                     Settings = setting
                 });
+                Console.WriteLine("setting " + setting.Id + " started");
             }
 
             _workers.Add(new Model.Worker

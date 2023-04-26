@@ -14,7 +14,6 @@ namespace DbService
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            //builder.Services.AddGrpc();
             builder.Services.AddGrpcHelper(builder.Configuration);
 
             var connectionString = builder.Configuration.GetConnectionString("mongodb");
@@ -39,8 +38,6 @@ namespace DbService
             var app = builder.Build();
 
             app.MapGrpcService<Services.DbService>();
-            app.MapGet("/", () => "Database service");
-
             app.Run();
         }
     }

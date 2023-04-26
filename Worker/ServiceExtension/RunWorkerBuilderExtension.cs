@@ -16,10 +16,7 @@ namespace Worker.ServiceExtension
         {
             var scope = application.ApplicationServices.CreateScope();
 
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
             var workService = scope.ServiceProvider.GetRequiredService<IWorkService>();
-
-            WorkEngine.InitLogger(logger);
             await workService.RunWorkers();
         }
 
@@ -27,12 +24,12 @@ namespace Worker.ServiceExtension
         {
             var scope = application.ApplicationServices.CreateScope();
             var worker = scope.ServiceProvider.GetRequiredService<TWorker>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
             var workService = scope.ServiceProvider.GetRequiredService<IWorkService>();
 
             await workService.RunWorker(worker);
         }
+
 
         public static void MapWorkerService(this IEndpointRouteBuilder builder)
         {

@@ -12,10 +12,12 @@ namespace Worker
         {
             _workers = workers;
             _logger = logger;
+            WorkEngine.InitLogger(logger);
         }
 
         public async Task RunWorkers()
         {
+            Console.WriteLine("starting workers");
             await WorkEngine.RunWorkers(_workers);
         }
 

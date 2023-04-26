@@ -1,4 +1,6 @@
-﻿using GrpcHelper.AuthService;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
+using GrpcHelper.AuthService;
 using GrpcHelper.Clients;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
@@ -21,9 +23,19 @@ namespace GrpcHelper
             services.AddScoped<IWorkerClientFactory, WorkerClientFactory>();
             services.AddScoped<IAuthServiceClient, AuthServiceClient>();
 
-            services.AddGrpcClient<Database.DatabaseClient>(x => x.Address = new Uri(GetUrl<Database.DatabaseClient>(config)));
+            services.AddGrpcClient<Database.DatabaseClient>(x =>
+            {
+                x.Address = new Uri(GetUrl<Database.DatabaseClient>(config));
+                x.CallOptionsActions.Add(context =>
+                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(5)));
+            });
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));
-            services.AddGrpcClient<Auth.AuthClient>(x => x.Address = new Uri(GetUrl<Auth.AuthClient>(config)));
+            services.AddGrpcClient<Auth.AuthClient>(x =>
+            {
+                x.Address = new Uri(GetUrl<Auth.AuthClient>(config));
+                x.CallOptionsActions.Add(context =>
+                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(5)));
+            });
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
         }

@@ -1,5 +1,6 @@
 ﻿using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
+using Serilog;
 using static GrpcHelper.DbService.Database;
 
 namespace GrpcHelper.Clients
@@ -7,83 +8,180 @@ namespace GrpcHelper.Clients
     public class DatabaseServiceClient : IDatabaseServiceClient
     {
         private readonly DatabaseClient _client;
+        private readonly ILogger _logger;
 
-        public DatabaseServiceClient(DatabaseClient client)
+        public DatabaseServiceClient(DatabaseClient client, ILogger logger)
         {
             _client = client;
+            _logger = logger;
         }
 
         public async Task<bool> WriteLogToDb(DbLogModel message)
         {
-            var result = await _client.WriteLogAsync(message);
-            return result.Success;
+            try
+            {
+                var result = await _client.WriteLogAsync(message);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<bool> AddPost(Post post)
         {
-            var result = await _client.AddPostAsync(post);
-            return result.Success;
+            try 
+            {
+                var result = await _client.AddPostAsync(post);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<bool> AddPosts(PostModel posts)
         {
-            var result = await _client.AddPostsAsync(posts);
-            return result.Success;
+            try 
+            {
+                var result = await _client.AddPostsAsync(posts);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<List<Post>> GetPosts(PostRequest request)
         {
-            var result = await _client.GetPostsAsync(request);
-            return result.Posts.ToList();
+            try
+            {
+                var result = await _client.GetPostsAsync(request);
+                return result.Posts.ToList();
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
         }
 
         public async Task<List<Image>> GetImages(ImageRequest request)
         {
-            var result = await _client.GetImagesAsync(request);
-            return result.Images.ToList();
+            try
+            {
+                var result = await _client.GetImagesAsync(request);
+                return result.Images.ToList();
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
         }
 
         public async Task<bool> AddImages(ImageModel images)
         {
-            var result = await _client.AddImagesAsync(images);
-            return result.Success;
+            try
+            {
+                var result = await _client.AddImagesAsync(images);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<List<ParserSettingsModel>> GetParserSettings(ParserSettingsRequest request)
         {
-            var result = await _client.GetParserSettingsAsync(request);
-            return result.ParserSetting.ToList();
+            try
+            {
+                var result = await _client.GetParserSettingsAsync(request);
+                return result.ParserSetting.ToList();
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
         }
 
         public async Task<bool> SaveParserSettings(ParserSettingsModel settings)
         {
-            var result = await _client.SaveParserSettingsAsync(settings);
-            return result.Success;
+            try
+            {
+                var result = await _client.SaveParserSettingsAsync(settings);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<List<PosterSettingsModel>> GetPosterSettings(PosterSettingsRequest request)
         {
-            var result = await _client.GetPosterSettingsAsync(request);
-            return result.PosterSettings_.ToList();
+            try
+            {
+                var result = await _client.GetPosterSettingsAsync(request);
+                return result.PosterSettings_.ToList();
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
         }
 
         public async Task<bool> SavePosterSettings(PosterSettingsModel settings)
         {
-            var result = await _client.SavePosterSettingsAsync(settings);
-            return result.Success;
+            try
+            {
+                var result = await _client.SavePosterSettingsAsync(settings);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<bool> CreateUser(string userName, string password)
         {
-            var result = await _client.AddUserAsync(new AddUserModel { UserName = userName, Password = password });
-
-            return result.Success;
+            try
+            {
+                var result = await _client.AddUserAsync(new AddUserModel { UserName = userName, Password = password });
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
         }
 
         public async Task<UserModel> GetUser(string userName)
         {
-            var user = await _client.GetUserAsync(new UserRequest { UserName = userName });
-            return user;
+            try
+            {
+                var user = await _client.GetUserAsync(new UserRequest { UserName = userName });
+                return user;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
         }
     }
 }

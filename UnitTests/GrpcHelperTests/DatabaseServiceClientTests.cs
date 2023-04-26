@@ -4,6 +4,7 @@ using GrpcHelper.Clients;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using Moq;
+using Serilog;
 
 namespace UnitTests.GrpcHelperTests
 {
@@ -11,6 +12,7 @@ namespace UnitTests.GrpcHelperTests
     public class DatabaseServiceClientTests : BaseTest
     {
         private Mock<Database.DatabaseClient> _dbClientMock;
+        private Mock<ILogger> _loggerMock;
 
         private IDatabaseServiceClient _dbServiceClient;
 
@@ -18,6 +20,7 @@ namespace UnitTests.GrpcHelperTests
         public void Setup()
         {
             _dbClientMock = new Mock<Database.DatabaseClient>();
+            _loggerMock = new Mock<ILogger>();
         }
 
 
@@ -33,7 +36,7 @@ namespace UnitTests.GrpcHelperTests
 
             _dbClientMock.Setup(s => s.WriteLogAsync(dbLogsModel, null, null, CancellationToken.None)).Returns(returnResponse);
 
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object);
+            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
             
             var result = _dbServiceClient.WriteLogToDb(dbLogsModel)
                 .GetAwaiter()
@@ -54,7 +57,7 @@ namespace UnitTests.GrpcHelperTests
 
             _dbClientMock.Setup(s => s.SaveParserSettingsAsync(parserSettings, null, null, CancellationToken.None)).Returns(returnResponse);
 
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object);
+            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
 
             var result = _dbServiceClient.SaveParserSettings(parserSettings)
                 .GetAwaiter()
@@ -75,7 +78,7 @@ namespace UnitTests.GrpcHelperTests
 
             _dbClientMock.Setup(s => s.SavePosterSettingsAsync(posterSettings, null, null, CancellationToken.None)).Returns(returnResponse);
 
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object);
+            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
 
             var result = _dbServiceClient.SavePosterSettings(posterSettings)
                 .GetAwaiter()
