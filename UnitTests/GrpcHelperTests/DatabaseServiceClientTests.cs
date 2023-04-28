@@ -21,6 +21,8 @@ namespace UnitTests.GrpcHelperTests
         {
             _dbClientMock = new Mock<Database.DatabaseClient>();
             _loggerMock = new Mock<ILogger>();
+
+            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
         }
 
 
@@ -36,8 +38,6 @@ namespace UnitTests.GrpcHelperTests
 
             _dbClientMock.Setup(s => s.WriteLogAsync(dbLogsModel, null, null, CancellationToken.None)).Returns(returnResponse);
 
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
-            
             var result = _dbServiceClient.WriteLogToDb(dbLogsModel)
                 .GetAwaiter()
                 .GetResult();
@@ -56,8 +56,6 @@ namespace UnitTests.GrpcHelperTests
             var returnResponse = GetAsyncUnaryCallSuccess(response);
 
             _dbClientMock.Setup(s => s.SaveParserSettingsAsync(parserSettings, null, null, CancellationToken.None)).Returns(returnResponse);
-
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
 
             var result = _dbServiceClient.SaveParserSettings(parserSettings)
                 .GetAwaiter()
@@ -78,13 +76,110 @@ namespace UnitTests.GrpcHelperTests
 
             _dbClientMock.Setup(s => s.SavePosterSettingsAsync(posterSettings, null, null, CancellationToken.None)).Returns(returnResponse);
 
-            _dbServiceClient = new DatabaseServiceClient(_dbClientMock.Object, _loggerMock.Object);
-
             var result = _dbServiceClient.SavePosterSettings(posterSettings)
                 .GetAwaiter()
                 .GetResult();
 
             result.Should().Be(responseTestCase);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void AddPost_ShouldReturn_Bool(bool responseTestCase)
+        {
+            var post = Fixture.Create<Post>();
+            var response = new Status { Success = responseTestCase };
+
+            var returnResponse = GetAsyncUnaryCallSuccess(response);
+            _dbClientMock.Setup(s => s.AddPostAsync(post, null, null, CancellationToken.None)).Returns(returnResponse);
+
+            var result = _dbServiceClient.AddPost(post)
+                .GetAwaiter()
+                .GetResult();
+
+            result.Should().Be(responseTestCase);
+        }
+
+        [Test]
+        public void AddPost_ShouldReturn_FalseException()
+        {
+            var post = Fixture.Create<Post>();
+
+            _dbClientMock.Setup(s => s.AddPostAsync(post, null, null, CancellationToken.None)).Throws<Exception>();
+
+            var result = _dbServiceClient.AddPost(post)
+                .GetAwaiter()
+                .GetResult();
+
+            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
+            result.Should().Be(false);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void AddPosts_ShouldReturn_Bool(bool responseTestCase)
+        {
+            var posts = Fixture.Create<PostModel>();
+            var response = new Status { Success = responseTestCase };
+
+            var returnResponse = GetAsyncUnaryCallSuccess(response);
+            _dbClientMock.Setup(s => s.AddPostsAsync(posts, null, null, CancellationToken.None)).Returns(returnResponse);
+
+            var result = _dbServiceClient.AddPosts(posts)
+                .GetAwaiter()
+                .GetResult();
+
+            result.Should().Be(responseTestCase);
+        }
+
+        [Test]
+        public void AddPosts_ShouldReturn_FalseException()
+        {
+            var posts = Fixture.Create<PostModel>();
+
+            _dbClientMock.Setup(s => s.AddPostsAsync(posts, null, null, CancellationToken.None)).Throws<Exception>();
+
+            var result = _dbServiceClient.AddPosts(posts)
+                .GetAwaiter()
+                .GetResult();
+
+            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
+            result.Should().Be(false);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void AddImages_ShouldReturn_Bool(bool responseTestCase)
+        {
+            var images = Fixture.Create<ImageModel>();
+            var response = new Status { Success = responseTestCase };
+
+            var returnResponse = GetAsyncUnaryCallSuccess(response);
+            _dbClientMock.Setup(s => s.AddImagesAsync(images, null, null, CancellationToken.None)).Returns(returnResponse);
+
+            var result = _dbServiceClient.AddImages(images)
+                .GetAwaiter()
+                .GetResult();
+
+            result.Should().Be(responseTestCase);
+        }
+
+        [Test]
+        public void AddImages_ShouldReturn_FalseException()
+        {
+            var images = Fixture.Create<ImageModel>();
+
+            _dbClientMock.Setup(s => s.AddImagesAsync(images, null, null, CancellationToken.None)).Throws<Exception>();
+
+            var result = _dbServiceClient.AddImages(images)
+                .GetAwaiter()
+                .GetResult();
+
+            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
+            result.Should().Be(false);
         }
     }
 }
