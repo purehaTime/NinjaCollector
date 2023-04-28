@@ -7,7 +7,7 @@
         <th>Group name</th>
         <th>Settings Id</th>
         <th>Task Id</th>
-        <th>stop action</th>
+        <th>Actions</th>
     </tr>
     @foreach (var row in Status.Works)
     {
@@ -16,7 +16,11 @@
             <td>@row.Group</td>
             <td>@row.SettingsId</td>
             <td>@row.TaskId</td>
-            <td><Button Action="async () => await OnStop.InvokeAsync(row.TaskId)">Stop</Button></td>
+            <td>
+                <div>
+                    <Button Action="async () => await OnStop.InvokeAsync(row.TaskId)">Stop</Button>
+                </div>
+            </td>
         </tr>
     }
 </table>

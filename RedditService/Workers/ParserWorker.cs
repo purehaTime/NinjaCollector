@@ -166,9 +166,9 @@ namespace RedditService.Workers
             {
                 Source = Name,
                 SettingsId = settingsId ?? string.Empty,
-            });
+            }) ?? new List<ParserSettingsModel>();
 
-            return settings.Where(w => !w.Disabled).Select(s => new Settings
+            return settings?.Where(w => !w.Disabled).Select(s => new Settings
             {
                 Counts = s.PostsCount,
                 Timeout = s.Timeout,

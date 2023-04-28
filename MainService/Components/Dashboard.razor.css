@@ -1,0 +1,10 @@
+﻿.layout {
+    display: flex;
+    align-content: flex-start;
+}
+
+.layout > div {
+    display: flex;
+    padding: 0 20px;
+}
+

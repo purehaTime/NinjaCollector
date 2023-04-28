@@ -99,8 +99,13 @@
     border-radius: 1px;
 }
 
-input:-internal-autofill-selected {
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
     background-color: #505050;
+}
+
+input[data-autocompleted] {
+    background-color: #505050 !important;
 }
 
 input:focus {

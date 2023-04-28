@@ -1,13 +1,19 @@
-﻿@page "/"
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <h2 class="center">Dashboard</h2>
 
 <AuthorizeView>
     <Authorized>
-        <Status />
+        <div class="layout">
+            <div>
+                <Menu></Menu>
+            </div>
+            <div>
+                @Body
+            </div>
+        </div>
     </Authorized>
     <NotAuthorized>
-        You are not authorized  !123Asdas
+        Session expired
     </NotAuthorized>
 </AuthorizeView>

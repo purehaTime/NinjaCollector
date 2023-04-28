@@ -35,6 +35,6 @@ public class LoginModel : PageModel
             return Redirect("~/");
         }
 
-        return Unauthorized();
+        return Page();
     }
 }
