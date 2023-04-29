@@ -34,7 +34,7 @@ input:focus {
 }
 
 .input-component {
-    margin: 5px 10px;
+    margin: 15px 10px;
     display: flex;
     flex-direction: column;
 }

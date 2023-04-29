@@ -1,6 +1,6 @@
 ﻿<div class="input-component">
-    <label for="@Id">@Label</label>
-    <input @bind-value="@InputValue" class="input" id="@Id" type="@Type" />
+    <label for="@_id">@Label</label>
+    <input @bind-value="@InputValue" class="input" id="@_id" type="@Type" />
 </div>
 
 @code {
@@ -13,5 +13,10 @@
     [Parameter]
     public string Type { get; set; } = "text";
 
-    private string Id => Guid.NewGuid().ToString();
+    private readonly string _id;
+
+    public Text()
+    {
+        _id = Guid.NewGuid().ToString();
+    }
 }

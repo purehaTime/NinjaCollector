@@ -2,8 +2,12 @@
     background-color: #505050;
     color: #89cd32;
     box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
     vertical-align: baseline;
     font-weight: 400;
+    line-height: 1.29;
+    letter-spacing: .16px;
     border-radius: 0;
     outline: 2px solid transparent;
     outline-offset: -2px;
@@ -13,11 +17,24 @@
     padding: 0 16px;
     transition: background-color 70ms cubic-bezier(.2, 0, .38, .9), outline 70ms cubic-bezier(.2, 0, .38, .9);
     border-radius: 1px;
-    margin-left: 25px;
 }
 
-.checkbox-component {
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    background-color: #505050;
+}
+
+input[data-autocompleted] {
+    background-color: #505050 !important;
+}
+
+input:focus {
+    outline: 2px solid #89cd32;
+    outline-offset: -2px;
+}
+
+.input-component {
     margin: 15px 10px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }

@@ -1,18 +1,18 @@
-﻿<div class="checkbox-component">
+﻿<div class="input-component">
     <label for="@_id">@Label</label>
-    <input @bind-value="@Value" class="input" id="@_id" type="checkbox" />
+    <input @bind-value="@Value" class="input" id="@_id" type="number" step="1" />
 </div>
 
 @code {
     [Parameter]
-    public bool Value { get; set; }
+    public int Value { get; set; }
 
     [Parameter]
     public string Label { get; set; }
 
     private readonly string _id;
 
-    public Checkbox()
+    public Number()
     {
         _id = Guid.NewGuid().ToString();
     }

@@ -5,33 +5,33 @@
 <div>
     <div class="add-parser-layout">
         <div>
-            <div>Setting</div>
-            <Input Label="Description"/>
-            <Input Label="Group"/>
-            <Input Label="PostsCount"/>
-            <Input Label="LastLoadPostId"/>
-            <Input Label="StartFromLastLoadPost"/>
-            <Input Label="ByUpdate"/>
-            <Input Label="Timeout"/>
-            <Input Label="JobInterval"/>
-            <Input Label="Tags"/>
-            <Input Label="Hold"/>
-            <Input Label="FromDate" Type="datetime"/>
-            <Input Label="UntilDate" Type="datetime"/>
+            <h2>Setting</h2>
+            <Text Label="Description"/>
+            <Text Label="Group" />
+            <Number Label="PostsCount" />
+            <Text Label="LastLoadPostId" />
+            <Text Label="StartFromLastLoadPost" />
+            <Text Label="ByUpdate" />
+            <Number Label="Timeout" />
+            <Number Label="JobInterval" />
+            <Text Label="Tags" />
+            <Text Label="Hold" />
+            <DateTime Label="FromDate" />
+            <DateTime Label="UntilDate"/>
             <Checkbox Label="Disabled"/>
             <Checkbox Label="ContinueMonitoring"/>
         </div>
         <div>
-            <div>Filters</div>
+            <h2>Filters</h2>
             <Checkbox Label="IgnoreVideo" />
             <Checkbox Label="IgnoreRepost" />
-            <Input Label="IgnoreWords" />
-            <Input Label="IgnoreAuthors" />
-            <Input Label="IgnoreTitles" />
-            <Input Label="IgnoreDescriptions" />
+            <Text Label="IgnoreWords" />
+            <Text Label="IgnoreAuthors" />
+            <Text Label="IgnoreTitles" />
+            <Text Label="IgnoreDescriptions" />
         </div>
     </div>
-    <div>
+    <div class="center">
         <Button Action="OnSave">Save</Button>
     </div>
 </div>
