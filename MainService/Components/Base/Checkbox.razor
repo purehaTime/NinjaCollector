@@ -1,0 +1,19 @@
+﻿<div class="checkbox-component">
+    <label for="@_id">@Label</label>
+    <input @bind-value="@InputValue" class="input" id="@_id" type="checkbox" />
+</div>
+
+@code {
+    [Parameter]
+    public string InputValue { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    private string _id;
+
+    public Checkbox()
+    {
+        _id = Guid.NewGuid().ToString();
+    }
+}

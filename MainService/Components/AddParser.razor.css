@@ -1,0 +1,7 @@
+﻿.add-parser-layout {
+    display: flex;
+}
+
+.add-parser-layout > div {
+    margin: 10px 30px;
+}

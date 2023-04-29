@@ -17,24 +17,10 @@
     padding: 0 16px;
     transition: background-color 70ms cubic-bezier(.2, 0, .38, .9), outline 70ms cubic-bezier(.2, 0, .38, .9);
     border-radius: 1px;
+    margin-left: 25px;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-    background-color: #505050;
-}
-
-input[data-autocompleted] {
-    background-color: #505050 !important;
-}
-
-input:focus {
-    outline: 2px solid #89cd32;
-    outline-offset: -2px;
-}
-
-.input-component {
+.checkbox-component {
     margin: 5px 10px;
     display: flex;
-    flex-direction: column;
 }

@@ -1,6 +1,6 @@
 ﻿.layout {
     display: flex;
-    align-content: flex-start;
+    align-items: flex-start;
 }
 
 .layout > div {
@@ -8,3 +8,6 @@
     padding: 0 20px;
 }
 
+.left-side {
+    border-right: #89cd32 1px solid;
+}

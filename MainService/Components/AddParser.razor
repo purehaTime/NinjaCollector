@@ -3,28 +3,33 @@
 @using MainService.Components.Base
 
 <div>
-    <div>
-        <Input Label="Description" InputValue="_description" />
-        <Input Label="Group" />
-        <Input Label="PostsCount"  />
-        <Input Label="LastLoadPostId"  />
-        <Input Label="StartFromLastLoadPost"  />
-        <Input Label="ByUpdate"  />
-        <Input Label="Timeout" />
-        <Input Label="JobInterval" />
-        <Input Label="Tags" />
-        <Input Label="Hold" />
-        <Input Label="FromDate" Type="datetime"/>
-        <Input Label="UntilDate" Type="datetime" />
-        <Input Label="Disabled" Type="checkbox"/>
-        <Input Label="ContinueMonitoring" Type="checkbox" />
-        <div>Filters</div>
-        <Input Label="IgnoreVideo" Type="checkbox" />
-        <Input Label="IgnoreRepost" Type="checkbox" />
-        <Input Label="IgnoreWords" />
-        <Input Label="IgnoreAuthors" />
-        <Input Label="IgnoreTitles" />
-        <Input Label="IgnoreDescriptions" />
+    <div class="add-parser-layout">
+        <div>
+            <div>Setting</div>
+            <Input Label="Description"/>
+            <Input Label="Group"/>
+            <Input Label="PostsCount"/>
+            <Input Label="LastLoadPostId"/>
+            <Input Label="StartFromLastLoadPost"/>
+            <Input Label="ByUpdate"/>
+            <Input Label="Timeout"/>
+            <Input Label="JobInterval"/>
+            <Input Label="Tags"/>
+            <Input Label="Hold"/>
+            <Input Label="FromDate" Type="datetime"/>
+            <Input Label="UntilDate" Type="datetime"/>
+            <Checkbox Label="Disabled"/>
+            <Checkbox Label="ContinueMonitoring"/>
+        </div>
+        <div>
+            <div>Filters</div>
+            <Checkbox Label="IgnoreVideo" />
+            <Checkbox Label="IgnoreRepost" />
+            <Input Label="IgnoreWords" />
+            <Input Label="IgnoreAuthors" />
+            <Input Label="IgnoreTitles" />
+            <Input Label="IgnoreDescriptions" />
+        </div>
     </div>
     <div>
         <Button Action="OnSave">Save</Button>
