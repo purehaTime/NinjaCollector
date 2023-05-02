@@ -6,29 +6,28 @@
     <div class="add-parser-layout">
         <div>
             <h2>Setting</h2>
-            <Text Label="Description"/>
-            <Text Label="Group" />
-            <Number Label="PostsCount" />
-            <Text Label="LastLoadPostId" />
-            <Text Label="StartFromLastLoadPost" />
-            <Text Label="ByUpdate" />
-            <Number Label="Timeout" />
-            <Number Label="JobInterval" />
-            <Text Label="Tags" />
-            <Text Label="Hold" />
-            <DateTime Label="FromDate" />
-            <DateTime Label="UntilDate"/>
-            <Checkbox Label="Disabled"/>
-            <Checkbox Label="ContinueMonitoring"/>
+            <Text Label="Description" OnChanged="o => ParserSettings.Description = o" />
+            <Text Label="Group" OnChanged="o => ParserSettings.Group = o" />
+            <Number Label="Posts count" OnChanged="o => ParserSettings.PostsCount = o" />
+            <Text Label="LastLoadPostId" OnChanged="o => ParserSettings.StartFromLastLoadPost = o" />
+            <Text Label="ByUpdate" OnChanged="o => ParserSettings.ByUpdate = o" />
+            <Number Label="Timeout (ms)" OnChanged="o => ParserSettings.Timeout = o" />
+            <Number Label="JobInterval" OnChanged="o => ParserSettings.JobInterval = o" />
+            <Text Label="Tags" OnChanged="o => ParserSettings.Tags = o" />
+            <Number Label="Hold (ms)" OnChanged="o => ParserSettings.Hold = o" />
+            <DateTime Label="FromDate" OnChanged="o => ParserSettings.FromDate = o" />
+            <DateTime Label="UntilDate" OnChanged="o => ParserSettings.UntilDate = o"/>
+            <Checkbox Label="Disabled" OnChanged="o => ParserSettings.Disabled = o" />
+            <Checkbox Label="Continue monitoring" OnChanged="o => ParserSettings.ContinueMonitoring = o" />
         </div>
         <div>
             <h2>Filters</h2>
-            <Checkbox Label="IgnoreVideo" />
-            <Checkbox Label="IgnoreRepost" />
-            <Text Label="IgnoreWords" />
-            <Text Label="IgnoreAuthors" />
-            <Text Label="IgnoreTitles" />
-            <Text Label="IgnoreDescriptions" />
+            <Checkbox Label="Ignore video" OnChanged="o => ParserSettings.IgnoreVideo = o" />
+            <Checkbox Label="Ignore repost" OnChanged="o => ParserSettings.IgnoreRepost = o"/>
+            <Text Label="Ignore words" OnChanged="o => ParserSettings.IgnoreWords = o" />
+            <Text Label="Ignore authors" OnChanged="o => ParserSettings.IgnoreAuthors = o" />
+            <Text Label="Ignore titles" OnChanged="o => ParserSettings.IgnoreTitles = o" />
+            <Text Label="Ignore descriptions" OnChanged="o => ParserSettings.IgnoreDescriptions = o" />
         </div>
     </div>
     <div class="center">
@@ -38,12 +37,11 @@
 
 @code {
 
-    private ParserModel ParserSettings { get; set; }
-
+    private ParserModel ParserSettings { get; set; } = new ();
 
     public async Task OnSave()
     {
-
+        Console.WriteLine("");
     }
-
+    
 }

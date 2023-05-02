@@ -1,0 +1,37 @@
+﻿@typeparam Tparam;
+
+<div class="@(Css ?? "input-component")">
+    <label for="@_id">@Label</label>
+    <input class="input" id="@_id" type="@Type" @onchange="OnChangedValue"/>
+</div>
+
+@code {
+    [Parameter]
+    public Tparam InputValue { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    protected virtual string Type { get; set; } = "text";
+
+    [Parameter]
+    public EventCallback<Tparam> OnChanged { get; set; }
+
+    private readonly string _id;
+
+    protected virtual string Css { get; set; }
+
+    public BaseInput()
+    {
+        _id = Guid.NewGuid().ToString();
+    }
+
+    private void OnChangedValue(ChangeEventArgs val)
+    {
+        if (!string.IsNullOrEmpty(val.Value?.ToString()))
+        {
+            var result = (Tparam)Convert.ChangeType(val.Value, typeof(Tparam));
+            OnChanged.InvokeAsync(result);
+        }
+    } 
+}

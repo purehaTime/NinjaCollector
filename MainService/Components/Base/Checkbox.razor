@@ -1,19 +1,10 @@
-﻿<div class="checkbox-component">
-    <label for="@_id">@Label</label>
-    <input @bind-value="@Value" class="input" id="@_id" type="checkbox" />
-</div>
+﻿@inherits BaseInput<bool>
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code {
-    [Parameter]
-    public bool Value { get; set; }
-
-    [Parameter]
-    public string Label { get; set; }
-
-    private readonly string _id;
-
-    public Checkbox()
-    {
-        _id = Guid.NewGuid().ToString();
-    }
+    protected override string Type { get; set; } = "checkbox";
+    protected override string Css { get; set; } = "checkbox-component";
 }

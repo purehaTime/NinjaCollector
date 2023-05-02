@@ -105,18 +105,18 @@ message ParserSettingsModel {
     string Description = 2;
     string Source = 3;
     string Group = 4;
-    int32 PostsCount = 5;
-    string LastPostId = 6;
-    bool StartFromPastPost = 7;
-    bool ByUpdate = 8;
-    int32 Timeout = 9;
-    int32 JobInterval = 10;
-    int32 Hold = 11;
-    repeated string Tags = 12;
-    google.protobuf.Timestamp FromDate = 13;
-    google.protobuf.Timestamp UntilDate = 14;
-    bool Disabled = 15;
-    bool ContinueMonitoring = 16;
+    int32 Timeout = 5;
+    int32 Hold = 6;
+    int32 Counts = 7;
+    int32 RetryAfterErrorCount = 8;
+    repeated string Tags = 9;
+    google.protobuf.Timestamp FromDate = 10;
+    google.protobuf.Timestamp UntilDate = 11;
+    string FromPostId = 12;
+    string UntilPostId = 13;
+    bool ByLastPostId = 14;
+    bool ContinueMonitoring = 15;
+    bool Disabled = 16;
     Filter Filters = 17;
 }
 

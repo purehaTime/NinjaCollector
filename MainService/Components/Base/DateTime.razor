@@ -1,19 +1,9 @@
-﻿<div class="input-component">
-    <label for="@_id">@Label</label>
-    <input @bind-value="@Value" class="input" id="@_id" type="datetime-local" />
-</div>
+﻿@inherits BaseInput<System.DateTime>
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code {
-    [Parameter]
-    public System.DateTime Value { get; set; }
-
-    [Parameter]
-    public string Label { get; set; }
-
-    private readonly string _id;
-
-    public DateTime()
-    {
-        _id = Guid.NewGuid().ToString();
-    }
+    protected override string Type { get; set; } = "datetime-local";
 }

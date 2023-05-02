@@ -1,22 +1,9 @@
-﻿<div class="input-component">
-    <label for="@_id">@Label</label>
-    <input @bind-value="@InputValue" class="input" id="@_id" type="@Type" />
-</div>
+﻿@inherits BaseInput<string>
+
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code {
-    [Parameter]
-    public string InputValue { get; set; }
-
-    [Parameter]
-    public string Label { get; set; }
-
-    [Parameter]
-    public string Type { get; set; } = "text";
-
-    private readonly string _id;
-
-    public Text()
-    {
-        _id = Guid.NewGuid().ToString();
-    }
+    protected override string Type { get; set; } = "text";
 }

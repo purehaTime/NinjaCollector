@@ -3,7 +3,8 @@
     public class Settings
     {
         public string Id { get; set; }
-        public string ApiName { get; set; }
+        public string Description { get; set; }
+        public string Source { get; set; }
         public string ForGroup { get; set; }
 
         /// <summary>

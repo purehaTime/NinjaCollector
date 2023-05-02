@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
@@ -104,18 +103,21 @@ namespace RedditService.Workers
             var result = await _dbClient.SaveParserSettings(new ParserSettingsModel
             {
                 Id = oldSettings.Id ?? "",
-                Tags = { oldSettings.Tags },
+                Description = oldSettings.Description,
+                Source = "reddit",
+                Group = oldSettings.ForGroup,
                 Timeout = oldSettings.Timeout,
                 Hold = oldSettings.Hold,
-                Source = "reddit",
-                LastPostId = oldSettings.UntilPostId,
-                StartFromPastPost = oldSettings.ByLastPostId,
-                Group = oldSettings.ForGroup,
-                Disabled = oldSettings.Disabled,
+                Counts = oldSettings.Counts,
+                RetryAfterErrorCount = oldSettings.RetryAfterErrorCount,
+                Tags = { oldSettings.Tags },
                 FromDate = Timestamp.FromDateTime(oldSettings.FromDate ?? DateTime.UtcNow),
                 UntilDate = Timestamp.FromDateTime(oldSettings.UntilDate ?? new DateTime()),
+                UntilPostId = oldSettings.UntilPostId,
+                ByLastPostId = oldSettings.ByLastPostId,
                 ContinueMonitoring = oldSettings.ContinueMonitoring,
-                
+                Disabled = oldSettings.Disabled,
+                Filters = DbFilterMap(oldSettings.Filters)
             });
 
             if (!result)
@@ -128,7 +130,7 @@ namespace RedditService.Workers
         {
             return new Settings
             {
-                ApiName = Name,
+                Source = Name,
                 ForGroup = "games",
                 Counts = 0,
                 Hold = 20000,
@@ -170,25 +172,26 @@ namespace RedditService.Workers
 
             return settings?.Where(w => !w.Disabled).Select(s => new Settings
             {
-                Counts = s.PostsCount,
+                Id = s.Id ?? "",
+                Description = s.Description,
+                Source = "reddit",
+                ForGroup = s.Group,
                 Timeout = s.Timeout,
                 Hold = s.Hold,
-                ApiName = s.Source,
-                RetryAfterErrorCount = 3,
-                Id = s.Id,
-                ByLastPostId = s.StartFromPastPost,
+                Counts = s.Counts,
+                RetryAfterErrorCount = s.RetryAfterErrorCount,
                 Tags = s.Tags.ToList(),
-                ForGroup = s.Group,
-                FromDate = s.FromDate?.ToDateTime(),
-                UntilDate = s.UntilDate?.ToDateTime(),
-                FromPostId = s.LastPostId,
-                Disabled = s.Disabled,
+                FromDate = s.FromDate.ToDateTime(),
+                UntilDate = s.UntilDate.ToDateTime(),
+                UntilPostId = s.UntilPostId,
+                ByLastPostId = s.ByLastPostId,
                 ContinueMonitoring = s.ContinueMonitoring,
+                Disabled = s.Disabled,
                 Filters = FilterMapping(s.Filters)
             }).ToList();
         }
 
-        public Filter FilterMapping(GrpcHelper.DbService.Filter map)
+        private Filter FilterMapping(GrpcHelper.DbService.Filter map)
         {
             return new Filter
             {
@@ -198,6 +201,19 @@ namespace RedditService.Workers
                 IgnoreDescriptions = map.IgnoreDescriptions.ToList(),
                 IgnoreTitles = map.IgnoreTitles.ToList(),
                 IgnoreWords = map.IgnoreWords.ToList()
+            };
+        }
+
+        private GrpcHelper.DbService.Filter DbFilterMap(Filter filter)
+        {
+            return new GrpcHelper.DbService.Filter
+            {
+                IgnoreVideo = filter.IgnoreVideo,
+                IgnoreRepost = filter.IgnoreRepost,
+                IgnoreAuthors = { filter.IgnoreAuthors },
+                IgnoreDescriptions = { filter.IgnoreDescriptions },
+                IgnoreTitles = { filter.IgnoreTitles.ToList() },
+                IgnoreWords = { filter.IgnoreWords.ToList() }
             };
         }
     }

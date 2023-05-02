@@ -82,23 +82,23 @@ namespace DbService.Services
         {
             var result = await _settings.SaveParserSettings(new ParserSettings
             {
-               Description = request.Description,
-               Source = request.Source,
-               ByUpdate = request.ByUpdate,
-               Timeout = request.Timeout,
-               Id = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id),
-               LastLoadPostId = request.LastPostId,
-               StartFromLastLoadPost = request.StartFromPastPost,
-               JobInterval = request.JobInterval,
-               PostsCount = request.PostsCount,
-               Tags = request.Tags,
-               FromDate = request.FromDate.ToDateTime(),
-               Group = request.Group,
-               Hold = request.Hold,
-               UntilDate = request.UntilDate.ToDateTime(),
-               Disabled = request.Disabled,
-               ContinueMonitoring = request.ContinueMonitoring,
-               Filters = FilterRequestMapping(request.Filters)
+                Id = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id),
+                Description = request.Description,
+                Source = request.Source,
+                Group = request.Group,
+                Timeout = request.Timeout,
+                Hold = request.Hold,
+                Counts = request.Counts,
+                RetryAfterErrorCount = request.RetryAfterErrorCount,
+                Tags = request.Tags.ToList(),
+                FromDate = request.FromDate.ToDateTime(),
+                UntilDate = request.UntilDate.ToDateTime(),
+                FromPostId = request.FromPostId,
+                UntilPostId = request.UntilPostId,
+                ByLastPostId = request.ByLastPostId,
+                ContinueMonitoring = request.ContinueMonitoring,
+                Disabled = request.Disabled,
+                Filters = FilterRequestMapping(request.Filters)
             });
             
             return new Status
@@ -119,22 +119,22 @@ namespace DbService.Services
             {
                  ParserSetting = { response.Select(s => new ParserSettingsModel
                  {
-                     Description = s.Description,
                      Id = s.Id.ToString(),
-                     ByUpdate = s.ByUpdate,
+                     Description = s.Description,
+                     Source = s.Source,
                      Group = s.Group,
                      Timeout = s.Timeout,
-                     JobInterval = s.JobInterval,
-                     LastPostId = s.LastLoadPostId,
-                     PostsCount = s.PostsCount,
-                     Source = s.Source,
-                     StartFromPastPost = s.StartFromLastLoadPost,
-                     Tags = { s.Tags },
                      Hold = s.Hold,
+                     Counts = s.Counts,
+                     RetryAfterErrorCount = s.RetryAfterErrorCount,
+                     Tags = { s.Tags },
                      FromDate = Timestamp.FromDateTime(s.FromDate),
                      UntilDate = Timestamp.FromDateTime(s.UntilDate),
-                     Disabled = s.Disabled,
+                     FromPostId = s.FromPostId,
+                     UntilPostId = s.UntilPostId,
+                     ByLastPostId = s.ByLastPostId,
                      ContinueMonitoring = s.ContinueMonitoring,
+                     Disabled = s.Disabled,
                      Filters = FilterMapping(s.Filters),
                  } ) }
             };
