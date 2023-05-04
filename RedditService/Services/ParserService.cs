@@ -2,6 +2,7 @@
 using RedditService.Interfaces;
 using RedditService.Model;
 using System.Collections.Concurrent;
+using Models.Models;
 using Worker.Model;
 
 namespace RedditService.Services
@@ -21,7 +22,7 @@ namespace RedditService.Services
 
         public async Task<Content> ParsePost(Post post, Filter filter)
         {
-            if (!_filterService.IsValid(post, filter)) 
+            if (!_filterService.IsValid(post, filter))
             {
                 return null;
             }

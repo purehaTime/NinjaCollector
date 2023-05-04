@@ -1,4 +1,4 @@
-﻿namespace Worker.Model
+﻿namespace Models.Models
 {
     public class Filter
     {

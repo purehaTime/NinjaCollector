@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Models.Models;
+using Serilog;
 using Serilog.Core;
 using Worker.Interfaces;
 using Worker.Model;
@@ -115,7 +116,7 @@ namespace Worker
             return false;
         }
 
-        private static async Task Worker(IWorker work, Settings settings)
+        private static async Task Worker(IWorker work, ParserSettings settings)
         {
             //timeout
             await Task.Delay(settings.Hold);

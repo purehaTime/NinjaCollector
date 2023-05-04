@@ -28,7 +28,7 @@ namespace Worker.Grpc
                         WorkerName = s.WorkerInstance.Name,
                         Works = { s.Works.Select(w => new Work
                         {
-                            Group = w.Settings.ForGroup,
+                            Group = w.Settings.Group,
                             TaskId = w.TaskId,
                             SettingsId = w.Settings.Id ?? ""
                         }) }

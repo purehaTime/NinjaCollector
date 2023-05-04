@@ -1,33 +1,38 @@
 ﻿@page "/addparser"
-@using MainService.Models
 @using MainService.Components.Base
+@using global::Models.Models
+@using MainService.Interfaces
+
+@inject IParserService _parserService;
 
 <div>
     <div class="add-parser-layout">
         <div>
             <h2>Setting</h2>
-            <Text Label="Description" OnChanged="o => ParserSettings.Description = o" />
-            <Text Label="Group" OnChanged="o => ParserSettings.Group = o" />
-            <Number Label="Posts count" OnChanged="o => ParserSettings.PostsCount = o" />
-            <Text Label="LastLoadPostId" OnChanged="o => ParserSettings.StartFromLastLoadPost = o" />
-            <Text Label="ByUpdate" OnChanged="o => ParserSettings.ByUpdate = o" />
-            <Number Label="Timeout (ms)" OnChanged="o => ParserSettings.Timeout = o" />
-            <Number Label="JobInterval" OnChanged="o => ParserSettings.JobInterval = o" />
-            <Text Label="Tags" OnChanged="o => ParserSettings.Tags = o" />
-            <Number Label="Hold (ms)" OnChanged="o => ParserSettings.Hold = o" />
-            <DateTime Label="FromDate" OnChanged="o => ParserSettings.FromDate = o" />
-            <DateTime Label="UntilDate" OnChanged="o => ParserSettings.UntilDate = o"/>
-            <Checkbox Label="Disabled" OnChanged="o => ParserSettings.Disabled = o" />
-            <Checkbox Label="Continue monitoring" OnChanged="o => ParserSettings.ContinueMonitoring = o" />
+            <Text Label="Description" OnChanged="o => _parserSettings.Description = o" />
+            <Text Label="Source" OnChanged="o => _parserSettings.Source = o" />
+            <Text Label="Group" OnChanged="o => _parserSettings.Group = o" />
+            <Number Label="Timeout (ms)" OnChanged="o => _parserSettings.Timeout = o" />
+            <Number Label="Hold (ms)" OnChanged="o => _parserSettings.Hold = o" />
+            <Number Label="Counts" OnChanged="o => _parserSettings.Counts = o" />
+            <Number Label="How may retry after error" OnChanged="o => _parserSettings.RetryAfterErrorCount = o" />
+            <Text Label="Tags" OnChanged="@(o => _parserSettings.Tags = o.Split('|').ToList())" />
+            <DateTime Label="From date" OnChanged="o => _parserSettings.FromDate = o" />
+            <DateTime Label="Until date" OnChanged="o => _parserSettings.UntilDate = o" />
+            <Text Label="From post Id" OnChanged="o => _parserSettings.FromPostId = o" />
+            <Text Label="Until post Id" OnChanged="o => _parserSettings.UntilPostId = o" />
+            <Checkbox Label="By last post Id" OnChanged="o => _parserSettings.ByLastPostId = o" />
+            <Checkbox Label="Continue monitoring" OnChanged="o => _parserSettings.ContinueMonitoring = o" />
+            <Checkbox Label="Disabled" OnChanged="o => _parserSettings.Disabled = o" />
         </div>
         <div>
             <h2>Filters</h2>
-            <Checkbox Label="Ignore video" OnChanged="o => ParserSettings.IgnoreVideo = o" />
-            <Checkbox Label="Ignore repost" OnChanged="o => ParserSettings.IgnoreRepost = o"/>
-            <Text Label="Ignore words" OnChanged="o => ParserSettings.IgnoreWords = o" />
-            <Text Label="Ignore authors" OnChanged="o => ParserSettings.IgnoreAuthors = o" />
-            <Text Label="Ignore titles" OnChanged="o => ParserSettings.IgnoreTitles = o" />
-            <Text Label="Ignore descriptions" OnChanged="o => ParserSettings.IgnoreDescriptions = o" />
+            <Checkbox Label="Ignore video" OnChanged="o => _parserSettings.Filter.IgnoreVideo = o" />
+            <Checkbox Label="Ignore repost" OnChanged="o => _parserSettings.Filter.IgnoreRepost = o" />
+            <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" />
+            <Text Label="Ignore authors" OnChanged="@(o => _parserSettings.Filter.IgnoreAuthors = o.Split('|').ToList())" />
+            <Text Label="Ignore titles" OnChanged="@(o => _parserSettings.Filter.IgnoreTitles = o.Split('|').ToList())" />
+            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" />
         </div>
     </div>
     <div class="center">
@@ -37,11 +42,11 @@
 
 @code {
 
-    private ParserModel ParserSettings { get; set; } = new ();
+    private ParserSettings _parserSettings { get; } = new ();
 
     public async Task OnSave()
     {
-        Console.WriteLine("");
+        await _parserService.SaveParserSettings(_parserSettings);
     }
     
 }

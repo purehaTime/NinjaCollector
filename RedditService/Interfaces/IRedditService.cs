@@ -1,4 +1,5 @@
-﻿using RedditService.Model;
+﻿using Models.Models;
+using RedditService.Model;
 using Worker.Model;
 
 namespace RedditService.Interfaces

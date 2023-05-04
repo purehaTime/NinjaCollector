@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoFixture;
 using FluentAssertions;
+using Models.Models;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Reddit.Controllers;

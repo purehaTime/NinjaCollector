@@ -3,6 +3,7 @@ using DbService.Interfaces;
 using DbService.Models;
 using DbService.Services;
 using FluentAssertions;
+using Models.Models;
 using MongoDB.Driver;
 using Moq;
 using Serilog;
@@ -13,7 +14,7 @@ namespace UnitTests.DatabaseService
     public class SettingsServiceTests : BaseTest
     {
         private Mock<ILogger> _loggerMock;
-        private Mock<IRepository<ParserSettings>> _parserRepositoryMock;
+        private Mock<IRepository<DbParserSettings>> _parserRepositoryMock;
         private Mock<IRepository<PosterSettings>> _posterRepositoryMock;
 
         private ISettingsService _settingsService;
@@ -22,14 +23,14 @@ namespace UnitTests.DatabaseService
         public void Setup()
         {
             _loggerMock = new Mock<ILogger>();
-            _parserRepositoryMock = new Mock<IRepository<ParserSettings>>();
+            _parserRepositoryMock = new Mock<IRepository<DbParserSettings>>();
             _posterRepositoryMock = new Mock<IRepository<PosterSettings>>();
         }
 
         [Test]
         public void SaveParserSettings_ShouldReturn_True()
         {
-            var parser = Fixture.Create<ParserSettings>();
+            var parser = Fixture.Create<DbParserSettings>();
 
             _parserRepositoryMock.Setup(s => s.Insert(parser, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(true);
 
@@ -49,7 +50,7 @@ namespace UnitTests.DatabaseService
         [Test]
         public void SaveParserSettings_ShouldReturn_False()
         {
-            var parser = Fixture.Create<ParserSettings>();
+            var parser = Fixture.Create<DbParserSettings>();
 
             _parserRepositoryMock.Setup(s => s.Insert(parser, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(false);
 
@@ -110,10 +111,10 @@ namespace UnitTests.DatabaseService
         public void GetParserSettings_ShouldReturn_ParserSettings()
         {
             var source = Fixture.Create<string>();
-            var parserSettings = Fixture.CreateMany<ParserSettings>(5).ToList();
+            var parserSettings = Fixture.CreateMany<DbParserSettings>(5).ToList();
 
             _parserRepositoryMock
-                .Setup(s => s.FindMany(It.IsAny<FilterDefinition<ParserSettings>>(), It.IsAny<FindOptions>(), CancellationToken.None))
+                .Setup(s => s.FindMany(It.IsAny<FilterDefinition<DbParserSettings>>(), It.IsAny<FindOptions>(), CancellationToken.None))
                 .ReturnsAsync(parserSettings);
 
             _settingsService = new SettingsService(_parserRepositoryMock.Object, _posterRepositoryMock.Object,

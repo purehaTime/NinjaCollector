@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GrpcHelper\GrpcHelper.csproj" />
     <ProjectReference Include="..\Logger\Logger.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
 </Project>

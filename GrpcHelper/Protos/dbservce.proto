@@ -117,7 +117,7 @@ message ParserSettingsModel {
     bool ByLastPostId = 14;
     bool ContinueMonitoring = 15;
     bool Disabled = 16;
-    Filter Filters = 17;
+    Filter Filter = 17;
 }
 
 message PosterSettingsModel {

@@ -1,4 +1,5 @@
-﻿using Worker.Interfaces;
+﻿using Models.Models;
+using Worker.Interfaces;
 
 namespace Worker.Model
 {
@@ -6,7 +7,7 @@ namespace Worker.Model
     {
         public int TaskId { get; set; }
         public CancellationTokenSource Token { get; set; }
-        public Settings Settings { get; set; }
+        public ParserSettings Settings { get; set; }
     }
 
     public class Worker

@@ -1,4 +1,5 @@
-﻿using Reddit.Controllers;
+﻿using Models.Models;
+using Reddit.Controllers;
 using RedditService.Model;
 using Worker.Model;
 

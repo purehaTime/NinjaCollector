@@ -1,11 +1,16 @@
-﻿namespace Worker.Model
+﻿namespace Models.Models
 {
-    public class Settings
+    public class ParserSettings
     {
+        public ParserSettings()
+        {
+            Filter = new Filter();
+        }
+
         public string Id { get; set; }
         public string Description { get; set; }
         public string Source { get; set; }
-        public string ForGroup { get; set; }
+        public string Group { get; set; }
 
         /// <summary>
         /// in milliseconds
@@ -26,9 +31,9 @@
 
         public List<string> Tags { get; set; }
 
-        public DateTime? FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
-        public DateTime? UntilDate { get; set; }
+        public DateTime UntilDate { get; set; }
 
         public string FromPostId { get; set; }
 
@@ -40,6 +45,8 @@
 
         public bool Disabled { get; set; }
 
-        public Filter Filters { get; set; }
+        //Filters
+        public Filter Filter { get; set; }
+
     }
 }

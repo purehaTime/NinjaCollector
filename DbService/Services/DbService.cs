@@ -1,14 +1,12 @@
 ﻿using DbService.Interfaces;
-using Google.Protobuf.Collections;
+using DbService.Models;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
+using Models.Mapping;
 using MongoDB.Bson;
-using Filter = DbService.Models.Filter;
-using ParserSettings = DbService.Models.ParserSettings;
 using Post = DbService.Models.Post;
 using Status = GrpcHelper.DbService.Status;
-using FilterRequest = GrpcHelper.DbService.Filter;
 
 namespace DbService.Services
 {
@@ -80,26 +78,10 @@ namespace DbService.Services
 
         public override async Task<Status> SaveParserSettings(ParserSettingsModel request, ServerCallContext context)
         {
-            var result = await _settings.SaveParserSettings(new ParserSettings
-            {
-                Id = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id),
-                Description = request.Description,
-                Source = request.Source,
-                Group = request.Group,
-                Timeout = request.Timeout,
-                Hold = request.Hold,
-                Counts = request.Counts,
-                RetryAfterErrorCount = request.RetryAfterErrorCount,
-                Tags = request.Tags.ToList(),
-                FromDate = request.FromDate.ToDateTime(),
-                UntilDate = request.UntilDate.ToDateTime(),
-                FromPostId = request.FromPostId,
-                UntilPostId = request.UntilPostId,
-                ByLastPostId = request.ByLastPostId,
-                ContinueMonitoring = request.ContinueMonitoring,
-                Disabled = request.Disabled,
-                Filters = FilterRequestMapping(request.Filters)
-            });
+            var model = (DbParserSettings)request.ToModel();
+            model.DbId = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id);
+
+            var result = await _settings.SaveParserSettings(model);
             
             return new Status
             {
@@ -107,7 +89,7 @@ namespace DbService.Services
             };
         }
 
-        public override async Task<GrpcHelper.DbService.ParserSettings> GetParserSettings(ParserSettingsRequest request, ServerCallContext context)
+        public override async Task<ParserSettings> GetParserSettings(ParserSettingsRequest request, ServerCallContext context)
         {
             ObjectId? settingsId = string.IsNullOrEmpty(request.SettingsId)
                 ? null
@@ -115,57 +97,9 @@ namespace DbService.Services
 
             var response = await _settings.GetParserSettings(request.Source, settingsId);
 
-            return new GrpcHelper.DbService.ParserSettings
+            return new ParserSettings
             {
-                 ParserSetting = { response.Select(s => new ParserSettingsModel
-                 {
-                     Id = s.Id.ToString(),
-                     Description = s.Description,
-                     Source = s.Source,
-                     Group = s.Group,
-                     Timeout = s.Timeout,
-                     Hold = s.Hold,
-                     Counts = s.Counts,
-                     RetryAfterErrorCount = s.RetryAfterErrorCount,
-                     Tags = { s.Tags },
-                     FromDate = Timestamp.FromDateTime(s.FromDate),
-                     UntilDate = Timestamp.FromDateTime(s.UntilDate),
-                     FromPostId = s.FromPostId,
-                     UntilPostId = s.UntilPostId,
-                     ByLastPostId = s.ByLastPostId,
-                     ContinueMonitoring = s.ContinueMonitoring,
-                     Disabled = s.Disabled,
-                     Filters = FilterMapping(s.Filters),
-                 } ) }
-            };
-        }
-
-        private Filter FilterRequestMapping(FilterRequest filter)
-        {
-            var result = filter == null ? null :
-                new Filter
-                {
-                    IgnoreRepost = filter.IgnoreRepost,
-                    IgnoreVideo = filter.IgnoreVideo,
-                    IgnoreAuthors = filter.IgnoreAuthors.ToList(),
-                    IgnoreDescriptions = filter.IgnoreDescriptions.ToList(),
-                    IgnoreTitles = filter.IgnoreTitles.ToList(),
-                    IgnoreWords = filter.IgnoreWords.ToList(),
-                };
-
-            return result;
-        }
-
-        private FilterRequest FilterMapping(Filter filter)
-        {
-            return new FilterRequest
-            {
-                IgnoreRepost = filter.IgnoreRepost,
-                IgnoreVideo = filter.IgnoreVideo,
-                IgnoreAuthors = { filter.IgnoreAuthors },
-                IgnoreDescriptions = { filter.IgnoreDescriptions },
-                IgnoreTitles = { filter.IgnoreTitles },
-                IgnoreWords = { filter.IgnoreWords },
+                 ParserSetting = { response.Select(s => s.ToGrpcData()) }
             };
         }
     }

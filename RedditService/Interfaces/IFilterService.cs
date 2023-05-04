@@ -1,4 +1,5 @@
-﻿using Worker.Model;
+﻿using Models.Models;
+using Worker.Model;
 using Post = Reddit.Controllers.Post;
 
 namespace RedditService.Interfaces

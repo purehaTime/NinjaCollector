@@ -1,4 +1,5 @@
-﻿using RedditService.Interfaces;
+﻿using Models.Models;
+using RedditService.Interfaces;
 using Worker.Model;
 using Post = Reddit.Controllers.Post;
 

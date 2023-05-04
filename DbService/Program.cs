@@ -21,7 +21,7 @@ namespace DbService
             builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
 
             builder.Services.AddScoped<IGridFsService, GridFsService>();
-            builder.Services.AddScoped<IRepository<ParserSettings>, ParserSettingsRepository>();
+            builder.Services.AddScoped<IRepository<DbParserSettings>, ParserSettingsRepository>();
             builder.Services.AddScoped<IRepository<Image>, ImageRepository>();
             builder.Services.AddScoped<IRepository<Post>, PostRepository>();
             builder.Services.AddScoped<IRepository<History>, HistoryRepository>();

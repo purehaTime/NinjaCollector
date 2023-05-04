@@ -8,8 +8,9 @@ using RedditService.Model;
 using RedditService.Workers;
 using Serilog;
 using Worker.Interfaces;
-using Worker.Model;
-using Filter = Worker.Model.Filter;
+using Models.Models;
+using Filter = Models.Models.Filter;
+using ParserSettings = Models.Models.ParserSettings;
 
 namespace UnitTests.RedditServiceTests
 {
@@ -81,14 +82,14 @@ namespace UnitTests.RedditServiceTests
         {
             var subName = Fixture.Create<string>();
             var filter = Fixture.Create<Filter>();
-            var settings = Fixture.Build<Settings>()
+            var settings = Fixture.Build<ParserSettings>()
                 .With(w => w.ByLastPostId, true)
-                .With(w => w.ForGroup, subName)
+                .With(w => w.Group, subName)
                 .With(w => w.ContinueMonitoring, true)
                 .With(w => w.FromDate, DateTime.UtcNow)
                 .With(w => w.UntilDate, DateTime.UtcNow)
                 .With(w => w.Disabled, false)
-                .With(w => w.Filters, filter)
+                .With(w => w.Filter, filter)
                 .Create();
 
             var contents = Fixture.Build<Content>()
@@ -120,14 +121,14 @@ namespace UnitTests.RedditServiceTests
             var subName = Fixture.Create<string>();
             var filter = Fixture.Create<Filter>();
 
-            var settings = Fixture.Build<Settings>()
+            var settings = Fixture.Build<ParserSettings>()
                 .With(w => w.ByLastPostId, true)
-                .With(w => w.ForGroup, subName)
+                .With(w => w.Group, subName)
                 .With(w => w.ContinueMonitoring, false)
                 .With(w => w.FromDate, DateTime.UtcNow)
                 .With(w => w.UntilDate, DateTime.UtcNow)
                 .With(w => w.Disabled, false)
-                .With(w => w.Filters, filter)
+                .With(w => w.Filter, filter)
                 .Create();
 
             var contents = Fixture.Build<Content>()
