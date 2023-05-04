@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Components\AddParser.razor.css" />
+    <None Remove="Components\Base\Option.razor.css" />
     <None Remove="Components\Dashboard.razor.css" />
     <None Remove="Components\Menu.razor.css" />
     <None Remove="Components\StatusTable.razor.css" />
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <Content Include="Components\AddParser.razor.css" />
+    <Content Include="Components\Base\Option.razor.css" />
     <Content Include="Components\Menu.razor.css" />
     <Content Include="Components\Dashboard.razor.css" />
     <Content Include="Components\StatusTable.razor.css" />

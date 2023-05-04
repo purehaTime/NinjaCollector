@@ -27,7 +27,7 @@ namespace MainService.Services
             {
                 _contextAccessor.HttpContext?.Response.Cookies.Append("session", result, new CookieOptions
                 {
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(5)
+                    Expires = DateTimeOffset.UtcNow.AddDays(1)
                 });
                 return true;
             }

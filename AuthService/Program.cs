@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AuthService.Interfaces;
@@ -22,28 +21,9 @@ namespace AuthService
             builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
             builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
             builder.Services.AddTransient<IPasswordHasher<string>, PasswordHasher<string>>();
-
             builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
-            /*
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.TokenValidationParameters = GetTokenParameters(builder);
-            });
-            */
 
             var app = builder.Build();
-
-            app.MapGet("/", () => "Hello World!");
-            app.MapGet("/test", async (IAuthorizeService service) =>
-            {
-                var result = await service.AuthorizeUser("test", "pass", "invite");
-                return result;
-            });
             app.MapGrpcService<Services.AuthService>();
             app.Run();
         }

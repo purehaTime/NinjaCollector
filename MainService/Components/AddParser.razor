@@ -2,6 +2,7 @@
 @using MainService.Components.Base
 @using global::Models.Models
 @using MainService.Interfaces
+@using MainService.Models
 
 @inject IParserService _parserService;
 
@@ -10,7 +11,7 @@
         <div>
             <h2>Setting</h2>
             <Text Label="Description" OnChanged="o => _parserSettings.Description = o" />
-            <Text Label="Source" OnChanged="o => _parserSettings.Source = o" />
+            <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _parserSettings.Source = o" />
             <Text Label="Group" OnChanged="o => _parserSettings.Group = o" />
             <Number Label="Timeout (ms)" OnChanged="o => _parserSettings.Timeout = o" />
             <Number Label="Hold (ms)" OnChanged="o => _parserSettings.Hold = o" />
@@ -42,7 +43,7 @@
 
 @code {
 
-    private ParserSettings _parserSettings { get; } = new ();
+    private readonly ParserSettings _parserSettings = new ();
 
     public async Task OnSave()
     {

@@ -5,8 +5,6 @@ namespace GrpcHelper.Clients
 {
     public class WorkerClientAggregator : IWorkerClientAggregator
     {
-        private readonly IWorkerServiceClient _client;
-
         public IWorkerServiceClient Reddit { get; }
 
         public WorkerClientAggregator(GrpcClientFactory grpcClientFactory)

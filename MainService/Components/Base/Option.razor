@@ -1,0 +1,35 @@
+﻿<div class="select-component">
+    <label for="@_id">@Label</label>
+    <select class="select" id="@_id" @onchange="OnChangedValue">
+        <option value="0">SELECT</option>
+        @foreach (var opt in Options)
+        {
+            <option value="@opt">@opt</option>
+        }
+    </select>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public List<string> Options { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnChanged { get; set; }
+
+    private readonly string _id;
+
+    public Option()
+    {
+        _id = Guid.NewGuid().ToString();
+    }
+
+    private void OnChangedValue(ChangeEventArgs val)
+    {
+        OnChanged.InvokeAsync(val.Value?.ToString());
+    }
+
+}

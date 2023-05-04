@@ -27,11 +27,12 @@ namespace MainService
 
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IParserService, ParserService>();
             builder.Services.AddScoped<IWorkerService<RedditStatusModel>, RedditStatusService>();
 
             builder.Services.AddAntiforgery(opt => {
                 opt.Cookie.Name = "x-xsrf-token";
-                opt.Cookie.Expiration = TimeSpan.FromMinutes(5);
+                opt.Cookie.Expiration = TimeSpan.FromDays(1);
             });
 
             var app = builder.Build();
