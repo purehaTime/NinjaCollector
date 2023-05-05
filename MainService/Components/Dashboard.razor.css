@@ -10,4 +10,5 @@
 
 .left-side {
     border-right: #89cd32 1px solid;
+    white-space: nowrap;
 }

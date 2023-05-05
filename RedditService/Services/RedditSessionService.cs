@@ -42,6 +42,7 @@ namespace RedditService.Services
                 });
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
+                _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
 
                 _logger.Information("start retrieval new access token");
                 var tokenResponse = await _httpClient.PostAsync(_url, formContent);

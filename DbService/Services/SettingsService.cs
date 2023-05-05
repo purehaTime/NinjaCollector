@@ -22,14 +22,19 @@ namespace DbService.Services
         
         public async Task<List<DbParserSettings>> GetParserSettings(string source, ObjectId? settingsId)
         {
-            var filter = Builders<DbParserSettings>.Filter.Eq(e => e.Source, source);
+            var filter = Builders<DbParserSettings>.Filter.Empty;
+            if (!string.IsNullOrEmpty(source))
+            {
+                filter = Builders<DbParserSettings>.Filter.Eq(e => e.Source, source);
+            }
+
             if (settingsId != null)
             {
                 filter &= Builders<DbParserSettings>.Filter.Eq(e => e.DbId, settingsId);
             }
             var results = await _parserRepository.FindMany(filter, null!, CancellationToken.None);
 
-            return results.ToList();
+            return results?.ToList() ?? new List<DbParserSettings>();
         }
 
         public async Task<bool> SaveParserSettings(DbParserSettings settings)

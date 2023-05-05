@@ -27,7 +27,7 @@ public class AuthStateProvider : AuthenticationStateProvider
                 claimsIdentity = new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, "user"),
-                    new Claim(ClaimTypes.Role, "user"),
+                    new Claim(ClaimTypes.Role, "role"),
                     new Claim("Jti", Guid.NewGuid().ToString()),
                 }, "customAuth" );
             }

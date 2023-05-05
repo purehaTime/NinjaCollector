@@ -1,6 +1,5 @@
 ﻿.menu-item {
     margin: 10px;
-    padding: 10px;
     text-align: center;
     font-size: 16px;
     border: #89cd32 1px solid;
@@ -9,6 +8,9 @@
 
 .menu-item > a {
     color: #89cd32;
+    text-decoration: inherit;
+    display: block;
+    padding: 10px;
 }
 
 .menu-item:hover {
@@ -25,5 +27,7 @@
 .link {
     color: #89cd32;
     text-decoration: inherit;
+    display: block;
+    margin: 10px;
 }
 

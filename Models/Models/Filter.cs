@@ -2,6 +2,14 @@
 {
     public class Filter
     {
+        public Filter()
+        {
+            IgnoreWords = new List<string>();
+            IgnoreAuthors = new List<string>();
+            IgnoreTitles = new List<string>();
+            IgnoreDescriptions = new List<string>();
+        }
+
         public bool IgnoreVideo { get; set; }
         public bool IgnoreRepost { get; set; }
         public List<string> IgnoreWords { get; set; }

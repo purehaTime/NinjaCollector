@@ -38,3 +38,24 @@ input:focus {
     display: flex;
     flex-direction: column;
 }
+
+.checkbox-component {
+    margin: 15px 10px;
+    display: flex;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    outline: none;
+    outline-offset: 0;
+}
+
+.checkbox-component > label {
+    padding-right: 15px;
+}
+
+.checkbox-component > input {
+    transform: scale(2);
+    filter: hue-rotate(230deg);
+}
+

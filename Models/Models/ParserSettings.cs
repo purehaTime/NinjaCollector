@@ -5,6 +5,7 @@
         public ParserSettings()
         {
             Filter = new Filter();
+            Tags = new List<string>();
         }
 
         public string Id { get; set; }
