@@ -1,4 +1,4 @@
-﻿using Models.Models;
+﻿using Models.DataModels;
 using Serilog;
 using Serilog.Core;
 using Worker.Interfaces;
@@ -26,10 +26,8 @@ namespace Worker
 
         public static async Task RunWorker(IWorker worker)
         {
-            Console.WriteLine("start load setting");
             var settings = await worker.Init();
             var works = new List<Work>();
-            Console.WriteLine("settings loaded");
             foreach (var setting in settings)
             {
                 var ct = new CancellationTokenSource();

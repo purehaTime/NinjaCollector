@@ -3,7 +3,7 @@ using GrpcHelper.Interfaces;
 using MainService.Interfaces;
 using Models.Mapping;
 using ILogger = Serilog.ILogger;
-using ParserSettings = Models.Models.ParserSettings;
+using ParserSettings = Models.DataModels.ParserSettings;
 
 namespace MainService.Services
 {
@@ -46,6 +46,16 @@ namespace MainService.Services
             }
 
             return null;
+        }
+
+        public async Task<ParserSettings> GetParserSettings(string settingId)
+        {
+            var result = await _dbClient.GetParserSettings(new ParserSettingsRequest
+            {
+                SettingsId = settingId
+            });
+
+            return result.FirstOrDefault(f => f.Id == settingId)?.ToModel();
         }
 
         public Task<bool> DeleteParserSettings(string id)

@@ -1,4 +1,4 @@
-﻿using Models.Models;
+﻿using Models.DataModels;
 
 namespace MainService.Interfaces
 {
@@ -7,6 +7,8 @@ namespace MainService.Interfaces
         public Task<bool> SaveParserSettings(ParserSettings parserSettings);
 
         public Task<List<ParserSettings>> GetAllParserSettings();
+
+        public Task<ParserSettings> GetParserSettings(string settingId);
 
         public Task<bool> DeleteParserSettings(string id);
     }

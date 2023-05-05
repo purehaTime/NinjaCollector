@@ -3,12 +3,12 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using Models.Mapping;
-using Models.Models;
 using RedditService.Interfaces;
 using RedditService.Model;
 using Worker.Interfaces;
+using Filter = Models.DataModels.Filter;
 using ILogger = Serilog.ILogger;
-using ParserSettings = Models.Models.ParserSettings;
+using ParserSettings = Models.DataModels.ParserSettings;
 
 namespace RedditService.Workers
 {
@@ -126,7 +126,7 @@ namespace RedditService.Workers
                 FromPostId = null,
                 Tags = new List<string>(),
                 Disabled = false,
-                Filter = new Models.Models.Filter()
+                Filter = new Filter()
             };
         }
 

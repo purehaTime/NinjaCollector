@@ -6,7 +6,7 @@
 
 @if (_redditModel != null)
 {
-    <StatusTable Status="@_redditModel" OnStop="async taskId => await RedditStatus.StopWorker(taskId)" />
+    <StatusTable Status="@_redditModel" OnStop="async taskId => await StopWorker(taskId)" />
 }
 else
 {
@@ -21,4 +21,15 @@ else
     {
         _redditModel = await RedditStatus.GetStatus();
     }
+
+    private async Task StopWorker(int taskId)
+    {
+        var result = await RedditStatus.StopWorker(taskId);
+
+        if (result)
+        {
+            _redditModel = await RedditStatus.GetStatus();
+        }
+    }
+
 }

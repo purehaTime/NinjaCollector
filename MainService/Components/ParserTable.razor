@@ -1,0 +1,71 @@
+﻿@using MainService.Components.Base
+@using global::Models.DataModels
+
+@inject NavigationManager NavManager
+
+<table class="table">
+    <tr class="t-head">
+        <th colspan="16">Settings</th>
+        <th colspan="6">Filters</th>
+    </tr>
+    <tr class="t-head">
+        <th>Description</th>
+        <th>Source</th>
+        <th>Group</th>
+        <th>Timeout</th>
+        <th>Hold</th>
+        <th>Counts</th>
+        <th>RetryAfterErrorCount</th>
+        <th>Tags</th>
+        <th>From date</th>
+        <th>Until date</th>
+        <th>From post Id</th>
+        <th>Until post Id</th>
+        <th>By last post Id</th>
+        <th>Continue monitoring</th>
+        <th>Disabled</th>
+        <th>Ignore video</th>
+        <th>Ignore repost</th>
+        <th>Ignore words</th>
+        <th>Ignore authors</th>
+        <th>Ignore titles</th>
+        <th>Ignore descriptions</th>
+    </tr>
+    @foreach (var row in Settings)
+    {
+        <tr class="t-row">
+            <td>@row.Description</td>
+            <td>@row.Source</td>
+            <td>@row.Group</td>
+            <td>@row.Timeout</td>
+            <td>@row.Hold</td>
+            <td>@row.Counts</td>
+            <td>@row.RetryAfterErrorCount</td>
+            <td>@string.Join('|', row.Tags)</td>
+            <td>@row.FromDate</td>
+            <td>@row.UntilDate</td>
+            <td>@row.FromPostId</td>
+            <td>@row.UntilPostId</td>
+            <td>@row.ByLastPostId</td>
+            <td>@row.ContinueMonitoring</td>
+            <td>@row.Disabled</td>
+            <td>@row.Filter.IgnoreRepost</td>
+            <td>@row.Filter.IgnoreVideo</td>
+            <td>@string.Join('|',row.Filter.IgnoreWords)</td>
+            <td>@string.Join('|',row.Filter.IgnoreAuthors)</td>
+            <td>@string.Join('|',row.Filter.IgnoreTitles)</td>
+            <td>@string.Join('|',row.Filter.IgnoreDescriptions)</td>
+            <td>
+                <div>
+                    <Button Action="@(() => NavManager.NavigateTo($"/editparser/{row.Id}"))">Edit</Button>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+@code {
+
+    [Parameter]
+    public List<ParserSettings> Settings { get; set; }
+}

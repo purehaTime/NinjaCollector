@@ -1,5 +1,4 @@
 ﻿using GrpcHelper.Interfaces;
-using MainService.Interfaces;
 using MainService.Models;
 
 namespace MainService.Services

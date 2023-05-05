@@ -1,6 +1,5 @@
-﻿using Models.Models;
+﻿using Models.DataModels;
 using RedditService.Interfaces;
-using Worker.Model;
 using Post = Reddit.Controllers.Post;
 
 namespace RedditService.Services

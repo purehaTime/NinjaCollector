@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Models.Models;
+using Models.DataModels;
 using Moq;
 using Reddit.Controllers;
 using RedditService.Interfaces;

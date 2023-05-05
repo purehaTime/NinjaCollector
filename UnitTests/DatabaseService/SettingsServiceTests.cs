@@ -3,7 +3,6 @@ using DbService.Interfaces;
 using DbService.Models;
 using DbService.Services;
 using FluentAssertions;
-using Models.Models;
 using MongoDB.Driver;
 using Moq;
 using Serilog;

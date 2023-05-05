@@ -17,3 +17,22 @@ a {
     color: inherit;
     text-decoration: inherit;
 }
+
+.table {
+    border: #89cd32 1px solid;
+}
+
+.t-head > th {
+    border-bottom: #89cd32 2px solid;
+    padding: 10px 20px;
+}
+
+.t-row > td {
+    border-right: #89cd32 1px solid;
+    padding: 5px 10px;
+    text-align: right;
+}
+
+.t-row > td:last-child {
+    border-right: none;
+}

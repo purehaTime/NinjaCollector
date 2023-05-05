@@ -1,0 +1,23 @@
+﻿@page "/parsers"
+@using MainService.Interfaces
+@using global::Models.DataModels
+@inject IParserService _parserService
+
+@if (_parserSettings != null)
+{
+    <ParserTable Settings="new List<ParserSettings>()" />
+}
+else
+{
+    <h5>Loading...</h5>
+}
+
+
+@code {
+    private List<ParserSettings> _parserSettings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _parserSettings = await _parserService.GetAllParserSettings();
+    }
+}

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using GrpcHelper;
 using Logger;
 using RedditService.API;
@@ -6,7 +5,6 @@ using RedditService.Interfaces;
 using RedditService.Services;
 using RedditService.Workers;
 using Serilog;
-using Worker;
 using Worker.ServiceExtension;
 
 namespace RedditService
@@ -39,8 +37,6 @@ namespace RedditService
                 builder.Host.UseSerilog(LoggerSetup.ConfigureWithHttp);
 
                 var app = builder.Build();
-
-                app.MapGet("/", () => "Hello World!");
 
                 app.MapWorkerService();
                 await app.RunWorkers();

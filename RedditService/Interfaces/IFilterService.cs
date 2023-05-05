@@ -1,4 +1,4 @@
-﻿using Models.Models;
+﻿using Models.DataModels;
 using Worker.Model;
 using Post = Reddit.Controllers.Post;
 

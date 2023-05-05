@@ -1,9 +1,9 @@
-﻿using System.Net.Http.Headers;
+﻿using Newtonsoft.Json;
 using RedditService.Interfaces;
 using RedditService.Model;
-using ILogger = Serilog.ILogger;
+using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json;
+using ILogger = Serilog.ILogger;
 
 namespace RedditService.Services
 {

@@ -1,4 +1,4 @@
-﻿using Models.Models;
+﻿using Models.DataModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

@@ -2,7 +2,7 @@
 
 <div class="@(Css ?? "input-component")">
     <label for="@_id">@Label</label>
-    <input class="input" id="@_id" type="@Type" @onchange="OnChangedValue"/>
+    <input class="input" id="@_id" type="@Type" @onchange="OnChangedValue" value="@InputValue" />
 </div>
 
 @code {

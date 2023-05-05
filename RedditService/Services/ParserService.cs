@@ -1,9 +1,8 @@
-﻿using Reddit.Controllers;
+﻿using Models.DataModels;
+using Reddit.Controllers;
 using RedditService.Interfaces;
 using RedditService.Model;
 using System.Collections.Concurrent;
-using Models.Models;
-using Worker.Model;
 
 namespace RedditService.Services
 {
