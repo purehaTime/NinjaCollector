@@ -1,4 +1,4 @@
-﻿namespace Models.DataModels
+﻿namespace ModelsHelper.Models
 {
     public class ParserSettings
     {

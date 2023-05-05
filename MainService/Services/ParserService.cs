@@ -1,9 +1,9 @@
 ﻿using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using MainService.Interfaces;
-using Models.Mapping;
+using ModelsHelper.Mapping;
 using ILogger = Serilog.ILogger;
-using ParserSettings = Models.DataModels.ParserSettings;
+using ParserSettings = ModelsHelper.Models.ParserSettings;
 
 namespace MainService.Services
 {

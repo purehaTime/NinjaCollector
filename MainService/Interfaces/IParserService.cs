@@ -1,4 +1,4 @@
-﻿using Models.DataModels;
+﻿using ModelsHelper.Models;
 
 namespace MainService.Interfaces
 {

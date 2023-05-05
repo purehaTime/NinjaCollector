@@ -8,8 +8,8 @@ using RedditService.Model;
 using RedditService.Workers;
 using Serilog;
 using Worker.Interfaces;
-using Filter = Models.DataModels.Filter;
-using ParserSettings = Models.DataModels.ParserSettings;
+using Filter = ModelsHelper.Models.Filter;
+using ParserSettings = ModelsHelper.Models.ParserSettings;
 
 namespace UnitTests.RedditServiceTests
 {

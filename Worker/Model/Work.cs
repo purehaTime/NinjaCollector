@@ -1,4 +1,4 @@
-﻿using Models.DataModels;
+﻿using ModelsHelper.Models;
 using Worker.Interfaces;
 
 namespace Worker.Model

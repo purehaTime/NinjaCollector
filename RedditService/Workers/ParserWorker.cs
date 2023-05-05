@@ -3,12 +3,13 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using Models.Mapping;
+using ModelsHelper.Mapping;
 using RedditService.Interfaces;
 using RedditService.Model;
 using Worker.Interfaces;
-using Filter = Models.DataModels.Filter;
+using Filter = ModelsHelper.Models.Filter;
 using ILogger = Serilog.ILogger;
-using ParserSettings = Models.DataModels.ParserSettings;
+using ParserSettings = ModelsHelper.Models.ParserSettings;
 
 namespace RedditService.Workers
 {

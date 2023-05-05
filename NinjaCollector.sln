@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService", "AuthService\AuthService.csproj", "{ABDC1883-7209-4F0D-A34B-E83B8DF21B01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsHelper", "Models\ModelsHelper.csproj", "{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

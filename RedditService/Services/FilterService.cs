@@ -1,4 +1,4 @@
-﻿using Models.DataModels;
+﻿using ModelsHelper.Models;
 using RedditService.Interfaces;
 using Post = Reddit.Controllers.Post;
 

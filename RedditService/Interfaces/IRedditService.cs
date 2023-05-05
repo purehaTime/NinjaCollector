@@ -1,4 +1,4 @@
-﻿using Models.DataModels;
+﻿using ModelsHelper.Models;
 using RedditService.Model;
 using Worker.Model;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GrpcHelper.AuthService;
-using Models.DataModels;
+using ModelsHelper.Models;
 
 namespace Models.Mapping
 {
