@@ -11,6 +11,8 @@ service WorkerService {
     rpc RestartWorker(WorkerRestart) returns (Status);
     rpc StopWorker(WorkerTaskId) returns (Status);
     rpc StartWorker(WorkerSettingsId) returns (Status);
+    rpc StopAll(google.protobuf.Empty) returns (Status);
+    rpc RunAll(google.protobuf.Empty) returns (Status);
 }
 
 message Work {

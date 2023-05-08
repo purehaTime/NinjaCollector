@@ -2,12 +2,10 @@
 using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
-using Models.Mapping;
 using ModelsHelper.Mapping;
 using RedditService.Interfaces;
 using RedditService.Model;
 using Worker.Interfaces;
-using Filter = ModelsHelper.Models.Filter;
 using ILogger = Serilog.ILogger;
 using ParserSettings = ModelsHelper.Models.ParserSettings;
 
@@ -36,13 +34,13 @@ namespace RedditService.Workers
         public async Task<List<ParserSettings>> Init()
         {
             var settings = await GetSettings(null);
-            return settings.Count > 0 ? settings : new List<ParserSettings> { GetDefaultSettings() };
+            return settings.Count > 0 ? settings : new List<ParserSettings> ();
         }
 
         public async Task<ParserSettings> LoadSettings(string settingsId)
         {
             var settings = await GetSettings(settingsId);
-            return settings.FirstOrDefault(f => f.Id == settingsId) ?? GetDefaultSettings();
+            return settings.FirstOrDefault(f => f.Id == settingsId) ?? new ParserSettings();
         }
 
         public async Task<ParserSettings> Run(ParserSettings settings)
@@ -107,28 +105,6 @@ namespace RedditService.Workers
             {
                 _logger.Error($"Can't save settings for reddit. Settings id: {oldSettings.Id}");
             }
-        }
-
-        private ParserSettings GetDefaultSettings()
-        {
-            return new ParserSettings
-            {
-                Source = Name,
-                Group = "games",
-                Counts = 0,
-                Hold = 20000,
-                Timeout = 30000,
-                RetryAfterErrorCount = 3,
-                ByLastPostId = false,
-                FromDate = DateTime.UtcNow,
-                UntilDate = DateTime.UtcNow - TimeSpan.FromDays(1),
-                UntilPostId = null,
-                ContinueMonitoring = true,
-                FromPostId = null,
-                Tags = new List<string>(),
-                Disabled = false,
-                Filter = new Filter()
-            };
         }
 
         private GrpcHelper.DbService.Image ImageMapper(ImageContainer image, IEnumerable<string> tags)

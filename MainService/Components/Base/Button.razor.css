@@ -1,6 +1,4 @@
 ﻿.button {
-    display: flex;
-    flex-direction: row-reverse;
     appearance: none;
     backface-visibility: hidden;
     background-color: #89cd32;
@@ -28,18 +26,41 @@
     color: #333333;
 }
 
+.icon {
+    display: inline-block;
+    background-color: #89cd32;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: relative;
+    padding: 0px;
+    border: 0;
+    border-radius: 4px;
+}
+
 .button:hover {
-        background-color: #89cd32;
-        opacity: 1;
-        transform: translateY(0);
-        transition-duration: .35s;
-    }
+    background-color: #89cd32;
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: .35s;
+    box-shadow: #89cd32 0 0px 6px;
+
+}
 
 .button:active {
         transform: translateY(2px);
         transition-duration: .35s;
     }
 
-.button:hover {
-        box-shadow: #89cd32 0 3px 6px;
+.icon:hover {
+    background-color: #89cd32;
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: .35s;
+    box-shadow: #89cd32 0 3px 6px;
+}
+
+.icon:active {
+    transform: translateY(2px);
+    transition-duration: .35s;
 }

@@ -41,5 +41,17 @@ namespace MainService.Services
                 Works = works
             };
         }
+
+        public async Task<bool> StopAll()
+        {
+            var result = await _workerClient.StopAll();
+            return result;
+        }
+
+        public async Task<bool> RunAll()
+        {
+            var result = await _workerClient.RunAll();
+            return result;
+        }
     }
 }

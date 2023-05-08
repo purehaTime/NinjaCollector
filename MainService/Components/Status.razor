@@ -1,17 +1,19 @@
 ﻿@using MainService.Models
 @using MainService.Interfaces
+@using MainService.Components.Base
 @inject IWorkerService<RedditStatusModel> RedditStatus
 @inherits LayoutComponentBase
 @page "/"
 
-@if (_redditModel != null)
+@if (_redditModel != null && _redditModel.Works.Count > 0)
 {
     <StatusTable Status="@_redditModel" OnStop="async taskId => await StopWorker(taskId)" />
 }
-else
-{
-    <h5>Loading...</h5>
-}
+
+<div>
+    <Button Action="@(async () => await StopAll())">Stop all workers</Button>
+    <Button Action="@(async () => await RunAll())">Run all workers</Button>
+</div>
 
 
 @code {
@@ -32,4 +34,13 @@ else
         }
     }
 
+    private async Task RunAll()
+    {
+        var redditRun = await RedditStatus.RunAll();
+    }
+
+    private async Task StopAll()
+    {
+        var redditStop = await RedditStatus.StopAll();
+    }
 }

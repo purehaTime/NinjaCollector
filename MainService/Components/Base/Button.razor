@@ -1,4 +1,6 @@
-﻿<button class="button" @onclick="Action">@ChildContent</button>
+﻿@using System.Diagnostics.Contracts
+@using MainService.Models
+<button class="@(ButtonType == ButtonType.Button ? "button" : "icon")" @onclick="Action">@ChildContent</button>
 
 @code {
 
@@ -7,4 +9,8 @@
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public ButtonType ButtonType { get; set; } = ButtonType.Button;
+
 }

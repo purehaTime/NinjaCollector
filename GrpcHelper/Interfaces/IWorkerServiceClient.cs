@@ -8,5 +8,8 @@ namespace GrpcHelper.Interfaces
         public Task<bool> StopWorker(int taskId);
         public Task<bool> RestartWorker(int taskId);
         public Task<bool> StartWorker(string settingId);
+        public Task<bool> StopAll();
+        public Task<bool> RunAll();
+
     }
 }

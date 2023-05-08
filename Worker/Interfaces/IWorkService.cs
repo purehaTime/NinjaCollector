@@ -11,5 +11,6 @@ namespace Worker.Interfaces
         Task<bool> RestartWorker(int taskId, string settingId);
         bool StopAll();
         bool StopWorker(int taskId);
+        bool StopWork(string settingId);
     }
 }

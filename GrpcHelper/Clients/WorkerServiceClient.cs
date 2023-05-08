@@ -47,5 +47,17 @@ namespace GrpcHelper.Clients
             });
             return response.Success;
         }
+
+        public async Task<bool> StopAll()
+        {
+            var response = await _client.StopAllAsync(new Empty());
+            return response.Success;
+        }
+
+        public async Task<bool> RunAll()
+        {
+            var response = await _client.RunAllAsync(new Empty());
+            return response.Success;
+        }
     }
 }

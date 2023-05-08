@@ -7,5 +7,9 @@ namespace MainService.Interfaces
         public Task<bool> StopWorker(int taskId);
 
         public Task<TStatusModel> GetStatus();
+
+        public Task<bool> StopAll();
+
+        public Task<bool> RunAll();
     }
 }

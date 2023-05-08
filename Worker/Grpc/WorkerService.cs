@@ -42,15 +42,32 @@ namespace Worker.Grpc
         public override async Task<Status> RestartWorker(WorkerRestart request, ServerCallContext context)
         {
             var result = await _workService.RestartWorker(request.TaskId, request.SettingsId);
-
             return new Status { Success = result };
         }
 
         public override async Task<Status> RestartWorkers(Empty request, ServerCallContext context)
         {
             var result = await _workService.RestartWorkers();
-
             return new Status { Success = result };
+        }
+
+        public override async Task<Status> StopAll(Empty request, ServerCallContext context)
+        {
+            var result = _workService.StopAll();
+            return await Task.FromResult(new Status { Success = result });
+        }
+
+        public override async Task<Status> RunAll(Empty request, ServerCallContext context)
+        {
+            try
+            {
+                await _workService.RunWorkers();
+                return new Status { Success = true };
+            }
+            catch (Exception err)
+            {
+                return new Status { Success = false };
+            }
         }
     }
 }

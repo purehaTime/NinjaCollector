@@ -70,6 +70,20 @@ namespace Worker
             return false;
         }
 
+        public bool StopWork(string settingId)
+        {
+            try
+            {
+                return WorkEngine.StopWork(settingId);
+            }
+            catch (Exception err)
+            {
+                _logger.Error($"Can't restart work {settingId}", err);
+            }
+
+            return false;
+        }
+
         public bool StopAll()
         {
             return WorkEngine.StopAll();

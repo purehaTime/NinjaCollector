@@ -20,7 +20,8 @@
                 <td>@row.TaskId</td>
                 <td>
                     <div>
-                        <Button Action="async () => await OnStop.InvokeAsync(row.TaskId)">Stop</Button>
+                        <Button ButtonType="ButtonType.Icon" Action="async () => await OnStop.InvokeAsync(row.TaskId)"><StopIcon /></Button>
+                        <Button ButtonType="ButtonType.Icon" Action="async () => await OnStart.InvokeAsync(row.TaskId)"><StartIcon /></Button>
                     </div>
                 </td>
             </tr>

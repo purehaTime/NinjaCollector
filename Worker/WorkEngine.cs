@@ -6,6 +6,9 @@ using Worker.Model;
 
 namespace Worker
 {
+    /// <summary>
+    /// Service -> Worker -> Work (setting)
+    /// </summary>
     internal static class WorkEngine
     {
         private static readonly List<Model.Worker> _workers = new();
@@ -48,7 +51,6 @@ namespace Worker
             });
         }
 
-
         public static IReadOnlyCollection<Model.Worker> GetWorkers()
         {
             return _workers.AsReadOnly();
@@ -81,6 +83,18 @@ namespace Worker
 
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        public static bool StopWork(string settingId)
+        {
+            var work = _workers.SelectMany(s => s.Works).FirstOrDefault(w => w.Settings.Id == settingId);
+            if (work != null)
+            {
+                work.Token.Cancel();
+                return true;
             }
 
             return false;
