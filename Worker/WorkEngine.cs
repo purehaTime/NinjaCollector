@@ -1,6 +1,7 @@
 ﻿using ModelsHelper.Models;
 using Serilog;
 using Serilog.Core;
+using System.Diagnostics;
 using Worker.Interfaces;
 using Worker.Model;
 
@@ -127,14 +128,19 @@ namespace Worker
             return false;
         }
 
-        private static async Task Worker(IWorker work, ParserSettings settings)
+        private static async Task Worker(IWorker work, Settings settings)
         {
+            if (settings.Disabled)
+            {
+                return;
+            }
+
             //timeout
             await Task.Delay(settings.Hold);
 
             var counter = 1; //by zero means run eternally
             var errorCounter = 0;
-
+            var stopWatch = new Stopwatch(); //correlation
             while (counter != settings.Counts)
             {
                 if (errorCounter == settings.RetryAfterErrorCount)
@@ -142,6 +148,7 @@ namespace Worker
                     _logger.Error($"task {Task.CurrentId} was stopped die to lots of error");
                 }
 
+                stopWatch.Restart();
                 try
                 {
                     settings = await work.Run(settings);
@@ -159,7 +166,9 @@ namespace Worker
                     errorCounter++;
                 }
 
-                await Task.Delay(settings.Timeout);
+                stopWatch.Stop();
+                var delay = settings.Timeout - stopWatch.Elapsed.Milliseconds;
+                await Task.Delay(delay > 0 ? delay : 0);
             }
 
             _logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");

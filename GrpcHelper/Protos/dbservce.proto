@@ -46,11 +46,12 @@ message Status {
 message Image {
   string Name  = 1;
   string Description = 2;
-  string OriginalLink = 3;
+  string DirectLink = 3;
   int32 Width = 4;
   int32 Height = 5;
   bytes File = 6;
   repeated string Tags = 7;
+  string ImageType = 8;
 }
 
 message Post {

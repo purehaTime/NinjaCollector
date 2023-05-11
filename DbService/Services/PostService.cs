@@ -33,7 +33,7 @@ namespace DbService.Services
             var histories = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Service, poster.ForGroup);
             var filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
 
-            return filterPost!;
+            return filterPost;
         }
 
         public async Task<bool> SavePost(Post post)
@@ -61,7 +61,7 @@ namespace DbService.Services
                     var savedImage = await _imageService.SaveImage(image.File.ToByteArray(),
                         image.Description,
                         image.Tags.ToList(),
-                        image.OriginalLink,
+                        image.DirectLink,
                         image.Width,
                         image.Height);
 

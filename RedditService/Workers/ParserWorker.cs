@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using ModelsHelper.Mapping;
+using ModelsHelper.Models;
 using RedditService.Interfaces;
 using RedditService.Model;
 using Worker.Interfaces;
@@ -31,25 +32,30 @@ namespace RedditService.Workers
         /// should be separate for different interface and class
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ParserSettings>> Init()
+        public async Task<List<Settings>> Init()
         {
             var settings = await GetSettings(null);
-            return settings.Count > 0 ? settings : new List<ParserSettings> ();
+            return settings.Count > 0 ? settings : new List<Settings> ();
         }
 
-        public async Task<ParserSettings> LoadSettings(string settingsId)
+        public async Task<Settings> LoadSettings(string settingsId)
         {
             var settings = await GetSettings(settingsId);
             return settings.FirstOrDefault(f => f.Id == settingsId) ?? new ParserSettings();
         }
 
-        public async Task<ParserSettings> Run(ParserSettings settings)
+        public async Task<Settings> Run(Settings settings)
         {
+            if (settings is not ParserSettings parserSettings)
+            {
+                return settings;
+            }
+
             var contents = new List<Content>();
 
-            var posts = settings.ByLastPostId && !string.IsNullOrEmpty(settings.UntilPostId)
-                ? await _redditService.GetPostsUntilPostId(settings.Group, settings.UntilPostId, settings.Filter)
-                : await _redditService.GetPostsBetweenDates(settings.Group, settings.FromDate, settings.UntilDate, settings.Filter);
+            var posts = parserSettings.ByLastPostId && !string.IsNullOrEmpty(parserSettings.UntilPostId)
+                ? await _redditService.GetPostsUntilPostId(parserSettings.Group, parserSettings.UntilPostId, parserSettings.Filter)
+                : await _redditService.GetPostsBetweenDates(parserSettings.Group, parserSettings.FromDate, parserSettings.UntilDate, parserSettings.Filter);
 
             contents.AddRange(posts);
 
@@ -62,39 +68,39 @@ namespace RedditService.Workers
                         contents.Select(s => new Post
                         {
                             Description = s.Description ?? "",
-                            Group = settings.Group ?? "",
+                            Group = parserSettings.Group ?? "",
                             Text = s.Text ?? "",
                             OriginalLink = s.OriginalLink ?? "",
                             Source = "reddit",
                             Title = s.Title,
                             UserName = s.UserName ?? "",
                             PostDate = Timestamp.FromDateTime(s.Created),
-                            Images = { s.Images.Select(img => ImageMapper(img, settings.Tags)) },
-                            Tags = { settings.Tags }
+                            Images = { s.Images.Select(img => ImageMapper(img, parserSettings.Tags)) },
+                            Tags = { parserSettings.Tags }
                         })
                     }
                 });
 
                 if (!savedResult)
                 {
-                    settings.Disabled = true;
-                    _logger.Error($"Can't save posts for {settings.Group}");
+                    parserSettings.Disabled = true;
+                    _logger.Error($"Can't save posts for {parserSettings.Group}");
                 }
 
-                if (settings.ContinueMonitoring)
+                if (parserSettings.ContinueMonitoring)
                 {
-                    settings.ByLastPostId = true;
-                    settings.UntilPostId = contents.First().Id;
+                    parserSettings.ByLastPostId = true;
+                    parserSettings.UntilPostId = contents.First().Id;
 
-                    await UpdateSettings(settings);
+                    await UpdateSettings(parserSettings);
                     return settings;
                 }
             }
 
-            settings.Disabled = true;
-            await UpdateSettings(settings);
+            parserSettings.Disabled = true;
+            await UpdateSettings(parserSettings);
 
-            return settings;
+            return parserSettings;
         }
 
         private async Task UpdateSettings(ParserSettings oldSettings)
@@ -121,7 +127,7 @@ namespace RedditService.Workers
             };
         }
 
-        private async Task<List<ParserSettings>> GetSettings(string settingsId)
+        private async Task<List<Settings>> GetSettings(string settingsId)
         {
             var settings = await _dbClient.GetParserSettings(new ParserSettingsRequest
             {
@@ -129,7 +135,9 @@ namespace RedditService.Workers
                 SettingsId = settingsId ?? string.Empty,
             }) ?? new List<ParserSettingsModel>();
 
-            return settings?.Where(w => !w.Disabled).Select(s => s.ToModel()).ToList();
+            var result = settings?.Where(w => !w.Disabled).Select(s => s.ToModel());
+
+            return new List<Settings>(result);
         }
     }
 }
