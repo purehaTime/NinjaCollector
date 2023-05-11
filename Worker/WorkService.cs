@@ -17,7 +17,6 @@ namespace Worker
 
         public async Task RunWorkers()
         {
-            Console.WriteLine("starting workers");
             await WorkEngine.RunWorkers(_workers);
         }
 
@@ -44,8 +43,9 @@ namespace Worker
             try
             {
                 var workers = WorkEngine.GetWorkers();
+                var instance = workers.Select(s => s.WorkerInstance).ToList();
                 WorkEngine.StopAll();
-                await WorkEngine.RunWorkers(workers.Select(s => s.WorkerInstance));
+                await WorkEngine.RunWorkers(instance);
             }
             catch (Exception err)
             {

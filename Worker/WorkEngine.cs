@@ -41,7 +41,6 @@ namespace Worker
                     TaskId = task.Id,
                     Settings = setting
                 });
-                Console.WriteLine("setting " + setting.Id + " started");
             }
 
             _workers.Add(new Model.Worker

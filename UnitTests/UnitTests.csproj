@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthService\AuthService.csproj" />
     <ProjectReference Include="..\DbService\DbService.csproj" />
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
     <ProjectReference Include="..\RedditService\RedditService.csproj" />
