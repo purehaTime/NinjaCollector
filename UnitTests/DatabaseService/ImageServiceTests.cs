@@ -37,7 +37,7 @@ namespace UnitTests.DatabaseService
             var objectId = ObjectId.GenerateNewId();
 
             var imageStream = Fixture.Create<MemoryStream>();
-            var image = Fixture.Create<Image>();
+            var image = Fixture.Create<GrpcHelper.DbService.Image>();
 
             _gridFsMock.Setup(s => s.AddFileAsStream(It.IsAny<MemoryStream>(), It.IsAny<string>(),
                 It.IsAny<GridFSUploadOptions>(), CancellationToken.None)).ReturnsAsync(objectId);
@@ -48,7 +48,7 @@ namespace UnitTests.DatabaseService
             _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
                 _historyServiceMock.Object, _loggerMock.Object);
 
-            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.DirectLink, image.Width, image.Height)
+            var result = _imageService.SaveImage(imageStream, image)
                 .GetAwaiter()
                 .GetResult();
 
@@ -63,7 +63,7 @@ namespace UnitTests.DatabaseService
             var objectId = ObjectId.Empty;
 
             var imageStream = Fixture.Create<MemoryStream>();
-            var image = Fixture.Create<Image>();
+            var image = Fixture.Create<GrpcHelper.DbService.Image>();
 
             _gridFsMock.Setup(s => s.AddFileAsStream(It.IsAny<MemoryStream>(), It.IsAny<string>(),
                 It.IsAny<GridFSUploadOptions>(), CancellationToken.None)).ReturnsAsync(objectId);
@@ -71,7 +71,7 @@ namespace UnitTests.DatabaseService
             _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
                 _historyServiceMock.Object, _loggerMock.Object);
 
-            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.DirectLink, image.Width, image.Height)
+            var result = _imageService.SaveImage(imageStream, image)
                 .GetAwaiter()
                 .GetResult();
 

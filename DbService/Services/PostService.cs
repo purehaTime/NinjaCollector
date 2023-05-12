@@ -54,13 +54,7 @@ namespace DbService.Services
             var images = new List<Image>();
             foreach (var image in post.Images)
             {
-                var savedImageId = await _imageService.SaveImage(image.File.ToByteArray(),
-                    image.Description,
-                    image.Tags?.ToList() ?? post.Tags.ToList(),
-                    image.DirectLink,
-                    image.Width,
-                    image.Height);
-
+                var savedImageId = await _imageService.SaveImage(image.File.ToByteArray(), image);
                 if (savedImageId.Status)
                 {
                     images.Add(image.ToDatabase(savedImageId.SavedImage));
@@ -86,12 +80,7 @@ namespace DbService.Services
                 var images = post.Images.ToList();
                 await Parallel.ForEachAsync(images, async (image, token) =>
                 {
-                    var savedImage = await _imageService.SaveImage(image.File.ToByteArray(),
-                        image.Description,
-                        image.Tags.ToList(),
-                        image.DirectLink,
-                        image.Width,
-                        image.Height);
+                    var savedImage = await _imageService.SaveImage(image.File.ToByteArray(), image);
 
                     if (savedImage.Status)
                     {

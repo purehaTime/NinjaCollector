@@ -1,4 +1,5 @@
 ﻿using DbService.Interfaces;
+using DbService.Mapping;
 using DbService.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -21,55 +22,33 @@ namespace DbService.Services
             _logger = logger;
         }
 
-        public async Task<(bool, ObjectId)> SaveImage(MemoryStream imageStream, string description, List<string> tags, string directLink, int width, int height)
+        public async Task<(bool, ObjectId)> SaveImage(MemoryStream imageStream, GrpcHelper.DbService.Image image)
         {
             var saved = await InsertFile(imageStream);
-
-            if (saved.Id == ObjectId.Empty)
-            {
-                return (false, ObjectId.Empty);
-            }
-
-            var model = new Image
-            {
-                GridFsId = saved.Id,
-                Name = saved.fileName,
-                Tags = tags,
-                Description = description,
-                DirectLink = directLink,
-                Width = width,
-                Height = height,
-                Id = ObjectId.GenerateNewId()
-            };
-
-            var result = await InsertImage(model);
-
-            return (result, model.Id);
+            var result = await SaveImage(saved.Id, saved.fileName, image);
+            return result;
         }
 
-        public async Task<(bool, ObjectId)> SaveImage(byte[] imageBytes, string description, List<string> tags, string directLink, int width, int height)
+        public async Task<(bool, ObjectId)> SaveImage(byte[] imageBytes, GrpcHelper.DbService.Image image)
         {
             var saved = await InsertFile(imageBytes);
+            var result = await SaveImage(saved.Id, saved.fileName, image);
+            return result;
+        }
 
-            if (saved.Id == ObjectId.Empty)
+        private async Task<(bool, ObjectId)> SaveImage(ObjectId id, string fileName, GrpcHelper.DbService.Image image)
+        {
+            if (id == ObjectId.Empty)
             {
                 return (false, ObjectId.Empty);
             }
 
-            var model = new Image
-            {
-                GridFsId = saved.Id,
-                Name = saved.fileName,
-                Tags = tags,
-                Description = description,
-                DirectLink = directLink,
-                Width = width,
-                Height = height,
-            };
+            var model = image.ToDatabase(id);
+            model.Name = fileName;
 
             var result = await InsertImage(model);
 
-            return (result, saved.Id);
+            return (result, id);
         }
 
         public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
@@ -134,13 +113,8 @@ namespace DbService.Services
             var fileName = new Guid().ToString();
             var fileId = await _gridFsService.AddFileAsStream(stream, fileName, null!, CancellationToken.None);
 
-            if (fileId == null || fileId == ObjectId.Empty)
-            {
-                _logger.Error("Cant save image to gridFS");
-                return (ObjectId.Empty, fileName);
-            }
-
-            return (fileId.Value, fileName);
+            var result = InsertFileValidation(fileId, fileName);
+            return result;
         }
 
         private async Task<(ObjectId Id, string fileName)> InsertFile(byte[] bytes)
@@ -148,13 +122,19 @@ namespace DbService.Services
             var fileName = new Guid().ToString();
             var fileId = await _gridFsService.AddFileAsBytes(bytes, fileName, null!, CancellationToken.None);
 
-            if (fileId == null || fileId == ObjectId.Empty)
+            var result = InsertFileValidation(fileId, fileName);
+            return result;
+        }
+
+        private (ObjectId Id, string fileName) InsertFileValidation(ObjectId? Id, string fileName)
+        {
+            if (Id == null || Id == ObjectId.Empty)
             {
                 _logger.Error("Cant save image to gridFS");
                 return (ObjectId.Empty, fileName);
             }
 
-            return (fileId.Value, fileName);
+            return (Id.Value, fileName);
         }
     }
 }
