@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using ModelsHelper.Models;
 
 namespace ModelsHelper.Mapping
@@ -25,12 +20,12 @@ namespace ModelsHelper.Mapping
             };
         }
 
-        public static GrpcHelper.DbService.Image ToGrpcData(this Image image)
+        public static GrpcHelper.DbService.Image ToGrpcData(this Image image, List<string> tags = null)
         {
             return new GrpcHelper.DbService.Image
             {
                 Description = image.Description,
-                Tags = { image.Tags },
+                Tags = { tags ?? image.Tags },
                 File = ByteString.CopyFrom(image.File),
                 DirectLink = image.DirectLink,
                 ImageType = image.ImageType,

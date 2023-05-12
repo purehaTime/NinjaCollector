@@ -1,14 +1,12 @@
-﻿using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
-using GrpcHelper.DbService;
+﻿using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using ModelsHelper.Mapping;
 using ModelsHelper.Models;
 using RedditService.Interfaces;
-using RedditService.Model;
 using Worker.Interfaces;
 using ILogger = Serilog.ILogger;
 using ParserSettings = ModelsHelper.Models.ParserSettings;
+using Post = ModelsHelper.Models.Post;
 
 namespace RedditService.Workers
 {
@@ -51,7 +49,7 @@ namespace RedditService.Workers
                 return settings;
             }
 
-            var contents = new List<Content>();
+            var contents = new List<Post>();
 
             var posts = parserSettings.ByLastPostId && !string.IsNullOrEmpty(parserSettings.UntilPostId)
                 ? await _redditService.GetPostsUntilPostId(parserSettings.Group, parserSettings.UntilPostId, parserSettings.Filter)
@@ -65,19 +63,7 @@ namespace RedditService.Workers
                 {
                     Posts =
                     {
-                        contents.Select(s => new Post
-                        {
-                            Description = s.Description ?? "",
-                            Group = parserSettings.Group ?? "",
-                            Text = s.Text ?? "",
-                            OriginalLink = s.OriginalLink ?? "",
-                            Source = "reddit",
-                            Title = s.Title,
-                            UserName = s.UserName ?? "",
-                            PostDate = Timestamp.FromDateTime(s.Created),
-                            Images = { s.Images.Select(img => ImageMapper(img, parserSettings.Tags)) },
-                            Tags = { parserSettings.Tags }
-                        })
+                        contents.Select(s => s.ToGrpcData(parserSettings.Tags))
                     }
                 });
 
@@ -111,20 +97,6 @@ namespace RedditService.Workers
             {
                 _logger.Error($"Can't save settings for reddit. Settings id: {oldSettings.Id}");
             }
-        }
-
-        private GrpcHelper.DbService.Image ImageMapper(ImageContainer image, IEnumerable<string> tags)
-        {
-            return new GrpcHelper.DbService.Image
-            {
-                Description = image.Image.Description,
-                OriginalLink = image.Image.DirectLink,
-                Name = image.Image.Name,
-                Width = image.Image.Width,
-                Height = image.Image.Height,
-                Tags = { tags },
-                File = ByteString.CopyFrom(image.Data),
-            };
         }
 
         private async Task<List<Settings>> GetSettings(string settingsId)

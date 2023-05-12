@@ -1,6 +1,6 @@
 ﻿namespace RedditService.Model
 {
-    public class Image
+    public class ParsedImage
     {
         public string Name { get; set; }
         public int Width { get; set; }

@@ -1,6 +1,6 @@
 ﻿using ModelsHelper.Models;
 
-namespace Models.Mapping
+namespace ModelsHelper.Mapping
 {
     public static class FilterMapping
     {

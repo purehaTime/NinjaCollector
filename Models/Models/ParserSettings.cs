@@ -7,10 +7,8 @@
             Filter = new Filter();
             Tags = new List<string>();
         }
-        
-       
+
         public string Source { get; set; }
-        public string Group { get; set; }
 
         public DateTime FromDate { get; set; }
 

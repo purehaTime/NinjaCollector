@@ -4,12 +4,12 @@ using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using Moq;
 using RedditService.Interfaces;
-using RedditService.Model;
 using RedditService.Workers;
 using Serilog;
 using Worker.Interfaces;
 using Filter = ModelsHelper.Models.Filter;
 using ParserSettings = ModelsHelper.Models.ParserSettings;
+using Post = ModelsHelper.Models.Post;
 
 namespace UnitTests.RedditServiceTests
 {
@@ -91,8 +91,8 @@ namespace UnitTests.RedditServiceTests
                 .With(w => w.Filter, filter)
                 .Create();
 
-            var contents = Fixture.Build<Content>()
-                .With(w => w.Created, DateTime.UtcNow)
+            var contents = Fixture.Build<Post>()
+                .With(w => w.PostDate, DateTime.UtcNow)
                 .CreateMany(5)
                 .ToList();
 
@@ -110,7 +110,8 @@ namespace UnitTests.RedditServiceTests
             _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>(), filter), Times.Never);
 
             result.Should().NotBeNull();
-            result.UntilPostId.Should().Be(contents.First().Id);
+            result.Should().BeOfType<ParserSettings>();
+            (result as ParserSettings)?.UntilPostId.Should().Be(contents.First().Id);
             result.Disabled.Should().Be(false);
         }
 
@@ -130,8 +131,8 @@ namespace UnitTests.RedditServiceTests
                 .With(w => w.Filter, filter)
                 .Create();
 
-            var contents = Fixture.Build<Content>()
-                .With(w => w.Created, DateTime.UtcNow)
+            var contents = Fixture.Build<Post>()
+                .With(w => w.PostDate, DateTime.UtcNow)
                 .CreateMany(5)
                 .ToList();
 
@@ -149,7 +150,8 @@ namespace UnitTests.RedditServiceTests
             _redditServiceMock.Verify(v => v.GetPostsBetweenDates(subName, It.IsAny<DateTime>(), It.IsAny<DateTime>(), filter), Times.Never);
 
             result.Should().NotBeNull();
-            result.UntilPostId.Should().NotBe(contents.First().Id);
+            result.Should().BeOfType<ParserSettings>();
+            (result as ParserSettings)?.Should().NotBe(contents.First().Id);
             result.Disabled.Should().Be(true);
         }
     }

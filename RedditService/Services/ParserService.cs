@@ -1,8 +1,9 @@
-﻿using Reddit.Controllers;
+﻿using ModelsHelper.Models;
 using RedditService.Interfaces;
 using RedditService.Model;
 using System.Collections.Concurrent;
-using ModelsHelper.Models;
+using Content = ModelsHelper.Models.Post;
+using Post = Reddit.Controllers.Post;
 
 namespace RedditService.Services
 {
@@ -32,12 +33,12 @@ namespace RedditService.Services
             {
                 Id = post.Listing.Id,
                 Images = images,
-                Created = post.Created,
+                PostDate = post.Created,
                 Title = post.Title,
                 Text = post.Listing.SelfText,
                 UserName = post.Author,
                 OriginalLink = post.Permalink,
-                SubredditName = post.Subreddit,
+                Source = post.Subreddit,
                 Description = post.Listing.LinkFlairText
             };
 
@@ -45,21 +46,27 @@ namespace RedditService.Services
         }
 
 
-        private async Task<List<ImageContainer>> ParseImages(Post post)
+        private async Task<List<Image>> ParseImages(Post post)
         {
             var imageLink = post.Listing.URL;
 
-            var images = new ConcurrentBag<ImageContainer>();
+            var images = new ConcurrentBag<Image>();
             if (imageLink.Contains("reddit.com/gallery"))
             {
                 var parsedImages = await _galleryService.GetImageLinks(imageLink);
                 await Parallel.ForEachAsync(parsedImages, async (image, ct) =>
                 {
                     var data = await _fileDownloadService.GetFile(image.DirectLink);
-                    images.Add(new ImageContainer
+                    images.Add(new Image
                     {
-                        Data = data,
-                        Image = image
+                        DirectLink = imageLink,
+                        Width = image.Width,
+                        Height = image.Height,
+                        Name = post.Fullname,
+                        File = data,
+                        ImageType = "unknow",
+                        Description = image.Description,
+                        Tags = new List<string> {"reddit", "image"}
                     });
                 });
             }
@@ -72,16 +79,16 @@ namespace RedditService.Services
                 if (resultParse != null)
                 {
                     var imageData = await _fileDownloadService.GetFile(imageLink);
-                    images.Add(new ImageContainer
+                    images.Add(new Image
                     {
-                        Data = imageData,
-                        Image = new Image
-                        {
-                            DirectLink = imageLink,
-                            Width = resultParse.Width,
-                            Height = resultParse.Height,
-                            Name = post.Fullname,
-                        }
+                        DirectLink = imageLink,
+                        Width = resultParse.Width,
+                        Height = resultParse.Height,
+                        Name = post.Fullname,
+                        File = imageData,
+                        ImageType = "unknow",
+                        Description = resultParse.Url,
+                        Tags = new List<string> { "reddit", "image" }
                     });
                 }
             }

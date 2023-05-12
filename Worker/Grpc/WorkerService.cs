@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.WorkerService;
+using Serilog;
 using Worker.Interfaces;
 using Status = GrpcHelper.WorkerService.Status;
 
@@ -9,10 +10,12 @@ namespace Worker.Grpc
     public class WorkerService : GrpcHelper.WorkerService.WorkerService.WorkerServiceBase
     {
         private IWorkService _workService;
+        private ILogger _logger;
 
-        public WorkerService(IWorkService workService)
+        public WorkerService(IWorkService workService, ILogger logger)
         {
             _workService = workService;
+            _logger = logger;
         }
 
         public override Task<WorkerModel> GetWorkers(Empty request, ServerCallContext context)
@@ -66,6 +69,7 @@ namespace Worker.Grpc
             }
             catch (Exception err)
             {
+                _logger.Error("RunAll can't ran workers service", err);
                 return new Status { Success = false };
             }
         }

@@ -1,15 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using ModelsHelper.Models;
 using Moq;
 using Newtonsoft.Json.Linq;
-using Reddit.Controllers;
 using RedditService.Interfaces;
 using RedditService.Model;
 using RedditService.Services;
-using RestSharp;
-using Worker.Model;
+using Post = Reddit.Controllers.Post;
 
 namespace UnitTests.RedditServiceTests
 {
@@ -57,7 +54,7 @@ namespace UnitTests.RedditServiceTests
             var post = Fixture.Create<Post>();
             post.Listing.URL = link;
 
-            var images = Fixture.CreateMany<Image>(5);
+            var images = Fixture.CreateMany<ParsedImage>(5);
             var filter = Fixture.Create<Filter>();
             var bytes = Fixture.Create<byte[]>();
 

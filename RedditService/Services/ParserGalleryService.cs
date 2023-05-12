@@ -16,7 +16,7 @@ namespace RedditService.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Image>> GetImageLinks(string urlToGallery)
+        public async Task<IEnumerable<ParsedImage>> GetImageLinks(string urlToGallery)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace RedditService.Services
                 var imagesData = jsonObject.SelectTokens("[*].data.children.[*].data.gallery_data.*");
                 var imagesDescription = imagesData.SelectMany(s => s.ToObject<ImageDescription[]>());
 
-                var images = imagesJson.Select(s => new Image
+                var images = imagesJson.Select(s => new ParsedImage
                 {
                     DirectLink = s.Original?.Url,
                     ImageType = s.Extension,

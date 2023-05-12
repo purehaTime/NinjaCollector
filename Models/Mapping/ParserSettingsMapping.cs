@@ -1,6 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcHelper.DbService;
-using Models.Mapping;
 using ParserSettings = ModelsHelper.Models.ParserSettings;
 
 namespace ModelsHelper.Mapping

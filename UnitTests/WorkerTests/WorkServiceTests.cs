@@ -83,7 +83,8 @@ namespace UnitTests.WorkerTests
         private void Init()
         {
             var settings = Fixture.CreateMany<ParserSettings>(5).ToList();
-            _workerMock.Setup(s => s.Init()).ReturnsAsync(() => settings);
+            _workerMock.Setup(s => s.Init()).ReturnsAsync(() => new List<Settings>(settings));
+
             foreach (var setting in settings)
             {
                 _workerMock.Setup(s => s.Run(setting)).ReturnsAsync(() => setting);

@@ -2,10 +2,9 @@
 using FluentAssertions;
 using ModelsHelper.Models;
 using Moq;
-using Reddit.Controllers;
 using RedditService.Interfaces;
-using RedditService.Model;
-using Worker.Model;
+using Content = ModelsHelper.Models.Post;
+using Post = Reddit.Controllers.Post;
 
 namespace UnitTests.RedditServiceTests
 {

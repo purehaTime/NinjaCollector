@@ -1,7 +1,7 @@
 ﻿using ModelsHelper.Models;
-using Reddit.Controllers;
-using RedditService.Model;
-using Worker.Model;
+using Content = ModelsHelper.Models.Post;
+using Post = Reddit.Controllers.Post;
+
 
 namespace RedditService.Interfaces
 {

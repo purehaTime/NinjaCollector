@@ -1,8 +1,9 @@
-﻿using Reddit.Controllers;
+﻿using ModelsHelper.Models;
 using RedditService.Interfaces;
-using RedditService.Model;
 using System.Collections.Concurrent;
-using ModelsHelper.Models;
+using Content = ModelsHelper.Models.Post;
+using Post = Reddit.Controllers.Post;
+
 
 namespace RedditService.Services
 {
