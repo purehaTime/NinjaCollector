@@ -48,7 +48,7 @@ namespace UnitTests.DatabaseService
             _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
                 _historyServiceMock.Object, _loggerMock.Object);
 
-            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.OriginalLink, image.Width, image.Height)
+            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.DirectLink, image.Width, image.Height)
                 .GetAwaiter()
                 .GetResult();
 
@@ -71,7 +71,7 @@ namespace UnitTests.DatabaseService
             _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
                 _historyServiceMock.Object, _loggerMock.Object);
 
-            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.OriginalLink, image.Width, image.Height)
+            var result = _imageService.SaveImage(imageStream, image.Description, new List<string>(), image.DirectLink, image.Width, image.Height)
                 .GetAwaiter()
                 .GetResult();
 

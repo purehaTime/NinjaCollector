@@ -1,11 +1,11 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using ModelsHelper.Models;
+﻿using DbService.Models;
+using Google.Protobuf.WellKnownTypes;
 
-namespace ModelsHelper.Mapping
+namespace DbService.Mapping
 {
     public static class PostMapping
     {
-        public static Post ToModel(this GrpcHelper.DbService.Post post)
+        public static Post ToDatabase(this GrpcHelper.DbService.Post post, List<Image> images)
         {
             return new Post
             {
@@ -19,11 +19,11 @@ namespace ModelsHelper.Mapping
                 Title = post.Title,
                 UserName = post.UserName,
                 Tags = post.Tags.ToList(),
-                Images = post.Images.Select(s => s.ToModel()).ToList()
+                Images = images
             };
         }
 
-        public static GrpcHelper.DbService.Post ToGrpcData(this Post post, List<string> tags = null)
+        public static GrpcHelper.DbService.Post ToGrpcData(this Post post, List<GrpcHelper.DbService.Image> images, List<string> tags = null)
         {
             return new GrpcHelper.DbService.Post
             {
@@ -37,7 +37,7 @@ namespace ModelsHelper.Mapping
                 Title = post.Title,
                 UserName = post.UserName,
                 Tags = { tags ?? post.Tags },
-                Images = { post.Images.Select(s => s.ToGrpcData(tags)) }
+                Images = { images }
             };
         }
     }

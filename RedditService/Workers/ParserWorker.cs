@@ -76,7 +76,7 @@ namespace RedditService.Workers
                 if (parserSettings.ContinueMonitoring)
                 {
                     parserSettings.ByLastPostId = true;
-                    parserSettings.UntilPostId = contents.First().Id;
+                    parserSettings.UntilPostId = contents.First().PostId;
 
                     await UpdateSettings(parserSettings);
                     return settings;

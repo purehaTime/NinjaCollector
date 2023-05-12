@@ -111,7 +111,7 @@ namespace UnitTests.RedditServiceTests
 
             result.Should().NotBeNull();
             result.Should().BeOfType<ParserSettings>();
-            (result as ParserSettings)?.UntilPostId.Should().Be(contents.First().Id);
+            (result as ParserSettings)?.UntilPostId.Should().Be(contents.First().PostId);
             result.Disabled.Should().Be(false);
         }
 
@@ -151,7 +151,7 @@ namespace UnitTests.RedditServiceTests
 
             result.Should().NotBeNull();
             result.Should().BeOfType<ParserSettings>();
-            (result as ParserSettings)?.Should().NotBe(contents.First().Id);
+            (result as ParserSettings)?.Should().NotBe(contents.First().PostId);
             result.Disabled.Should().Be(true);
         }
     }

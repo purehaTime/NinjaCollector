@@ -1,5 +1,5 @@
 ﻿using GrpcHelper.DbService;
-using Post = DbService.Models.Post;
+using Post = GrpcHelper.DbService.Post;
 using PosterSettings = DbService.Models.PosterSettings;
 
 namespace DbService.Interfaces

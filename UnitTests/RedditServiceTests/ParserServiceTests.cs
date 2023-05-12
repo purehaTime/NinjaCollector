@@ -70,7 +70,7 @@ namespace UnitTests.RedditServiceTests
             result.Images.Should().HaveCount(5);
             result.Description.Should().Be(post.Listing.LinkFlairText);
             result.Text.Should().Be(post.Listing.SelfText);
-            result.Id.Should().Be(post.Id);
+            result.PostId.Should().Be(post.Id);
             result.UserName.Should().Be(post.Author);
             result.Title.Should().Be(post.Title);
         }
@@ -96,7 +96,7 @@ namespace UnitTests.RedditServiceTests
             result.Images.Should().HaveCount(1);
             result.Description.Should().Be(post.Listing.LinkFlairText);
             result.Text.Should().Be(post.Listing.SelfText);
-            result.Id.Should().Be(post.Id);
+            result.PostId.Should().Be(post.Id);
             result.UserName.Should().Be(post.Author);
             result.Title.Should().Be(post.Title);
         }

@@ -36,7 +36,7 @@ namespace DbService.Services
                 Name = saved.fileName,
                 Tags = tags,
                 Description = description,
-                OriginalLink = directLink,
+                DirectLink = directLink,
                 Width = width,
                 Height = height,
                 Id = ObjectId.GenerateNewId()
@@ -62,7 +62,7 @@ namespace DbService.Services
                 Name = saved.fileName,
                 Tags = tags,
                 Description = description,
-                OriginalLink = directLink,
+                DirectLink = directLink,
                 Width = width,
                 Height = height,
             };

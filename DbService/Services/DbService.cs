@@ -1,12 +1,13 @@
 ﻿using DbService.Interfaces;
+using DbService.Mapping;
 using DbService.Models;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
-using ModelsHelper.Mapping;
 using MongoDB.Bson;
-using Post = DbService.Models.Post;
 using Status = GrpcHelper.DbService.Status;
+using ParserSettings = GrpcHelper.DbService.ParserSettings;
+using Post = GrpcHelper.DbService.Post;
 
 namespace DbService.Services
 {
@@ -49,23 +50,9 @@ namespace DbService.Services
             return new UserModel();
         }
 
-        public override async Task<Status> AddPost(GrpcHelper.DbService.Post post, ServerCallContext context)
+        public override async Task<Status> AddPost(Post post, ServerCallContext context)
         {
-            var result = await _post.SavePost(new Post
-            {
-                PostId = post.PostId,
-                Description = post.Description,
-                GroupName = post.Group,
-                Images = null,
-                OriginalLink = post.OriginalLink,
-                UserName = post.UserName,
-                PostDate = post.PostDate.ToDateTime(),
-                Source = post.Source,
-                Tags = post.Tags,
-                Text = post.Text,
-                Title = post.Title,
-            });
-
+            var result = await _post.SavePost(post);
             return new Status { Success = result };
         }
 
@@ -78,9 +65,7 @@ namespace DbService.Services
 
         public override async Task<Status> SaveParserSettings(ParserSettingsModel request, ServerCallContext context)
         {
-            var model = (DbParserSettings)request.ToModel();
-            model.DbId = string.IsNullOrEmpty(request.Id) ? ObjectId.GenerateNewId() : ObjectId.Parse(request.Id);
-
+            var model = request.ToDatabase();
             var result = await _settings.SaveParserSettings(model);
             
             return new Status

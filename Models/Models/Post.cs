@@ -8,7 +8,7 @@
             Images = new List<Image>();
         }
 
-        public string Id { get; set; }
+        public string PostId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }

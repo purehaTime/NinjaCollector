@@ -8,36 +8,36 @@ namespace DbService.Services
 {
     public class SettingsService : ISettingsService
     {
-        private IRepository<DbParserSettings> _parserRepository;
+        private IRepository<ParserSettings> _parserRepository;
         private IRepository<PosterSettings> _posterRepository;
 
         private ILogger _logger;
 
-        public SettingsService(IRepository<DbParserSettings> parserRepository, IRepository<PosterSettings> posterRepository, ILogger logger)
+        public SettingsService(IRepository<ParserSettings> parserRepository, IRepository<PosterSettings> posterRepository, ILogger logger)
         {
             _parserRepository = parserRepository;
             _posterRepository = posterRepository;
             _logger = logger;
         }
         
-        public async Task<List<DbParserSettings>> GetParserSettings(string source, ObjectId? settingsId)
+        public async Task<List<ParserSettings>> GetParserSettings(string source, ObjectId? settingsId)
         {
-            var filter = Builders<DbParserSettings>.Filter.Empty;
+            var filter = Builders<ParserSettings>.Filter.Empty;
             if (!string.IsNullOrEmpty(source))
             {
-                filter = Builders<DbParserSettings>.Filter.Eq(e => e.Source, source);
+                filter = Builders<ParserSettings>.Filter.Eq(e => e.Source, source);
             }
 
             if (settingsId != null)
             {
-                filter &= Builders<DbParserSettings>.Filter.Eq(e => e.DbId, settingsId);
+                filter &= Builders<ParserSettings>.Filter.Eq(e => e.Id, settingsId);
             }
             var results = await _parserRepository.FindMany(filter, null!, CancellationToken.None);
 
-            return results?.ToList() ?? new List<DbParserSettings>();
+            return results?.ToList() ?? new List<ParserSettings>();
         }
 
-        public async Task<bool> SaveParserSettings(DbParserSettings settings)
+        public async Task<bool> SaveParserSettings(ParserSettings settings)
         {
             var result = await _parserRepository.Insert(settings, null!, CancellationToken.None);
 

@@ -27,15 +27,18 @@ namespace UnitTests.DatabaseService
             _historyServiceMock = new Mock<IHistoryService>();
             _imageServiceMock = new Mock<IImageService>();
             _loggerMock = new Mock<ILogger>();
+
+            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
         }
 
-
         [Test]
-        public void SavePost_ShouldReturn_True()
+        [TestCase(true, 0)]
+        [TestCase(false, 1)]
+        public void SaveHistory_ShouldReturn_Bool(bool insertResult, int errorCount)
         {
-            var post = Fixture.Create<Post>();
+            var post = Fixture.Create<GrpcHelper.DbService.Post>();
 
-            _postRepositoryMock.Setup(s => s.Insert(post, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(true);
+            _postRepositoryMock.Setup(s => s.Insert(It.IsAny<Post>(), It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(insertResult);
 
             _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
 
@@ -43,39 +46,26 @@ namespace UnitTests.DatabaseService
                 .GetAwaiter()
                 .GetResult();
 
-            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Never);
+            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Exactly(errorCount));
 
-            result.Should().BeTrue();
-        }
-
-        [Test]
-        public void SaveHistory_ShouldReturn_False()
-        {
-            var post = Fixture.Create<Post>();
-
-            _postRepositoryMock.Setup(s => s.Insert(post, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(false);
-
-            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
-
-            var result = _postService.SavePost(post)
-                .GetAwaiter()
-                .GetResult();
-
-            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
-
-            result.Should().BeFalse();
+            result.Should().Be(insertResult);
         }
 
         [Test]
         public void GetHistory_ShouldReturn_HistoryList()
         {
-            var historyObjectId = Fixture.Create<ObjectId>();
             var postObjectId = Fixture.Create<ObjectId>();
             
             var postList = Fixture.Build<Post>()
-                .With(w => w.Id, historyObjectId)
+                .With(w => w.Id, postObjectId)
+                .With(w => w.PostDate, new DateTime().ToUniversalTime())
                 .CreateMany(5)
                 .ToList();
+
+            var imageStream = Fixture.Create<MemoryStream>();
+            var image = Fixture.Build<Image>()
+                .With(w => w.GridFsId, postObjectId)
+                .Create();
 
             postList[0].Id = postObjectId; // one should be not filtered by history
 
@@ -91,10 +81,12 @@ namespace UnitTests.DatabaseService
                 .ReturnsAsync(postList);
 
             _historyServiceMock
-                .Setup(s => s.GetHistory(postList.Select(s => s.Id), settings.Service, settings.ForGroup))
+                .Setup(s => s.GetHistory(postList.Select(p => p.Id), settings.Service, settings.ForGroup))
                 .ReturnsAsync(histories);
 
-            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
+            _imageServiceMock
+                .Setup(s => s.GetImagesForPost(It.IsAny<ObjectId>()))
+                .ReturnsAsync(() => new List<(Image image, MemoryStream stream)> {(image, imageStream)});
 
             var result = _postService.GetPostByTags(tags, settings)
                 .GetAwaiter()
@@ -103,7 +95,8 @@ namespace UnitTests.DatabaseService
             _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Never);
 
             result.Should().NotBeNull();
-            result.Id.Should().Be(postObjectId);
+            result.PostId.Should().Be(postList.First().PostId);
+            result.Source.Should().Be(postList.First().Source);
         }
     }
 }
