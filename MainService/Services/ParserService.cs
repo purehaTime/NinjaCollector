@@ -58,9 +58,10 @@ namespace MainService.Services
             return result.FirstOrDefault(f => f.Id == settingId)?.ToModel();
         }
 
-        public Task<bool> DeleteParserSettings(string id)
+        public async Task<bool> DeleteParserSettings(string id)
         {
-            throw new NotImplementedException();
+            var result = await _dbClient.DeleteParserSettings(id);
+            return result;
         }
     }
 }

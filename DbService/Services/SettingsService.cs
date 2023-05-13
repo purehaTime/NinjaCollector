@@ -48,6 +48,19 @@ namespace DbService.Services
             return result;
         }
 
+        public async Task<bool> RemoveParserSettings(string id)
+        {
+            var filter = Builders<ParserSettings>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
+            var result = await _parserRepository.Delete(filter, null!, CancellationToken.None);
+
+            if (result == null)
+            {
+                _logger.Error($"Cant delete settings for parser {id}");
+                return false;
+            }
+            return true;
+        }
+
         public async Task<List<PosterSettings>> GetPosterSettings(string service, string forGroup)
         {
             var filter = Builders<PosterSettings>.Filter.Eq(e => e.Service, service);

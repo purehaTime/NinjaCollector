@@ -128,6 +128,23 @@ namespace GrpcHelper.Clients
             return false;
         }
 
+        public async Task<bool> DeleteParserSettings(string id)
+        {
+            try
+            {
+                var result = await _client.RemoveParserSettingsAsync(new ModelId()
+                {
+                    Id = id ?? string.Empty
+                });
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
+        }
+
         public async Task<List<PosterSettingsModel>> GetPosterSettings(PosterSettingsRequest request)
         {
             try

@@ -7,6 +7,7 @@ namespace DbService.Interfaces
     {
         public Task<List<ParserSettings>> GetParserSettings(string source, ObjectId? settingsId);
         public Task<bool> SaveParserSettings(ParserSettings settings);
+        public Task<bool> RemoveParserSettings(string id);
 
         public Task<List<PosterSettings>> GetPosterSettings(string service, string forGroup);
         public Task<bool> SavePosterSettings(PosterSettings settings);

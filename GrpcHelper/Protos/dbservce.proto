@@ -20,6 +20,7 @@ service Database {
     rpc SaveHistory(HistoryModel) returns (Status);
     rpc AddUser(AddUserModel) returns (Status);
     rpc GetUser(UserRequest) returns (UserModel);
+    rpc RemoveParserSettings(ModelId) returns (Status);
 }
 
 message DbLogModel {
@@ -168,4 +169,8 @@ message Filter {
     repeated string IgnoreAuthors = 4;
     repeated string IgnoreTitles = 5;
     repeated string IgnoreDescriptions = 6;
+}
+
+message ModelId {
+    string Id = 1;
 }
