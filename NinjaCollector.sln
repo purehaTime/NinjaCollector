@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService", "AuthService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsHelper", "Models\ModelsHelper.csproj", "{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramService", "TelegramService\TelegramService.csproj", "{F7948516-51A0-4E11-A5C6-233A8BE7B54D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3146BAAF-CAA3-4336-95F9-8FCAA365F46A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7948516-51A0-4E11-A5C6-233A8BE7B54D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7948516-51A0-4E11-A5C6-233A8BE7B54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7948516-51A0-4E11-A5C6-233A8BE7B54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7948516-51A0-4E11-A5C6-233A8BE7B54D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{298C7DFA-923A-4551-A20E-B8174DF57170} = {8ED2DC8C-A5DD-4962-BF3C-D126BC69453C}
 		{ABDC1883-7209-4F0D-A34B-E83B8DF21B01} = {FBA51386-9104-4B37-856D-AB04632B380E}
 		{3146BAAF-CAA3-4336-95F9-8FCAA365F46A} = {13B2BB81-9444-4298-BD92-76B91F966F2D}
+		{F7948516-51A0-4E11-A5C6-233A8BE7B54D} = {7950BF40-897B-43F6-9272-A145DA82DC00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C53FDDA5-F946-40F4-9AC0-5D8EEE41AF2A}

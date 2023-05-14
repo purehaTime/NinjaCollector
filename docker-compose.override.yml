@@ -2,12 +2,12 @@ version: '3.4'
 
 services:
   storedb:
-    ports:
+    expose:
       - "27017:27017"
   
   dbservice:
     container_name: DbService
-    ports:
+    expose:
       - "127.0.0.1:14010:80"
       - "127.0.0.1:14011:443"
     environment:
@@ -38,9 +38,9 @@ services:
 
   loggerservice:
     container_name: LoggerService
-    ports:
-      - "127.0.0.1:14090:80"
-      - "127.0.0.1:14091:443"
+    expose:
+      - "14090:80"
+      - "14091:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -53,7 +53,7 @@ services:
   redditservice:
     container_name: RedditService
     env_file: reddit_settings.env
-    ports:
+    expose:
       - "14030:80"
       - "14031:443"
     environment:
@@ -62,7 +62,6 @@ services:
     depends_on:
       - dbservice
       - loggerservice
-      - authservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
@@ -70,7 +69,7 @@ services:
   authservice:
     container_name: AuthService
     env_file: auth.env
-    ports:
+    expose:
       - "127.0.0.1:14020:80"
       - "127.0.0.1:14021:443"
     environment:
@@ -78,6 +77,22 @@ services:
       - ASPNETCORE_URLS=https://+:443;http://+:80
     depends_on:
       - dbservice
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  telegramservice:
+    container_name: TelegramService
+    env_file: telegram.env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    expose:
+      - "14040:80"
+      - "14041:443"
+    depends_on:
+      - dbservice
+      - loggerservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

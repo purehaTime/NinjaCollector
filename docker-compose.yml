@@ -35,3 +35,10 @@ services:
     build:
       context: .
       dockerfile: AuthService/Dockerfile
+
+  telegramservice:
+    image: ${DOCKER_REGISTRY-}telegramservice
+    build:
+      context: .
+      dockerfile: TelegramService/Dockerfile
+
