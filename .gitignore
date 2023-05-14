@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/reddit_settings.env
-telegram.env
+
+#Docker config files
+*.env
