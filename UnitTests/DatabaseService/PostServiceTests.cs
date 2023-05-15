@@ -81,7 +81,7 @@ namespace UnitTests.DatabaseService
                 .ReturnsAsync(postList);
 
             _historyServiceMock
-                .Setup(s => s.GetHistory(postList.Select(p => p.Id), settings.Service, settings.ForGroup))
+                .Setup(s => s.GetHistory(postList.Select(p => p.Id), settings.Source, settings.Group))
                 .ReturnsAsync(histories);
 
             _imageServiceMock

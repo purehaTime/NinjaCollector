@@ -2,14 +2,14 @@ version: '3.4'
 
 services:
   storedb:
-    expose:
+    ports:
       - "27017:27017"
   
   dbservice:
     container_name: DbService
     expose:
-      - "127.0.0.1:14010:80"
-      - "127.0.0.1:14011:443"
+      - "14010:80"
+      - "14011:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -32,6 +32,7 @@ services:
       - loggerservice
       - authservice
       - redditservice
+      - telegramservice
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

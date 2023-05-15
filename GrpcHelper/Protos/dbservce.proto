@@ -56,7 +56,7 @@ message Image {
 }
 
 message Post {
-  string postId = 1;
+  string PostId = 1;
   string Title = 2;
   string Description = 3;
   string Group = 4;
@@ -99,7 +99,7 @@ message ParserSettingsRequest {
 
 message PosterSettingsRequest {
   string Service = 1;
-  string ForGroup  = 2;
+  string SettingsId = 2;
 }
 
 message ParserSettingsModel {
@@ -123,12 +123,21 @@ message ParserSettingsModel {
 }
 
 message PosterSettingsModel {
-    string Name = 1;
-    string ForGroup = 2;
-    string Service = 3;
-    int32 TimeInterval = 4;
-    bool MixRandom = 5;
-    repeated string Tags = 6;
+    string Id = 1;
+    string Description = 2;
+    string Source = 3;
+    string Group = 4;
+    int32 Timeout = 5;
+    int32 Hold = 6;
+    int32 Counts = 7;
+    int32 RetryAfterErrorCount = 8;
+    repeated string Tags = 9;
+    bool UseScheduling = 10;
+    int32 ScheduleInterval = 11;
+    bool UseRandom = 12;
+    bool IgnoreHistory = 13;
+    bool ContinuePosting = 14;
+    bool Disabled = 15;
 }
 
 message ParserSettings {

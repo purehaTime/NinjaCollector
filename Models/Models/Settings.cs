@@ -2,9 +2,14 @@
 {
     public abstract class Settings
     {
+        protected Settings()
+        {
+            Tags = new List<string>();
+        }
         public string Id { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }
+        public string Source { get; set; }
 
         /// <summary>
         /// in milliseconds
@@ -20,11 +25,8 @@
         /// how many time worker should run
         /// </summary>
         public int Counts { get; set; }
-
         public int RetryAfterErrorCount { get; set; }
-
         public bool Disabled { get; set; }
-
         public List<string> Tags { get; set; }
     }
 }

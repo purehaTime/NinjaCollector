@@ -3,6 +3,7 @@ using DbService.Interfaces;
 using DbService.Models;
 using DbService.Services;
 using FluentAssertions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Moq;
 using Serilog;
@@ -132,7 +133,7 @@ namespace UnitTests.DatabaseService
         public void GetPosterSettings_ShouldReturn_PosterSettings()
         {
             var service = Fixture.Create<string>();
-            var forGroup = Fixture.Create<string>();
+            var settingId = Fixture.Create<ObjectId>();
             var posterSettings = Fixture.CreateMany<PosterSettings>(5).ToList();
 
             _posterRepositoryMock
@@ -142,7 +143,7 @@ namespace UnitTests.DatabaseService
             _settingsService = new SettingsService(_parserRepositoryMock.Object, _posterRepositoryMock.Object,
                 _loggerMock.Object);
 
-            var result = _settingsService.GetPosterSettings(service, forGroup)
+            var result = _settingsService.GetPosterSettings(service, settingId)
                 .GetAwaiter()
                 .GetResult();
 

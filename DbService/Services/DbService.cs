@@ -8,6 +8,7 @@ using MongoDB.Bson;
 using Status = GrpcHelper.DbService.Status;
 using ParserSettings = GrpcHelper.DbService.ParserSettings;
 using Post = GrpcHelper.DbService.Post;
+using PosterSettings = GrpcHelper.DbService.PosterSettings;
 
 namespace DbService.Services
 {
@@ -85,6 +86,20 @@ namespace DbService.Services
             return new ParserSettings
             {
                  ParserSetting = { response.Select(s => s.ToGrpcData()) }
+            };
+        }
+
+        public override async Task<PosterSettings> GetPosterSettings(PosterSettingsRequest request, ServerCallContext context)
+        {
+            ObjectId? settingsId = string.IsNullOrEmpty(request.SettingsId)
+                ? null
+                : ObjectId.Parse(request.SettingsId);
+
+            var response = await _settings.GetPosterSettings(request.Service, settingsId);
+
+            return new PosterSettings
+            {
+                PosterSettings_ = { response.Select(s => s.ToGrpcData()) }
             };
         }
     }

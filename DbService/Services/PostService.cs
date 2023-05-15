@@ -3,6 +3,7 @@ using DbService.Mapping;
 using GrpcHelper.DbService;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System.Collections.Concurrent;
 using DbPost = DbService.Models.Post;
 using ILogger = Serilog.ILogger;
@@ -31,10 +32,15 @@ namespace DbService.Services
         public async Task<Post> GetPostByTags(List<string> tags, PosterSettings poster)
         {
             var filter = Builders<DbPost>.Filter.AnyIn(x => x.Tags, tags);
-            var posts = (await _postRepository.FindMany(filter, null!, CancellationToken.None)).ToList();
+            var posts = (await _postRepository.FindMany(filter, null, CancellationToken.None)).ToList();
 
-            var histories = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Service, poster.ForGroup);
-            var filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
+            var rnd = new Random();
+            var filterPost = poster.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.FirstOrDefault();
+            if (!poster.IgnoreHistory)
+            {
+                var histories = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Source, poster.Group);
+                filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
+            }
 
             var images = await _imageService.GetImagesForPost(filterPost?.Id ?? ObjectId.Empty);
 
@@ -60,7 +66,7 @@ namespace DbService.Services
                     images.Add(image.ToDatabase(savedImageId.SavedImage));
                 }
             }
-            var result = await _postRepository.Insert(post.ToDatabase(images), null!, CancellationToken.None);
+            var result = await _postRepository.Insert(post.ToDatabase(images), null, CancellationToken.None);
 
             if (!result)
             {

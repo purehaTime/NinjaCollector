@@ -7,20 +7,35 @@ namespace DbService.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        public string Name { get; set; }
-        public string ForGroup { get; set; }
-        public string Service { get; set; }
+        public string Description { get; set; }
+        public string Group { get; set; }
 
         /// <summary>
-        /// in minutes
+        /// in milliseconds
         /// </summary>
-        public int TimeInterval { get; set; }
+        public int Timeout { get; set; }
 
         /// <summary>
-        /// enable this activate a plus\minus minutes for time interval
+        /// Delay before first run
         /// </summary>
-        public bool MixRandom { get; set; }
+        public int Hold { get; set; }
 
-        public IEnumerable<string> Tags { get; set; }
+        /// <summary>
+        /// how many time worker should run
+        /// </summary>
+        public int Counts { get; set; }
+        public int RetryAfterErrorCount { get; set; }
+        public bool Disabled { get; set; }
+        public List<string> Tags { get; set; }
+
+        /// <summary>
+        /// Service name: tg, reddit, etc.
+        /// </summary>
+        public string Source { get; set; }
+        public bool UseScheduling { get; set; }
+        public int ScheduleInterval { get; set; }
+        public bool UseRandom { get; set; }
+        public bool IgnoreHistory { get; set; }
+        public bool ContinuePosting { get; set; }
     }
 }
