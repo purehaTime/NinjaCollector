@@ -1,14 +1,13 @@
 ﻿using DbService.Interfaces;
 using DbService.Mapping;
-using DbService.Models;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
 using MongoDB.Bson;
-using Status = GrpcHelper.DbService.Status;
 using ParserSettings = GrpcHelper.DbService.ParserSettings;
 using Post = GrpcHelper.DbService.Post;
 using PosterSettings = GrpcHelper.DbService.PosterSettings;
+using Status = GrpcHelper.DbService.Status;
 
 namespace DbService.Services
 {
@@ -64,6 +63,12 @@ namespace DbService.Services
             return new Status { Success = result };
         }
 
+        public override async Task<Post> GetPost(PostRequest request, ServerCallContext context)
+        {
+            var result = await _post.GetPostBySettingId(request.SettingsId);
+            return result;
+        }
+
         public override async Task<Status> SaveParserSettings(ParserSettingsModel request, ServerCallContext context)
         {
             var model = request.ToDatabase();
@@ -86,6 +91,17 @@ namespace DbService.Services
             return new ParserSettings
             {
                  ParserSetting = { response.Select(s => s.ToGrpcData()) }
+            };
+        }
+
+        public override async Task<Status> SavePosterSettings(PosterSettingsModel request, ServerCallContext context)
+        {
+            var model = request.ToDatabase();
+            var result = await _settings.SavePosterSettings(model);
+
+            return new Status
+            {
+                Success = result
             };
         }
 

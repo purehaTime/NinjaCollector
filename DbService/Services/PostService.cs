@@ -9,7 +9,6 @@ using DbPost = DbService.Models.Post;
 using ILogger = Serilog.ILogger;
 using Image = DbService.Models.Image;
 using Post = GrpcHelper.DbService.Post;
-using PosterSettings = DbService.Models.PosterSettings;
 
 namespace DbService.Services
 {
@@ -18,27 +17,35 @@ namespace DbService.Services
         private readonly IRepository<DbPost> _postRepository;
         private readonly IImageService _imageService;
         private readonly IHistoryService _historyService;
+        private readonly ISettingsService _settingsService;
 
         private ILogger _logger;
 
-        public PostService(IRepository<DbPost> postRepository, IImageService imageService, IHistoryService historyService, ILogger logger)
+        public PostService(IRepository<DbPost> postRepository, IImageService imageService, IHistoryService historyService, ISettingsService settingsService, ILogger logger)
         {
             _postRepository = postRepository;
             _imageService = imageService;
             _historyService = historyService;
+            _settingsService = settingsService;
             _logger = logger;
         }
 
-        public async Task<Post> GetPostByTags(List<string> tags, PosterSettings poster)
+        public async Task<Post> GetPostBySettingId(string settingId)
         {
-            var filter = Builders<DbPost>.Filter.AnyIn(x => x.Tags, tags);
+            var setting = await _settingsService.GetPosterSetting(settingId);
+            if (setting == null)
+            {
+                return null;
+            }
+
+            var filter = Builders<DbPost>.Filter.AnyIn(x => x.Tags, setting.Tags);
             var posts = (await _postRepository.FindMany(filter, null, CancellationToken.None)).ToList();
 
             var rnd = new Random();
-            var filterPost = poster.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.FirstOrDefault();
-            if (!poster.IgnoreHistory)
+            var filterPost = setting.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.FirstOrDefault();
+            if (!setting.IgnoreHistory)
             {
-                var histories = await _historyService.GetHistory(posts.Select(s => s.Id), poster.Source, poster.Group);
+                var histories = await _historyService.GetHistory(posts.Select(s => s.Id), setting.Source, setting.Group);
                 filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
             }
 

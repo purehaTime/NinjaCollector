@@ -12,5 +12,6 @@ namespace DbService.Interfaces
         public Task<List<PosterSettings>> GetPosterSettings(string service, ObjectId? settingsId);
         public Task<bool> SavePosterSettings(PosterSettings settings);
         public Task<bool> RemovePosterSettings(string id);
+        public Task<PosterSettings> GetPosterSetting(string id);
     }
 }

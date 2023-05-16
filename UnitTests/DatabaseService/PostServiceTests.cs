@@ -17,6 +17,7 @@ namespace UnitTests.DatabaseService
         private Mock<IRepository<Post>> _postRepositoryMock;
         private Mock<IHistoryService> _historyServiceMock;
         private Mock<IImageService> _imageServiceMock;
+        private Mock<ISettingsService> _settingsServiceMock;
 
         private IPostService _postService;
 
@@ -26,9 +27,10 @@ namespace UnitTests.DatabaseService
             _postRepositoryMock = new Mock<IRepository<Post>>();
             _historyServiceMock = new Mock<IHistoryService>();
             _imageServiceMock = new Mock<IImageService>();
+            _settingsServiceMock = new Mock<ISettingsService>();
             _loggerMock = new Mock<ILogger>();
 
-            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
+            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _settingsServiceMock.Object, _loggerMock.Object);
         }
 
         [Test]
@@ -39,8 +41,6 @@ namespace UnitTests.DatabaseService
             var post = Fixture.Create<GrpcHelper.DbService.Post>();
 
             _postRepositoryMock.Setup(s => s.Insert(It.IsAny<Post>(), It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(insertResult);
-
-            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _loggerMock.Object);
 
             var result = _postService.SavePost(post)
                 .GetAwaiter()
@@ -69,12 +69,17 @@ namespace UnitTests.DatabaseService
 
             postList[0].Id = postObjectId; // one should be not filtered by history
 
-            var tags = Fixture.CreateMany<string>(5).ToList();
+            var settingsId = Fixture.Create<string>();
             var settings = Fixture.Create<PosterSettings>();
+
             var histories = Fixture.Build<History>()
                 .With(w => w.EntityId, postList.First().Id)
                 .CreateMany()
                 .ToList();
+
+            _settingsServiceMock
+                .Setup(s => s.GetPosterSetting(settingsId))
+                .ReturnsAsync(settings);
 
             _postRepositoryMock
                 .Setup(s => s.FindMany(It.IsAny<FilterDefinition<Post>>(), It.IsAny<FindOptions>(), CancellationToken.None))
@@ -88,7 +93,7 @@ namespace UnitTests.DatabaseService
                 .Setup(s => s.GetImagesForPost(It.IsAny<ObjectId>()))
                 .ReturnsAsync(() => new List<(Image image, MemoryStream stream)> {(image, imageStream)});
 
-            var result = _postService.GetPostByTags(tags, settings)
+            var result = _postService.GetPostBySettingId(settingsId)
                 .GetAwaiter()
                 .GetResult();
 

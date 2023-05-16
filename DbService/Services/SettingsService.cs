@@ -32,14 +32,14 @@ namespace DbService.Services
             {
                 filter &= Builders<ParserSettings>.Filter.Eq(e => e.Id, settingsId);
             }
-            var results = await _parserRepository.FindMany(filter, null!, CancellationToken.None);
+            var results = await _parserRepository.FindMany(filter, null, CancellationToken.None);
 
             return results?.ToList() ?? new List<ParserSettings>();
         }
 
         public async Task<bool> SaveParserSettings(ParserSettings settings)
         {
-            var result = await _parserRepository.Insert(settings, null!, CancellationToken.None);
+            var result = await _parserRepository.Insert(settings, null, CancellationToken.None);
 
             if (!result)
             {
@@ -51,7 +51,7 @@ namespace DbService.Services
         public async Task<bool> RemoveParserSettings(string id)
         {
             var filter = Builders<ParserSettings>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
-            var result = await _parserRepository.Delete(filter, null!, CancellationToken.None);
+            var result = await _parserRepository.Delete(filter, null, CancellationToken.None);
 
             if (result == null)
             {
@@ -92,7 +92,7 @@ namespace DbService.Services
         public async Task<bool> RemovePosterSettings(string id)
         {
             var filter = Builders<PosterSettings>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
-            var result = await _posterRepository.Delete(filter, null!, CancellationToken.None);
+            var result = await _posterRepository.Delete(filter, null, CancellationToken.None);
 
             if (result == null)
             {
@@ -100,6 +100,19 @@ namespace DbService.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<PosterSettings> GetPosterSetting(string id)
+        {
+            var filter = Builders<PosterSettings>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
+            var result = await _posterRepository.Find(filter, null, CancellationToken.None);
+
+            if (result == null)
+            {
+                _logger.Error($"Cant delete settings for parser {id}");
+                return null;
+            }
+            return result;
         }
     }
 }

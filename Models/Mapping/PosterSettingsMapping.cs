@@ -22,6 +22,7 @@ namespace ModelsHelper.Mapping
                 ScheduleInterval = model.ScheduleInterval,
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
+                UseImagesOnly = model.UseImagesOnly,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };
@@ -44,6 +45,7 @@ namespace ModelsHelper.Mapping
                 ScheduleInterval = model.ScheduleInterval,
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
+                UseImagesOnly = model.UseImagesOnly,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };

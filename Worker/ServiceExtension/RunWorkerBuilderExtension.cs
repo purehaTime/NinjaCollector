@@ -1,11 +1,7 @@
-﻿using GrpcHelper.WorkerService;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Worker.Grpc;
 using Worker.Interfaces;
-using Worker.Model;
 using WorkerService = Worker.Grpc.WorkerService;
 
 namespace Worker.ServiceExtension

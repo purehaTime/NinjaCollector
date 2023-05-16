@@ -1,11 +1,8 @@
 ﻿using DbService.Interfaces;
 using DbService.Mapping;
 using DbService.Models;
-using Grpc.Core;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections.Generic;
 using ILogger = Serilog.ILogger;
 
 namespace DbService.Services
@@ -15,13 +12,15 @@ namespace DbService.Services
         private readonly IGridFsService _gridFsService;
         private readonly IRepository<Image> _imageRepository;
         private readonly IHistoryService _historyService;
+        private readonly ISettingsService _settingsService;
         private readonly ILogger _logger;
 
-        public ImageService(IGridFsService gridService, IRepository<Image> imageRepository, IHistoryService historyService, ILogger logger)
+        public ImageService(IGridFsService gridService, IRepository<Image> imageRepository, IHistoryService historyService, ISettingsService settingsService, ILogger logger)
         {
             _gridFsService = gridService;
             _imageRepository = imageRepository;
             _historyService = historyService;
+            _settingsService = settingsService;
             _logger = logger;
         }
 
@@ -39,24 +38,9 @@ namespace DbService.Services
             return result;
         }
 
-        private async Task<(bool, ObjectId)> SaveImage(ObjectId id, string fileName, GrpcHelper.DbService.Image image)
+        public async Task<(Image image, MemoryStream stream)> GetImageById(string id)
         {
-            if (id == ObjectId.Empty)
-            {
-                return (false, ObjectId.Empty);
-            }
-
-            var model = image.ToDatabase(id);
-            model.Name = fileName;
-
-            var result = await InsertImage(model);
-
-            return (result, id);
-        }
-
-        public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
-        {
-            var filter = Builders<Image>.Filter.Eq(e => e.Id, id);
+            var filter = Builders<Image>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
             var image = await _imageRepository.Find(filter, null, CancellationToken.None);
 
             var stream = await _gridFsService.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
@@ -72,22 +56,73 @@ namespace DbService.Services
             return results;
         }
 
-        public async Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags,
-            PosterSettings poster)
+        public async Task<List<(Image image, MemoryStream stream)>> GetImagesBySettingId(string settingId)
         {
-            var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, tags);
+            var setting = await _settingsService.GetPosterSetting(settingId);
+            if (setting == null)
+            {
+                return null;
+            }
 
+            var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, setting.Tags);
             var images = (await _imageRepository.FindMany(filter, null, CancellationToken.None)).ToList();
 
             var filteredImages = images;
-            if (!poster.IgnoreHistory)
+            if (!setting.IgnoreHistory)
             {
-                var histories = await _historyService.GetHistory(images.Select(s => s.Id), poster.Source, poster.Group);
+                var histories = await _historyService.GetHistory(images.Select(s => s.Id), setting.Source, setting.Group);
                 filteredImages = images.Where(w => histories.All(a => a.EntityId != w.Id)).ToList();
             }
 
             var results = await GetImagesFromGridFs(filteredImages);
             return results;
+        }
+
+        public async Task<(Image image, MemoryStream steam)> GetImageBySettingId(string settingId)
+        {
+            var setting = await _settingsService.GetPosterSetting(settingId);
+            if (setting == null)
+            {
+                return (null, null);
+            }
+
+            var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, setting.Tags);
+
+            var rnd = new Random();
+            var images = (await _imageRepository.FindMany(filter, null, CancellationToken.None)).ToList();
+            var image = setting.UseRandom ? images[rnd.Next(images.Count - 1)] : images.FirstOrDefault();
+
+            if (image == null)
+            {
+                return (null, null);
+            }
+
+            if (!setting.IgnoreHistory)
+            {
+                var histories = await _historyService.GetHistory(new List<ObjectId> { image.Id }, setting.Source, setting.Group);
+                if (histories.Any())
+                {
+                    return (null, null);
+                }
+            }
+
+            var results = await GetImagesFromGridFs(new List<Image> { image });
+            return results.FirstOrDefault();
+        }
+
+        private async Task<(bool, ObjectId)> SaveImage(ObjectId id, string fileName, GrpcHelper.DbService.Image image)
+        {
+            if (id == ObjectId.Empty)
+            {
+                return (false, ObjectId.Empty);
+            }
+
+            var model = image.ToDatabase(id);
+            model.Name = fileName;
+
+            var result = await InsertImage(model);
+
+            return (result, id);
         }
 
         private async Task<bool> InsertImage(Image model)

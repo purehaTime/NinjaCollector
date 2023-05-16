@@ -58,12 +58,12 @@ namespace GrpcHelper.Clients
             return false;
         }
 
-        public async Task<List<Post>> GetPosts(PostRequest request)
+        public async Task<Post> GetPost(PostRequest postRequest)
         {
             try
             {
-                var result = await _client.GetPostsAsync(request);
-                return result.Posts.ToList();
+                var result = await _client.GetPostAsync(postRequest);
+                return result;
             }
             catch (Exception err)
             {

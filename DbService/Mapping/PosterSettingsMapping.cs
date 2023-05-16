@@ -23,6 +23,7 @@ namespace DbService.Mapping
                 ScheduleInterval = model.ScheduleInterval,
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
+                UseImagesOnly = model.UseImagesOnly,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };
@@ -45,6 +46,7 @@ namespace DbService.Mapping
                 ScheduleInterval = model.ScheduleInterval,
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
+                UseImagesOnly = model.UseImagesOnly,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };

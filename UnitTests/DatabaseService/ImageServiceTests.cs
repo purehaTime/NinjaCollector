@@ -19,6 +19,7 @@ namespace UnitTests.DatabaseService
         private Mock<IRepository<Image>> _imageRepositoryMock;
         private Mock<IHistoryService> _historyServiceMock;
         private Mock<ILogger> _loggerMock;
+        private Mock<ISettingsService> _settingsServiceMock;
 
         private IImageService _imageService;
 
@@ -28,7 +29,11 @@ namespace UnitTests.DatabaseService
             _gridFsMock = new Mock<IGridFsService>();
             _imageRepositoryMock = new Mock<IRepository<Image>>();
             _historyServiceMock = new Mock<IHistoryService>();
+            _settingsServiceMock = new Mock<ISettingsService>();
             _loggerMock = new Mock<ILogger>();
+
+            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
+                _historyServiceMock.Object, _settingsServiceMock.Object, _loggerMock.Object);
         }
 
         [Test]
@@ -44,9 +49,6 @@ namespace UnitTests.DatabaseService
 
             _imageRepositoryMock.Setup(s =>
                 s.Insert(It.IsAny<Image>(), It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(true);
-
-            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
-                _historyServiceMock.Object, _loggerMock.Object);
 
             var result = _imageService.SaveImage(imageStream, image)
                 .GetAwaiter()
@@ -67,9 +69,6 @@ namespace UnitTests.DatabaseService
 
             _gridFsMock.Setup(s => s.AddFileAsStream(It.IsAny<MemoryStream>(), It.IsAny<string>(),
                 It.IsAny<GridFSUploadOptions>(), CancellationToken.None)).ReturnsAsync(objectId);
-
-            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
-                _historyServiceMock.Object, _loggerMock.Object);
 
             var result = _imageService.SaveImage(imageStream, image)
                 .GetAwaiter()
@@ -98,10 +97,7 @@ namespace UnitTests.DatabaseService
             _gridFsMock.Setup(s => s.GetFileAsStream(objectId, It.IsAny<GridFSDownloadOptions>(), CancellationToken.None))
                 .ReturnsAsync(imageStream);
 
-            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
-                _historyServiceMock.Object, _loggerMock.Object);
-
-            var result = _imageService.GetImageById(objectId)
+            var result = _imageService.GetImageById(objectId.ToString())
                 .GetAwaiter()
                 .GetResult();
 
@@ -131,9 +127,6 @@ namespace UnitTests.DatabaseService
             _gridFsMock.Setup(s => s.GetFileAsStream(objectId, It.IsAny<GridFSDownloadOptions>(), CancellationToken.None))
                 .ReturnsAsync(imageStream);
 
-            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
-                _historyServiceMock.Object, _loggerMock.Object);
-
             var result = _imageService.GetImagesForPost(objectId)
                 .GetAwaiter()
                 .GetResult();
@@ -150,14 +143,18 @@ namespace UnitTests.DatabaseService
         public void GetImagesByTags_ShouldReturn_Image()
         {
             var objectId = Fixture.Create<ObjectId>();
-            var tags = Fixture.CreateMany<string>(5).ToList();
-            var poster = Fixture.Create<PosterSettings>();
+            var settingsId = Fixture.Create<string>();
+            var settings = Fixture.Create<PosterSettings>();
 
             var imageStream = Fixture.Create<MemoryStream>();
             var images = Fixture.Build<Image>()
                 .With(w => w.GridFsId, objectId)
                 .CreateMany(5)
                 .ToList();
+
+            _settingsServiceMock
+                .Setup(s => s.GetPosterSetting(settingsId))
+                .ReturnsAsync(settings);
 
             _imageRepositoryMock
                 .Setup(s => s.FindMany(It.IsAny<FilterDefinition<Image>>(), It.IsAny<FindOptions>(), CancellationToken.None))
@@ -166,10 +163,7 @@ namespace UnitTests.DatabaseService
             _gridFsMock.Setup(s => s.GetFileAsStream(objectId, It.IsAny<GridFSDownloadOptions>(), CancellationToken.None))
                 .ReturnsAsync(imageStream);
 
-            _imageService = new ImageService(_gridFsMock.Object, _imageRepositoryMock.Object,
-                _historyServiceMock.Object, _loggerMock.Object);
-
-            var result = _imageService.GetImagesByTags(tags, poster)
+            var result = _imageService.GetImagesBySettingId(settingsId)
                 .GetAwaiter()
                 .GetResult();
 

@@ -10,8 +10,10 @@ service Database {
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
     rpc AddPost(Post) returns (Status);
     rpc AddPosts(PostModel) returns (Status);
-    rpc GetPosts(PostRequest) returns (PostModel);
+    rpc GetPosts(PostsRequest) returns (PostModel);
+    rpc GetPost(PostRequest) returns (Post);
     rpc GetImages(ImageRequest) returns (ImageModel);
+    rpc GetImage(ImageRequest) returns (Image);
     rpc AddImages(ImageModel) returns (Status);
     rpc GetParserSettings(ParserSettingsRequest) returns (ParserSettings);
     rpc GetPosterSettings(PosterSettingsRequest) returns (PosterSettings);
@@ -21,6 +23,7 @@ service Database {
     rpc AddUser(AddUserModel) returns (Status);
     rpc GetUser(UserRequest) returns (UserModel);
     rpc RemoveParserSettings(ModelId) returns (Status);
+    rpc RemovePosterSettings(ModelId) returns (Status);
 }
 
 message DbLogModel {
@@ -73,11 +76,15 @@ message PostModel {
   repeated Post Posts = 1;
 }
 
-message PostRequest {
+message PostsRequest {
   repeated string Tags = 1;
   string FromSource = 2;
   string ByTitle = 3;
   string ByUserName = 4;
+}
+
+message PostRequest {
+  string SettingsId = 1;
 }
 
 message ImageRequest {
@@ -136,8 +143,9 @@ message PosterSettingsModel {
     int32 ScheduleInterval = 11;
     bool UseRandom = 12;
     bool IgnoreHistory = 13;
-    bool ContinuePosting = 14;
-    bool Disabled = 15;
+    bool useImagesOnly = 14;
+    bool ContinuePosting = 15;
+    bool Disabled = 16;
 }
 
 message ParserSettings {

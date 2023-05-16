@@ -9,10 +9,12 @@ namespace DbService.Interfaces
 
         public Task<(bool Status, ObjectId SavedImage)> SaveImage(byte[] imageBytes, GrpcHelper.DbService.Image image);
 
-        public Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id);
+        public Task<(Image image, MemoryStream stream)> GetImageById(string id);
 
         public Task<List<(Image image, MemoryStream stream)>> GetImagesForPost(ObjectId postId);
 
-        public Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags, PosterSettings poster);
+        public Task<List<(Image image, MemoryStream stream)>> GetImagesBySettingId(string settingId);
+
+        public Task<(Image image, MemoryStream steam)> GetImageBySettingId(string settingId);
     }
 }
