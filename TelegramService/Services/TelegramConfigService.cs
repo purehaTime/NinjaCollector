@@ -29,13 +29,13 @@ namespace TelegramService.Services
             var admins = Environment.GetEnvironmentVariable("Telegram_Admins") ??
                          _appConfig.GetSection("Telegram:Admins").Value;
 
-            var parsed = admins.Split("|").Select(s =>
+            var parsed = admins?.Split("|").Select(s =>
             {
                 var valid = long.TryParse(s, out var result);
                 return valid ? result : -1;
             });
 
-            return parsed.ToList();
+            return parsed?.ToList();
         }
     }
 }

@@ -7,8 +7,9 @@ namespace GrpcHelper.Interfaces
         public Task<bool> WriteLogToDb(DbLogModel message);
         public Task<bool> AddPost(Post post);
         public Task<bool> AddPosts(PostModel post);
-        public Task<Post> GetPost(PostRequest postRequest);
-        public Task<List<Image>> GetImages(ImageRequest request);
+        public Task<Post> GetPost(EntityRequest postRequest);
+        public Task<List<Image>> GetImages(ImagesRequest request);
+        public Task<Image> GetImage(EntityRequest request);
         public Task<bool> AddImages(ImageModel images);
         public Task<List<ParserSettingsModel>> GetParserSettings(ParserSettingsRequest request);
         public Task<bool> SaveParserSettings(ParserSettingsModel settings);

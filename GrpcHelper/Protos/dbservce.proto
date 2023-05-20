@@ -6,14 +6,14 @@ import "google/protobuf/timestamp.proto";
 package database;
 
 service Database {
-    rpc WriteLog(DbLogModel) returns (WriteLogResponse);
+    rpc WriteLog(DbLogModel) returns (Status);
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
     rpc AddPost(Post) returns (Status);
     rpc AddPosts(PostModel) returns (Status);
     rpc GetPosts(PostsRequest) returns (PostModel);
-    rpc GetPost(PostRequest) returns (Post);
-    rpc GetImages(ImageRequest) returns (ImageModel);
-    rpc GetImage(ImageRequest) returns (Image);
+    rpc GetPost(EntityRequest) returns (Post);
+    rpc GetImages(ImagesRequest) returns (ImageModel);
+    rpc GetImage(EntityRequest) returns (Image);
     rpc AddImages(ImageModel) returns (Status);
     rpc GetParserSettings(ParserSettingsRequest) returns (ParserSettings);
     rpc GetPosterSettings(PosterSettingsRequest) returns (PosterSettings);
@@ -27,24 +27,20 @@ service Database {
 }
 
 message DbLogModel {
-    string jsondata = 1;
-    google.protobuf.Timestamp timestamp = 2;
-}
-
-message WriteLogResponse {
-  bool success = 1;
+    string JsonData = 1;
+    google.protobuf.Timestamp Timestamp = 2;
 }
 
 message DbLogsRequest {
-    repeated DbLogModel logs = 1;
+    repeated DbLogModel Logs = 1;
 }
 
 message DbLogsResponse {
-    DbLogModel filter = 1;
+    DbLogModel Filter = 1;
 }
 
 message Status {
-  bool success = 1;
+  bool Success = 1;
 }
 
 message Image {
@@ -83,16 +79,16 @@ message PostsRequest {
   string ByUserName = 4;
 }
 
-message PostRequest {
-  string SettingsId = 1;
-}
-
-message ImageRequest {
+message ImagesRequest {
   repeated string Tags = 1;
   int32 MaxWidth = 2;
   int32 MaxHeight = 3;
   int32 MinWidth = 4;
   int32 MinHeight = 5;
+}
+
+message EntityRequest {
+  string SettingsId = 1;
 }
 
 message ImageModel {

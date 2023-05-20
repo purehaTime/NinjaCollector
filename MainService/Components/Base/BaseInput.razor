@@ -1,4 +1,4 @@
-﻿@typeparam Tparam;
+﻿@typeparam TParam;
 
 <div class="@(Css ?? "input-component")">
     <label for="@_id">@Label</label>
@@ -7,7 +7,7 @@
 
 @code {
     [Parameter]
-    public Tparam InputValue { get; set; }
+    public TParam InputValue { get; set; }
 
     [Parameter]
     public string Label { get; set; }
@@ -15,7 +15,7 @@
     protected virtual string Type { get; set; } = "text";
 
     [Parameter]
-    public EventCallback<Tparam> OnChanged { get; set; }
+    public EventCallback<TParam> OnChanged { get; set; }
 
     private readonly string _id;
 
@@ -30,7 +30,7 @@
     {
         if (!string.IsNullOrEmpty(val.Value?.ToString()))
         {
-            var result = (Tparam)Convert.ChangeType(val.Value, typeof(Tparam));
+            var result = (TParam)Convert.ChangeType(val.Value, typeof(TParam));
             OnChanged.InvokeAsync(result);
         }
     } 

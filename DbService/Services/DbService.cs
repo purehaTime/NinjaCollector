@@ -59,11 +59,10 @@ namespace DbService.Services
         public override async Task<Status> AddPosts(PostModel posts, ServerCallContext context)
         {
             var result = await _post.SavePosts(posts);
-
             return new Status { Success = result };
         }
 
-        public override async Task<Post> GetPost(PostRequest request, ServerCallContext context)
+        public override async Task<Post> GetPost(EntityRequest request, ServerCallContext context)
         {
             var result = await _post.GetPostBySettingId(request.SettingsId);
             return result;
@@ -117,6 +116,13 @@ namespace DbService.Services
             {
                 PosterSettings_ = { response.Select(s => s.ToGrpcData()) }
             };
+        }
+
+        public override async Task<Image> GetImage(EntityRequest request, ServerCallContext context)
+        {
+            var image = await _image.GetImageBySettingId(request.SettingsId);
+            var result = image.image.ToGrpcData(image.steam.ToArray());
+            return result;
         }
     }
 }

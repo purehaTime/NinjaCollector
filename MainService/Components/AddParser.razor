@@ -18,7 +18,8 @@
             <Number Label="Hold (ms)" OnChanged="o => _parserSettings.Hold = o" InputValue="@_parserSettings.Hold" />
             <Number Label="Counts" OnChanged="o => _parserSettings.Counts = o" InputValue="@_parserSettings.Counts" />
             <Number Label="How may retry after error" OnChanged="o => _parserSettings.RetryAfterErrorCount = o" InputValue="@_parserSettings.RetryAfterErrorCount" />
-            <Text Label="Tags" OnChanged="@(o => _parserSettings.Tags = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Tags)" />
+            <!--<Text Label="Tags" OnChanged="@(o => _parserSettings.Tags = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Tags)" />-->
+            <Text Label="Tags" OnChanged="(o => Task.FromResult(_parserSettings.Tags = o.Split('|').ToList()))" />
             <DateTime Label="From date" OnChanged="o => _parserSettings.FromDate = o" InputValue="@_parserSettings.FromDate" />
             <DateTime Label="Until date" OnChanged="o => _parserSettings.UntilDate = o" InputValue="@_parserSettings.UntilDate" />
             <Text Label="From post Id" OnChanged="o => _parserSettings.FromPostId = o" InputValue="@_parserSettings.FromPostId" />
@@ -31,10 +32,10 @@
             <h2>Filters</h2>
             <Checkbox Label="Ignore video" OnChanged="o => _parserSettings.Filter.IgnoreVideo = o" InputValue="@(_parserSettings.Filter.IgnoreVideo)" />
             <Checkbox Label="Ignore repost" OnChanged="o => _parserSettings.Filter.IgnoreRepost = o" InputValue="@_parserSettings.Filter.IgnoreRepost" />
-            <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
+            <!--    <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
             <Text Label="Ignore authors" OnChanged="@(o => _parserSettings.Filter.IgnoreAuthors = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreAuthors)" />
             <Text Label="Ignore titles" OnChanged="@(o => _parserSettings.Filter.IgnoreTitles = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreTitles)" />
-            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />
+            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />-->
         </div>
     </div>
     <div class="center">

@@ -58,7 +58,7 @@ namespace GrpcHelper.Clients
             return false;
         }
 
-        public async Task<Post> GetPost(PostRequest postRequest)
+        public async Task<Post> GetPost(EntityRequest postRequest)
         {
             try
             {
@@ -72,12 +72,26 @@ namespace GrpcHelper.Clients
             return null;
         }
 
-        public async Task<List<Image>> GetImages(ImageRequest request)
+        public async Task<List<Image>> GetImages(ImagesRequest request)
         {
             try
             {
                 var result = await _client.GetImagesAsync(request);
                 return result.Images.ToList();
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return null;
+        }
+
+        public async Task<Image> GetImage(EntityRequest request)
+        {
+            try
+            {
+                var result = await _client.GetImageAsync(request);
+                return result;
             }
             catch (Exception err)
             {
@@ -132,7 +146,7 @@ namespace GrpcHelper.Clients
         {
             try
             {
-                var result = await _client.RemoveParserSettingsAsync(new ModelId()
+                var result = await _client.RemoveParserSettingsAsync(new ModelId
                 {
                     Id = id ?? string.Empty
                 });

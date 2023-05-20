@@ -32,7 +32,7 @@ namespace UnitTests.GrpcHelperTests
         public void WriteLogToDb_ShouldReturn_Bool(bool responseTestCase)
         {
             var dbLogsModel = Fixture.Create<DbLogModel>();
-            var response = new WriteLogResponse { Success = responseTestCase };
+            var response = new Status { Success = responseTestCase };
 
             var returnResponse = GetAsyncUnaryCallSuccess(response);
 
