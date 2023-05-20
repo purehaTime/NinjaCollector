@@ -33,7 +33,9 @@ namespace TelegramService.Workers
             {
                 Service = "telegram"
             });
-            return new List<Settings>(posters.Select(s => s.ToModel()));
+            return posters.Count > 0
+                ? new List<Settings>(posters.Select(s => s.ToModel())) 
+                : new List<Settings>();
         }
 
         public async Task<Settings> LoadSettings(string settingsId)
