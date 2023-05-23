@@ -16,6 +16,7 @@ namespace GrpcHelper.Interfaces
         public Task<bool> DeleteParserSettings(string id);
         public Task<List<PosterSettingsModel>> GetPosterSettings(PosterSettingsRequest request);
         public Task<bool> SavePosterSettings(PosterSettingsModel settings);
+        public Task<bool> DeletePosterSettings(string id);
         public Task<bool> CreateUser(string userName, string password);
         public Task<UserModel> GetUser(string userName);
     }

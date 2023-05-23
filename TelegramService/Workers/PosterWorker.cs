@@ -77,8 +77,9 @@ namespace TelegramService.Workers
             posterSettings.ContinuePosting = false;
             if (post != null && !string.IsNullOrEmpty(post.PostId))
             {
+                var text = posterSettings.UseSettingsText ? posterSettings.TextForPost : post.Text;
                 var images = post.Images.Select(s => s.ToModel());
-                await _tgBot.SendPost(chatId, post.Text, images.ToList());
+                await _tgBot.SendPost(chatId, text, images.ToList());
                 posterSettings.ContinuePosting = true;
             }
 

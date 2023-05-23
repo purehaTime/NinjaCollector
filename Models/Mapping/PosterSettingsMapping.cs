@@ -23,6 +23,8 @@ namespace ModelsHelper.Mapping
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
                 UseImagesOnly = model.UseImagesOnly,
+                UseSettingsText = model.UseSettingsText,
+                TextForPost = model.TextForPost,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };
@@ -46,6 +48,8 @@ namespace ModelsHelper.Mapping
                 UseRandom = model.UseRandom,
                 IgnoreHistory = model.IgnoreHistory,
                 UseImagesOnly = model.UseImagesOnly,
+                UseSettingsText = model.UseSettingsText,
+                TextForPost = model.TextForPost,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };

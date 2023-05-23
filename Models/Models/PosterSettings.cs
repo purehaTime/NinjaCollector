@@ -9,6 +9,8 @@ namespace ModelsHelper.Models
         public bool UseRandom { get; set; }
         public bool IgnoreHistory { get; set; }
         public bool UseImagesOnly { get; set; }
+        public bool UseSettingsText { get; set; }
+        public string TextForPost { get; set; }
         public bool ContinuePosting { get; set; }
 
     }

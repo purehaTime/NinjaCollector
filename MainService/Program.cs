@@ -28,6 +28,7 @@ namespace MainService
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IParserService, ParserService>();
+            builder.Services.AddScoped<IPosterService, PosterService>();
             builder.Services.AddScoped<IWorkerService<RedditStatusModel>, RedditStatusService>();
 
             builder.Services.AddAntiforgery(opt => {

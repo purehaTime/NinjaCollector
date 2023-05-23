@@ -1,0 +1,11 @@
+﻿.add-poster-layout {
+    display: flex;
+}
+
+.add-poster-layout > div {
+    margin: 10px 30px;
+}
+
+.center {
+    text-align: center;
+}

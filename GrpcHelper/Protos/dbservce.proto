@@ -139,9 +139,11 @@ message PosterSettingsModel {
     int32 ScheduleInterval = 11;
     bool UseRandom = 12;
     bool IgnoreHistory = 13;
-    bool useImagesOnly = 14;
-    bool ContinuePosting = 15;
-    bool Disabled = 16;
+    bool UseImagesOnly = 14;
+    bool UseSettingsText = 15;
+    string TextForPost = 16;
+    bool ContinuePosting = 17;
+    bool Disabled = 18;
 }
 
 message ParserSettings {

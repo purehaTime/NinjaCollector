@@ -1,0 +1,66 @@
+﻿@page "/addposter"
+@page "/editposter/{ParserId}"
+@using MainService.Components.Base
+@using MainService.Interfaces
+@using MainService.Models
+@using ModelsHelper.Models
+
+@inject IPosterService _posterService
+
+<div>
+    <h2 class="center">Setting</h2>
+    <div class="add-poster-layout">
+        <div>
+            <Text Label="Description" OnChanged="o => _posterSettings.Description = o" InputValue="@_posterSettings.Description"/>
+            <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _posterSettings.Source = o"/>
+            <Text Label="Group" OnChanged="o => _posterSettings.Group = o" InputValue="@_posterSettings.Description"/>
+            <Number Label="Timeout (ms)" OnChanged="o => _posterSettings.Timeout = o" InputValue="@_posterSettings.Timeout"/>
+            <Number Label="Hold (ms)" OnChanged="o => _posterSettings.Hold = o" InputValue="@_posterSettings.Hold"/>
+            <Number Label="Counts" OnChanged="o => _posterSettings.Counts = o" InputValue="@_posterSettings.Counts"/>
+            <Number Label="How may retry after error" OnChanged="o => _posterSettings.RetryAfterErrorCount = o" InputValue="@_posterSettings.RetryAfterErrorCount"/>
+            <Text Label="Tags" OnChanged="o => _posterSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _posterSettings.Tags)"/>
+            <Checkbox Label="Continue monitoring" OnChanged="o => _posterSettings.ContinuePosting = o" InputValue="@_posterSettings.ContinuePosting"/>
+            <Checkbox Label="Disabled" OnChanged="o => _posterSettings.Disabled = o" InputValue="@_posterSettings.Disabled"/>
+        </div>
+        <div>
+            <Checkbox Label="Use scheduling" OnChanged="o => _posterSettings.UseScheduling = o" InputValue="@_posterSettings.UseScheduling"/>
+            <Number Label="Scheduling interval" OnChanged="o => _posterSettings.ScheduleInterval = o" InputValue="@_posterSettings.ScheduleInterval"/>
+            <Checkbox Label="Ignore history" OnChanged="o => _posterSettings.IgnoreHistory = o" InputValue="@_posterSettings.IgnoreHistory"/>
+            <Checkbox Label="Use images only" OnChanged="o => _posterSettings.UseImagesOnly = o" InputValue="@_posterSettings.UseImagesOnly"/>
+            <Checkbox Label="Use random" OnChanged="o => _posterSettings.UseRandom = o" InputValue="@_posterSettings.UseRandom"/>
+            <Checkbox Label="Use settings text" OnChanged="o => _posterSettings.UseSettingsText = o" InputValue="@_posterSettings.UseSettingsText"/>
+            <Text Label="Text for post" OnChanged="o => _posterSettings.TextForPost = o" InputValue="@_posterSettings.TextForPost"/>
+        </div>
+    </div>
+    <div class="center">
+        <Button Action="OnSave">Save</Button>
+        @if (_saveError)
+        {
+            <div @onclick="() => _saveError = false">Can't save setting</div>
+        }
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string ParserId { get; set; }
+
+    private PosterSettings _posterSettings = new ();
+
+    private bool _saveError;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (ParserId != null)
+        {
+            _posterSettings = await _posterService.GetPosterSettings(ParserId);
+        }
+    }
+
+    public async Task OnSave()
+    {
+        _saveError = !await _posterService.SavePosterSettings(_posterSettings);
+    }
+}

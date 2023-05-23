@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\AddPoster.razor.css" />
     <None Remove="Components\AddParser.razor.css" />
     <None Remove="Components\Base\Option.razor.css" />
     <None Remove="Components\Dashboard.razor.css" />
@@ -17,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Components\AddPoster.razor.css" />
     <Content Include="Components\AddParser.razor.css" />
     <Content Include="Components\Base\Option.razor.css" />
     <Content Include="Components\Menu.razor.css" />
