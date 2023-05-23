@@ -1,9 +1,16 @@
-﻿@inherits BaseInput<int>
-
-@{
-    base.BuildRenderTree(__builder);
+﻿@{
+    <BaseInput TParam="int" Label="@Label" Type="number" InputValue="@InputValue" OnChanged="OnChanged" />
 }
 
 @code {
-    protected override string Type { get; set; } = "number";
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public int InputValue { get; set; }
+
+    [Parameter]
+    public Action<int> OnChanged { get; set; }
+
 }

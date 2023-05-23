@@ -11,8 +11,6 @@
     <div class="add-parser-layout">
         <div>
             <h2>Setting</h2>
-            <Exmple Label="Example" OnChanged="x => Console.WriteLine(x)" InputValue="example" />
-            <Text Label="Description" OnChanged="x => Console.WriteLine(x)" InputValue="test" />
             <Text Label="Description" OnChanged="o => _parserSettings.Description = o" InputValue="@_parserSettings.Description" />
             <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _parserSettings.Source = o" />
             <Text Label="Group" OnChanged="o => _parserSettings.Group = o" InputValue="@_parserSettings.Description" />
@@ -33,10 +31,10 @@
             <h2>Filters</h2>
             <Checkbox Label="Ignore video" OnChanged="o => _parserSettings.Filter.IgnoreVideo = o" InputValue="@(_parserSettings.Filter.IgnoreVideo)" />
             <Checkbox Label="Ignore repost" OnChanged="o => _parserSettings.Filter.IgnoreRepost = o" InputValue="@_parserSettings.Filter.IgnoreRepost" />
-            <!--    <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
+            <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
             <Text Label="Ignore authors" OnChanged="@(o => _parserSettings.Filter.IgnoreAuthors = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreAuthors)" />
             <Text Label="Ignore titles" OnChanged="@(o => _parserSettings.Filter.IgnoreTitles = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreTitles)" />
-            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />-->
+            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />
         </div>
     </div>
     <div class="center">

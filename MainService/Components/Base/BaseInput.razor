@@ -12,14 +12,16 @@
     [Parameter]
     public string Label { get; set; }
 
-    protected virtual string Type { get; set; } = "text";
+    [Parameter]
+    public string Type { get; set; } = "text";
 
     [Parameter]
     public EventCallback<TParam> OnChanged { get; set; }
 
     private readonly string _id;
 
-    protected virtual string Css { get; set; }
+    [Parameter]
+    public string Css { get; set; }
 
     public BaseInput()
     {
@@ -34,4 +36,23 @@
             OnChanged.InvokeAsync(result);
         }
     } 
+
+    /*
+     * 
+    Need to inspect why whis way not working.
+    a) previous version of dotnet works fine
+    b) namespace is correct and direct put not helps
+    c) generated files looks fine
+    d) Dependently  problem with @inherits BaseInput<bool> others way work good
+     * @inherits BaseInput<bool>
+
+    @{
+    base.BuildRenderTree(__builder);
+    }
+
+    @code {
+    protected override string Type { get; set; } = "checkbox";
+    protected override string Css { get; set; } = "checkbox-component";
+    }
+    */
 }

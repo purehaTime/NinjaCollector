@@ -1,9 +1,16 @@
-﻿@inherits BaseInput<System.DateTime>
-
-@{
-    base.BuildRenderTree(__builder);
+﻿@{
+    <BaseInput TParam="System.DateTime" Label="@Label" Type="datetime-local" InputValue="@InputValue" OnChanged="OnChanged" />
 }
 
 @code {
-    protected override string Type { get; set; } = "datetime-local";
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public System.DateTime InputValue { get; set; }
+
+    [Parameter]
+    public Action<System.DateTime> OnChanged { get; set; }
+
 }

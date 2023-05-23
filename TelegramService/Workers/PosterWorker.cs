@@ -32,10 +32,9 @@ namespace TelegramService.Workers
             var posters = await _dbClient.GetPosterSettings(new PosterSettingsRequest
             {
                 Service = "telegram"
-            });
-            return posters.Count > 0
-                ? new List<Settings>(posters.Select(s => s.ToModel())) 
-                : new List<Settings>();
+            }) ?? new List<PosterSettingsModel>();
+
+            return new List<Settings>(posters.Select(s => s.ToModel()));
         }
 
         public async Task<Settings> LoadSettings(string settingsId)
