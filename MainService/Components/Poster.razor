@@ -1,0 +1,23 @@
+﻿@page "/posters"
+@using ModelsHelper.Models
+@using MainService.Interfaces
+@inject IPosterService _posterService
+
+@if (_posterSettings != null)
+{
+    <PosterTable Settings="_posterSettings" />
+}
+else
+{
+    <h5>Loading...</h5>
+}
+
+
+@code {
+    private List<PosterSettings> _posterSettings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _posterSettings = await _posterService.GetAllPosterSettings();
+    }
+}

@@ -9,10 +9,10 @@ namespace ModelsHelper.Mapping
         {
             return new PosterSettingsModel
             {
-                Id = model.Id,
-                Description = model.Description,
-                Source = model.Source,
-                Group = model.Group,
+                Id = model.Id ?? string.Empty,
+                Description = model.Description ?? string.Empty,
+                Source = model.Source ?? string.Empty,
+                Group = model.Group ?? string.Empty,
                 Timeout = model.Timeout,
                 Hold = model.Hold,
                 Counts = model.Counts,
@@ -24,7 +24,7 @@ namespace ModelsHelper.Mapping
                 IgnoreHistory = model.IgnoreHistory,
                 UseImagesOnly = model.UseImagesOnly,
                 UseSettingsText = model.UseSettingsText,
-                TextForPost = model.TextForPost,
+                TextForPost = model.TextForPost ?? string.Empty,
                 ContinuePosting = model.ContinuePosting,
                 Disabled = model.Disabled
             };
@@ -34,10 +34,10 @@ namespace ModelsHelper.Mapping
         {
             return new PosterSettings
             {
-                Id = model.Id,
-                Description = model.Description,
-                Source = model.Source,
-                Group = model.Group,
+                Id = model.Id ?? string.Empty,
+                Description = model.Description ?? string.Empty,
+                Source = model.Source ?? string.Empty,
+                Group = model.Group ?? string.Empty,
                 Timeout = model.Timeout,
                 Hold = model.Hold,
                 Counts = model.Counts,

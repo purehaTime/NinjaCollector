@@ -136,7 +136,7 @@ namespace Worker
             }
 
             //timeout
-            await Task.Delay(settings.Hold);
+            await Task.Delay(settings.Hold * 1000);
 
             var counter = 1; //by zero means run eternally
             var errorCounter = 0;
@@ -168,7 +168,7 @@ namespace Worker
 
                 stopWatch.Stop();
                 var delay = settings.Timeout - stopWatch.Elapsed.Milliseconds;
-                await Task.Delay(delay > 0 ? delay : 0);
+                await Task.Delay(delay > 0 ? delay * 1000 : 0);
             }
 
             _logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");

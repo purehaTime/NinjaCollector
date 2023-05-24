@@ -13,9 +13,9 @@
             <h2>Setting</h2>
             <Text Label="Description" OnChanged="o => _parserSettings.Description = o" InputValue="@_parserSettings.Description" />
             <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _parserSettings.Source = o" />
-            <Text Label="Group" OnChanged="o => _parserSettings.Group = o" InputValue="@_parserSettings.Description" />
-            <Number Label="Timeout (ms)" OnChanged="o => _parserSettings.Timeout = o" InputValue="@_parserSettings.Timeout" />
-            <Number Label="Hold (ms)" OnChanged="o => _parserSettings.Hold = o" InputValue="@_parserSettings.Hold" />
+            <Text Label="Group" OnChanged="o => _parserSettings.Group = o" InputValue="@_parserSettings.Group" />
+            <Number Label="Timeout (seconds)" OnChanged="o => _parserSettings.Timeout = o" InputValue="@_parserSettings.Timeout" />
+            <Number Label="Hold (seconds)" OnChanged="o => _parserSettings.Hold = o" InputValue="@_parserSettings.Hold" />
             <Number Label="Counts" OnChanged="o => _parserSettings.Counts = o" InputValue="@_parserSettings.Counts" />
             <Number Label="How may retry after error" OnChanged="o => _parserSettings.RetryAfterErrorCount = o" InputValue="@_parserSettings.RetryAfterErrorCount" />
             <Text Label="Tags" OnChanged="o => _parserSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _parserSettings.Tags)" />

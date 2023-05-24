@@ -13,13 +13,13 @@
         <div>
             <Text Label="Description" OnChanged="o => _posterSettings.Description = o" InputValue="@_posterSettings.Description"/>
             <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _posterSettings.Source = o"/>
-            <Text Label="Group" OnChanged="o => _posterSettings.Group = o" InputValue="@_posterSettings.Description"/>
-            <Number Label="Timeout (ms)" OnChanged="o => _posterSettings.Timeout = o" InputValue="@_posterSettings.Timeout"/>
-            <Number Label="Hold (ms)" OnChanged="o => _posterSettings.Hold = o" InputValue="@_posterSettings.Hold"/>
+            <Text Label="Group" OnChanged="o => _posterSettings.Group = o" InputValue="@_posterSettings.Group"/>
+            <Number Label="Timeout (seconds)" OnChanged="o => _posterSettings.Timeout = o" InputValue="@_posterSettings.Timeout"/>
+            <Number Label="Hold (seconds)" OnChanged="o => _posterSettings.Hold = o" InputValue="@_posterSettings.Hold" />
             <Number Label="Counts" OnChanged="o => _posterSettings.Counts = o" InputValue="@_posterSettings.Counts"/>
             <Number Label="How may retry after error" OnChanged="o => _posterSettings.RetryAfterErrorCount = o" InputValue="@_posterSettings.RetryAfterErrorCount"/>
             <Text Label="Tags" OnChanged="o => _posterSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _posterSettings.Tags)"/>
-            <Checkbox Label="Continue monitoring" OnChanged="o => _posterSettings.ContinuePosting = o" InputValue="@_posterSettings.ContinuePosting"/>
+            <Checkbox Label="Continue posting" OnChanged="o => _posterSettings.ContinuePosting = o" InputValue="@_posterSettings.ContinuePosting"/>
             <Checkbox Label="Disabled" OnChanged="o => _posterSettings.Disabled = o" InputValue="@_posterSettings.Disabled"/>
         </div>
         <div>

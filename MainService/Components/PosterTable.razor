@@ -1,0 +1,59 @@
+﻿@using MainService.Components.Base
+@using ModelsHelper.Models
+
+@inject NavigationManager NavManager
+
+<table class="table">
+    <tr class="t-head">
+        <th>Description</th>
+        <th>Source</th>
+        <th>Group</th>
+        <th>Timeout</th>
+        <th>Hold</th>
+        <th>Counts</th>
+        <th>RetryAfterErrorCount</th>
+        <th>Tags</th>
+        <th>Continue Posting</th>
+        <th>Disabled</th>
+        <th>Use Scheduling</th>
+        <th>Schedule Interval</th>
+        <th>Ignore History</th>
+        <th>Use Images Only</th>
+        <th>Use Random</th>
+        <th>Use Settings Text</th>
+        <th>Text For Post</th>
+    </tr>
+    @foreach (var row in Settings)
+    {
+        <tr class="t-row">
+            <td>@row.Description</td>
+            <td>@row.Source</td>
+            <td>@row.Group</td>
+            <td>@row.Timeout</td>
+            <td>@row.Hold</td>
+            <td>@row.Counts</td>
+            <td>@row.RetryAfterErrorCount</td>
+            <td>@string.Join('|', row.Tags)</td>
+            <td>@row.ContinuePosting</td>
+            <td>@row.Disabled</td>
+            <td>@row.UseScheduling</td>
+            <td>@row.ScheduleInterval</td>
+            <td>@row.IgnoreHistory</td>
+            <td>@row.UseImagesOnly</td>
+            <td>@row.UseRandom</td>
+            <td>@row.UseSettingsText</td>
+            <td>@row.TextForPost</td>
+            <td>
+                <div>
+                    <Button Action="@(() => NavManager.NavigateTo($"/editposter/{row.Id}"))">Edit</Button>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+@code {
+
+    [Parameter]
+    public List<PosterSettings> Settings { get; set; }
+}
