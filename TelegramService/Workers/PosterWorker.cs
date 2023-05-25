@@ -29,21 +29,14 @@ namespace TelegramService.Workers
         
         public async Task<List<Settings>> Init()
         {
-            var posters = await _dbClient.GetPosterSettings(new PosterSettingsRequest
-            {
-                Service = "telegram"
-            }) ?? new List<PosterSettingsModel>();
-
-            return new List<Settings>(posters.Select(s => s.ToModel()));
+            var posters = await GetPosterSettings(null);
+            return new List<Settings>(posters);
         }
 
         public async Task<Settings> LoadSettings(string settingsId)
         {
-            var posters = await _dbClient.GetPosterSettings(new PosterSettingsRequest
-            {
-                Service = "telegram",
-            });
-            return posters.FirstOrDefault().ToModel();
+            var posters = await GetPosterSettings(null);
+            return posters.FirstOrDefault();
         }
 
         public async Task<Settings> Run(Settings setting)
@@ -90,6 +83,18 @@ namespace TelegramService.Workers
         private async Task UpdateSettings(PosterSettings settings)
         {
             await _dbClient.SavePosterSettings(settings.ToGrpcData());
+        }
+
+        private async Task<List<PosterSettings>> GetPosterSettings(string settingsId)
+        {
+            var settings = await _dbClient.GetPosterSettings(new PosterSettingsRequest
+            {
+                Service = "telegram",
+                SettingsId = settingsId,
+            }) ?? new List<PosterSettingsModel>();
+
+            var result = settings.Where(w => !w.Disabled).Select(s => s.ToModel());
+            return new List<PosterSettings>(result);
         }
     }
 }

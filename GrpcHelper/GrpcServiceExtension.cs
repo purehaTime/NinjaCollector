@@ -34,7 +34,7 @@ namespace GrpcHelper
             {
                 x.Address = new Uri(GetUrl<Auth.AuthClient>(config));
                 x.CallOptionsActions.Add(context =>
-                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(5)));
+                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(15)));
             });
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));

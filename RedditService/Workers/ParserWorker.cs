@@ -103,7 +103,7 @@ namespace RedditService.Workers
         {
             var settings = await _dbClient.GetParserSettings(new ParserSettingsRequest
             {
-                Source = Name,
+                Source = "reddit",
                 SettingsId = settingsId ?? string.Empty,
             }) ?? new List<ParserSettingsModel>();
 
