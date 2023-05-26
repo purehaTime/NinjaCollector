@@ -90,7 +90,7 @@ namespace TelegramService.Workers
             var settings = await _dbClient.GetPosterSettings(new PosterSettingsRequest
             {
                 Service = "telegram",
-                SettingsId = settingsId,
+                SettingsId = settingsId ?? string.Empty,
             }) ?? new List<PosterSettingsModel>();
 
             var result = settings.Where(w => !w.Disabled).Select(s => s.ToModel());

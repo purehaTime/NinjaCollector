@@ -1,5 +1,5 @@
 ﻿@{
-    <BaseInput TParam="System.DateTime" Label="@Label" Type="datetime-local" InputValue="@InputValue" OnChanged="OnChanged" />
+    <BaseInput TParam="System.DateTime" Label="@Label" Type="datetime-local" InputValue="@FormatDate()" OnChanged="fieldChanged" />
 }
 
 @code {
@@ -8,9 +8,17 @@
     public string Label { get; set; }
 
     [Parameter]
-    public System.DateTime InputValue { get; set; }
+    public System.DateTime field { get; set; }
 
     [Parameter]
-    public Action<System.DateTime> OnChanged { get; set; }
+    public EventCallback<System.DateTime> fieldChanged { get; set; }
+
+
+    private string FormatDate()
+    {
+        return field == System.DateTime.MinValue 
+            ? string.Empty 
+            : field.ToString("yyyy-MM-ddThh:mm");
+    }
 
 }

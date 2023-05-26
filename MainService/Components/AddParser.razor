@@ -11,30 +11,30 @@
     <div class="add-parser-layout">
         <div>
             <h2>Setting</h2>
-            <Text Label="Description" OnChanged="o => _parserSettings.Description = o" InputValue="@_parserSettings.Description" />
+            <Text Label="Description" @bind-field="_parserSettings.Description" />
             <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _parserSettings.Source = o" />
-            <Text Label="Group" OnChanged="o => _parserSettings.Group = o" InputValue="@_parserSettings.Group" />
-            <Number Label="Timeout (seconds)" OnChanged="o => _parserSettings.Timeout = o" InputValue="@_parserSettings.Timeout" />
-            <Number Label="Hold (seconds)" OnChanged="o => _parserSettings.Hold = o" InputValue="@_parserSettings.Hold" />
-            <Number Label="Counts" OnChanged="o => _parserSettings.Counts = o" InputValue="@_parserSettings.Counts" />
-            <Number Label="How may retry after error" OnChanged="o => _parserSettings.RetryAfterErrorCount = o" InputValue="@_parserSettings.RetryAfterErrorCount" />
-            <Text Label="Tags" OnChanged="o => _parserSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _parserSettings.Tags)" />
-            <DateTime Label="From date" OnChanged="o => _parserSettings.FromDate = o" InputValue="@_parserSettings.FromDate" />
-            <DateTime Label="Until date" OnChanged="o => _parserSettings.UntilDate = o" InputValue="@_parserSettings.UntilDate" />
-            <Text Label="From post Id" OnChanged="o => _parserSettings.FromPostId = o" InputValue="@_parserSettings.FromPostId" />
-            <Text Label="Until post Id" OnChanged="o => _parserSettings.UntilPostId = o" InputValue="@_parserSettings.UntilPostId" />
-            <Checkbox Label="By last post Id" OnChanged="o => _parserSettings.ByLastPostId = o" InputValue="@_parserSettings.ByLastPostId" />
-            <Checkbox Label="Continue monitoring" OnChanged="o => _parserSettings.ContinueMonitoring = o" InputValue="@_parserSettings.ContinueMonitoring" />
-            <Checkbox Label="Disabled" OnChanged="o => _parserSettings.Disabled = o" InputValue="@_parserSettings.Disabled" />
+            <Text Label="Group" @bind-field="@_parserSettings.Group" />
+            <Number Label="Timeout (seconds)" @bind-field="_parserSettings.Timeout" />
+            <Number Label="Hold (seconds)" @bind-field="_parserSettings.Hold" />
+            <Number Label="Counts" @bind-field="_parserSettings.Counts" />
+            <Number Label="How may retry after error" @bind-field="_parserSettings.RetryAfterErrorCount" />
+            <Text Label="Tags" FieldChanged="o => _parserSettings.Tags = o.Split('|').ToList()" Field="@string.Join('|', _parserSettings.Tags)" />
+            <DateTime Label="From date" @bind-field="_parserSettings.FromDate" />
+            <DateTime Label="Until date" @bind-field="_parserSettings.UntilDate" />
+            <Text Label="From post Id" @bind-field="_parserSettings.FromPostId" />
+            <Text Label="Until post Id" @bind-field="_parserSettings.UntilPostId" />
+            <Checkbox Label="By last post Id" @bind-field="_parserSettings.ByLastPostId" />
+            <Checkbox Label="Continue monitoring" @bind-field="_parserSettings.ContinueMonitoring" />
+            <Checkbox Label="Disabled" @bind-field="_parserSettings.Disabled" />
         </div>
         <div>
             <h2>Filters</h2>
-            <Checkbox Label="Ignore video" OnChanged="o => _parserSettings.Filter.IgnoreVideo = o" InputValue="@(_parserSettings.Filter.IgnoreVideo)" />
-            <Checkbox Label="Ignore repost" OnChanged="o => _parserSettings.Filter.IgnoreRepost = o" InputValue="@_parserSettings.Filter.IgnoreRepost" />
-            <Text Label="Ignore words" OnChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
-            <Text Label="Ignore authors" OnChanged="@(o => _parserSettings.Filter.IgnoreAuthors = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreAuthors)" />
-            <Text Label="Ignore titles" OnChanged="@(o => _parserSettings.Filter.IgnoreTitles = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreTitles)" />
-            <Text Label="Ignore descriptions" OnChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" InputValue="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />
+            <Checkbox Label="Ignore video" @bind-field="_parserSettings.Filter.IgnoreVideo" />
+            <Checkbox Label="Ignore repost" @bind-field="_parserSettings.Filter.IgnoreRepost" />
+            <Text Label="Ignore words" FieldChanged="@(o => _parserSettings.Filter.IgnoreWords = o.Split('|').ToList())" Field="@string.Join('|', _parserSettings.Filter.IgnoreWords)" />
+            <Text Label="Ignore authors" FieldChanged="@(o => _parserSettings.Filter.IgnoreAuthors = o.Split('|').ToList())" Field="@string.Join('|', _parserSettings.Filter.IgnoreAuthors)" />
+            <Text Label="Ignore titles" FieldChanged="@(o => _parserSettings.Filter.IgnoreTitles = o.Split('|').ToList())" Field="@string.Join('|', _parserSettings.Filter.IgnoreTitles)" />
+            <Text Label="Ignore descriptions" FieldChanged="@(o => _parserSettings.Filter.IgnoreDescriptions = o.Split('|').ToList())" Field="@string.Join('|', _parserSettings.Filter.IgnoreDescriptions)" />
         </div>
     </div>
     <div class="center">

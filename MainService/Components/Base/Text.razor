@@ -1,5 +1,5 @@
 ﻿@{
-    <BaseInput TParam="string" Label="@Label" Type="text" InputValue="@InputValue" OnChanged="OnChanged" />
+    <BaseInput TParam="string" Label="@Label" Type="text" InputValue="@Field" OnChanged="FieldChanged" />
 }
 
 @code {
@@ -8,9 +8,9 @@
     public string Label { get; set; }
 
     [Parameter]
-    public string InputValue { get; set; }
+    public string Field { get; set; }
 
     [Parameter]
-    public Action<string> OnChanged { get; set; }
+    public EventCallback<string> FieldChanged { get; set; }
 
 }

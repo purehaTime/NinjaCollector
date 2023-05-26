@@ -39,13 +39,18 @@ namespace DbService.Services
 
         public async Task<bool> SaveParserSettings(ParserSettings settings)
         {
-            var result = await _parserRepository.Insert(settings, null, CancellationToken.None);
+            var filter = Builders<ParserSettings>.Filter.Eq(e => e.Id, settings.Id);
+            var existingSetting = await _parserRepository.Find(filter, null, CancellationToken.None);
 
-            if (!result)
+            if (existingSetting != null)
             {
-                 _logger.Error($"Cant save settings for parser {settings.Source}");
+                filter = Builders<ParserSettings>.Filter.Eq(e => e.Id, settings.Id);
+                var updateResult = await _parserRepository.Update(filter, settings, null, CancellationToken.None);
+                return updateResult;
             }
-            return result;
+
+            var insertResult = await _parserRepository.Insert(settings, null, CancellationToken.None);
+            return insertResult;
         }
 
         public async Task<bool> RemoveParserSettings(string id)

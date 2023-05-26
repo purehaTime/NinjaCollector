@@ -63,7 +63,6 @@ namespace DbService.Repositories
             {
                 var collection = InitCollection();
                 await collection.InsertOneAsync(entity, options, cToken);
-
                 return true;
             }
             catch (Exception err)
@@ -91,38 +90,37 @@ namespace DbService.Repositories
             return false;
         }
 
-        public virtual async Task<TEntity> Update(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, FindOneAndUpdateOptions<TEntity> options, CancellationToken cToken)
+        public virtual async Task<bool> Update(FilterDefinition<TEntity> filter, TEntity entity, FindOneAndReplaceOptions<TEntity> update, CancellationToken cToken)
         {
             try
             {
                 var collection = InitCollection();
-                var result = await collection.FindOneAndUpdateAsync(filter, update, options, cToken);
-
-                return result;
+                await collection.FindOneAndReplaceAsync(filter, entity, update, cToken);
+                return true;
             }
             catch (Exception err)
             {
                 _logger.Error(err, $"Update error. Details: {err.Message}");
             }
 
-            return null!;
+            return false;
         }
 
-        public virtual async Task<UpdateResult> UpdateMany(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, UpdateOptions options, CancellationToken cToken)
+        public virtual async Task<bool> UpdateMany(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, UpdateOptions options, CancellationToken cToken)
         {
             try
             {
                 var collection = InitCollection();
-                var result = await collection.UpdateManyAsync(filter, update, options, cToken);
+                await collection.UpdateManyAsync(filter, update, options, cToken);
 
-                return result;
+                return true;
             }
             catch (Exception err)
             {
                 _logger.Error(err, $"UpdateMany error. Details: {err.Message}");
             }
 
-            return null!;
+            return false;
         }
 
         public virtual async Task<TEntity> Delete(FilterDefinition<TEntity> filter, FindOneAndDeleteOptions<TEntity> options, CancellationToken cToken)

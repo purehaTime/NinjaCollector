@@ -11,25 +11,25 @@
     <h2 class="center">Setting</h2>
     <div class="add-poster-layout">
         <div>
-            <Text Label="Description" OnChanged="o => _posterSettings.Description = o" InputValue="@_posterSettings.Description"/>
+            <Text Label="Description" @bind-field="_posterSettings.Description" />
             <Option Label="Source" Options="Source.GetAll()" OnChanged="o => _posterSettings.Source = o"/>
-            <Text Label="Group" OnChanged="o => _posterSettings.Group = o" InputValue="@_posterSettings.Group"/>
-            <Number Label="Timeout (seconds)" OnChanged="o => _posterSettings.Timeout = o" InputValue="@_posterSettings.Timeout"/>
-            <Number Label="Hold (seconds)" OnChanged="o => _posterSettings.Hold = o" InputValue="@_posterSettings.Hold" />
-            <Number Label="Counts" OnChanged="o => _posterSettings.Counts = o" InputValue="@_posterSettings.Counts"/>
-            <Number Label="How may retry after error" OnChanged="o => _posterSettings.RetryAfterErrorCount = o" InputValue="@_posterSettings.RetryAfterErrorCount"/>
+            <Text Label="Group" @bind-field="_posterSettings.Group" />
+            <Number Label="Timeout (seconds)" @bind-field="_posterSettings.Timeout" />
+            <Number Label="Hold (seconds)" @bind-field="_posterSettings.Hold" />
+            <Number Label="Counts" @bind-field="_posterSettings.Counts" />
+            <Number Label="How may retry after error" @bind-field="_posterSettings.RetryAfterErrorCount" />
             <Text Label="Tags" OnChanged="o => _posterSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _posterSettings.Tags)"/>
-            <Checkbox Label="Continue posting" OnChanged="o => _posterSettings.ContinuePosting = o" InputValue="@_posterSettings.ContinuePosting"/>
-            <Checkbox Label="Disabled" OnChanged="o => _posterSettings.Disabled = o" InputValue="@_posterSettings.Disabled"/>
+            <Checkbox Label="Continue posting" @bind-field="_posterSettings.ContinuePosting" />
+            <Checkbox Label="Disabled" @bind-field="_posterSettings.Disabled" />
         </div>
         <div>
-            <Checkbox Label="Use scheduling" OnChanged="o => _posterSettings.UseScheduling = o" InputValue="@_posterSettings.UseScheduling"/>
-            <Number Label="Scheduling interval" OnChanged="o => _posterSettings.ScheduleInterval = o" InputValue="@_posterSettings.ScheduleInterval"/>
-            <Checkbox Label="Ignore history" OnChanged="o => _posterSettings.IgnoreHistory = o" InputValue="@_posterSettings.IgnoreHistory"/>
-            <Checkbox Label="Use images only" OnChanged="o => _posterSettings.UseImagesOnly = o" InputValue="@_posterSettings.UseImagesOnly"/>
-            <Checkbox Label="Use random" OnChanged="o => _posterSettings.UseRandom = o" InputValue="@_posterSettings.UseRandom"/>
-            <Checkbox Label="Use settings text" OnChanged="o => _posterSettings.UseSettingsText = o" InputValue="@_posterSettings.UseSettingsText"/>
-            <Text Label="Text for post" OnChanged="o => _posterSettings.TextForPost = o" InputValue="@_posterSettings.TextForPost"/>
+            <Checkbox Label="Use scheduling" @bind-field="_posterSettings.UseScheduling" />
+            <Number Label="Scheduling interval" @bind-field="_posterSettings.ScheduleInterval" />
+            <Checkbox Label="Ignore history" @bind-field="_posterSettings.IgnoreHistory" />
+            <Checkbox Label="Use images only" @bind-field="_posterSettings.UseImagesOnly" />
+            <Checkbox Label="Use random" @bind-field="_posterSettings.UseRandom" />
+            <Checkbox Label="Use settings text" @bind-field="_posterSettings.UseSettingsText" />
+            <Text Label="Text for post" @bind-field="_posterSettings.TextForPost" />
         </div>
     </div>
     <div class="center">

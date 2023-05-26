@@ -7,7 +7,7 @@
 
 @code {
     [Parameter]
-    public TParam InputValue { get; set; }
+    public string InputValue { get; set; }
 
     [Parameter]
     public string Label { get; set; }
@@ -28,12 +28,12 @@
         _id = Guid.NewGuid().ToString();
     }
 
-    private void OnChangedValue(ChangeEventArgs val)
+    private async Task OnChangedValue(ChangeEventArgs val)
     {
         if (!string.IsNullOrEmpty(val.Value?.ToString()))
         {
             var result = (TParam)Convert.ChangeType(val.Value, typeof(TParam));
-            OnChanged.InvokeAsync(result);
+            await OnChanged.InvokeAsync(result);
         }
     } 
 
