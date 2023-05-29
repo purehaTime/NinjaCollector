@@ -49,7 +49,7 @@ namespace UnitTests.RedditService
         {
             var (subName, postId, untilPostId) = PrepareData();
 
-            var result = _apiClient.GetPostsBetweenDates(subName, DateTime.MaxValue, DateTime.MinValue)
+            var result = _apiClient.GetPostsBetweenDates(subName, DateTime.MinValue, DateTime.MaxValue)
                 .GetAwaiter()
                 .GetResult()
                 .ToList();

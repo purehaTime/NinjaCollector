@@ -23,7 +23,7 @@ namespace RedditService.API
         public async Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate)
         {
             var sub = await _client.GetSubreddit(subReddit);
-            var posts = await GetPostsByFilter(sub, post => post.Created <= fromDate && post.Created >= toDate, post => post.Created <= toDate);
+            var posts = await GetPostsByFilter(sub, post => post.Created >= fromDate, post => post.Created >= toDate);
 
             return posts;
         }
@@ -32,11 +32,11 @@ namespace RedditService.API
         {
             var sub = await _client.GetSubreddit(subReddit);
 
-            var skipFilter = fromPostId != null ?
-                new Func<Post, bool>(post => post.Id != fromPostId) 
+            var takeFilter = fromPostId != null ?
+                new Func<Post, bool>(post => post.Id == fromPostId) 
                 : null;
 
-            var posts = await GetPostsByFilter(sub, skipFilter, post => post.Id != untilPostId);
+            var posts = await GetPostsByFilter(sub, takeFilter, post => post.Id == untilPostId);
 
             return posts;
         }
@@ -45,11 +45,11 @@ namespace RedditService.API
         {
             var sub = await _client.GetSubreddit(subReddit);
 
-            var skipFilter = fromPostId != null ?
-                new Func<Post, bool>(post => post.Id != fromPostId)
+            var takeFilter = fromPostId != null ?
+                new Func<Post, bool>(post => post.Id == fromPostId)
                 : null;
 
-            var posts = await GetPostsByFilter(sub, skipFilter, post => post.Created != untilDate);
+            var posts = await GetPostsByFilter(sub, takeFilter, post => post.Created >= untilDate);
 
             return posts;
         }
@@ -58,13 +58,13 @@ namespace RedditService.API
         {
             var sub = await _client.GetSubreddit(subReddit);
 
-            var posts = await GetPostsByFilter(sub, post => post.Created <= fromDate, post => post.Id != untilPostId);
+            var posts = await GetPostsByFilter(sub, post => post.Created >= fromDate, post => post.Id == untilPostId);
 
             return posts;
         }
 
-        private async Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> skipFilter,
-            Func<Post, bool> takeFilter)
+        private async Task<IEnumerable<Post>> GetPostsByFilter(Subreddit subreddit, Func<Post, bool> takeUntil,
+            Func<Post, bool> skipUntil)
         {
             var afterFullname = "";
             var posts = new List<Post>();
@@ -79,21 +79,21 @@ namespace RedditService.API
                     break;
                 }
 
-                if (skipFilter != null)
+                if (takeUntil != null)
                 {
-                    filteredPost = newPosts.SkipWhile(skipFilter).ToList();
+                    filteredPost = newPosts.TakeWhile(takeUntil).ToList();
                 }
 
-                if (filteredPost.Count == 0 && skipFilter != null)
+                if (filteredPost.Count == 0 && takeUntil != null)
                 {
                     afterFullname = newPosts.LastOrDefault()?.Fullname ?? "";
                     await _client.Hold();
                     continue;
                 }
 
-                if (takeFilter != null)
+                if (skipUntil != null)
                 {
-                    var tookPosts =  filteredPost.TakeWhile(takeFilter).ToList();
+                    var tookPosts =  filteredPost.SkipWhile(skipUntil).ToList();
                     filteredPost = tookPosts;
                 }
 
