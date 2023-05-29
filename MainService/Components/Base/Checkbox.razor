@@ -13,7 +13,7 @@
     [Parameter]
     public EventCallback<bool> fieldChanged { get; set; }
 
-    private Dictionary<string, object> Attributes { get; set; }
+    private Dictionary<string, object> Attributes { get; set; } = new();
 
     protected override void OnParametersSet()
     {

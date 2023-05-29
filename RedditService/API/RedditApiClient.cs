@@ -23,7 +23,7 @@ namespace RedditService.API
         public async Task<IEnumerable<Post>> GetPostsBetweenDates(string subReddit, DateTime fromDate, DateTime toDate)
         {
             var sub = await _client.GetSubreddit(subReddit);
-            var posts = await GetPostsByFilter(sub, post => post.Created >= fromDate, post => post.Created >= toDate);
+            var posts = await GetPostsByFilter(sub, post => post.Created <= fromDate && post.Created >= toDate, post => post.Created <= toDate);
 
             return posts;
         }
@@ -93,7 +93,8 @@ namespace RedditService.API
 
                 if (takeFilter != null)
                 {
-                    filteredPost = filteredPost.TakeWhile(takeFilter).ToList();
+                    var tookPosts =  filteredPost.TakeWhile(takeFilter).ToList();
+                    filteredPost = tookPosts;
                 }
 
                 if (filteredPost.Count == 0 || filteredPost.Last()?.Fullname == afterFullname)

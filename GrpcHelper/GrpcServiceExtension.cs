@@ -38,6 +38,7 @@ namespace GrpcHelper
             });
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
+            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("telegram", x => x.Address = new Uri(GetUrl("TelegramService", config)));
         }
 
         public static IServiceCollection AddGrpsHelper<TService, TClass>(this IServiceCollection services)
@@ -73,6 +74,7 @@ namespace GrpcHelper
                 { nameof(Database.DatabaseClient), "ServiceAddress:DbService" },
                 { nameof(Auth.AuthClient), "ServiceAddress:AuthService" },
                 { "RedditService", "ServiceAddress:RedditService" },
+                { "TelegramService", "ServiceAddress:TelegramService" },
             };
 
             return mapping;

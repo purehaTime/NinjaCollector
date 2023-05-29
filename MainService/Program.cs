@@ -30,6 +30,7 @@ namespace MainService
             builder.Services.AddScoped<IParserService, ParserService>();
             builder.Services.AddScoped<IPosterService, PosterService>();
             builder.Services.AddScoped<IWorkerService<RedditStatusModel>, RedditStatusService>();
+            builder.Services.AddScoped<IWorkerService<TelegramStatusModel>, TelegramStatusService>();
 
             builder.Services.AddAntiforgery(opt => {
                 opt.Cookie.Name = "x-xsrf-token";

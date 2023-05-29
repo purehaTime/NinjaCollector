@@ -132,6 +132,7 @@ namespace Worker
         {
             if (settings.Disabled)
             {
+                _logger.Information($"Setting {settings.Id} was disabled");
                 return;
             }
 
@@ -171,7 +172,7 @@ namespace Worker
                 await Task.Delay(delay > 0 ? delay * 1000 : 0);
             }
 
-            _logger.Information($"Task {Task.CurrentId} with {settings.Id} finish work");
+            _logger.Information($"Task {Task.CurrentId} with setting: {settings.Id} finish work");
         }
     }
 

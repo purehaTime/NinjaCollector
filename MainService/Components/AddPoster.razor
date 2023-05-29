@@ -18,7 +18,7 @@
             <Number Label="Hold (seconds)" @bind-field="_posterSettings.Hold" />
             <Number Label="Counts" @bind-field="_posterSettings.Counts" />
             <Number Label="How may retry after error" @bind-field="_posterSettings.RetryAfterErrorCount" />
-            <Text Label="Tags" OnChanged="o => _posterSettings.Tags = o.Split('|').ToList()" InputValue="@string.Join('|', _posterSettings.Tags)"/>
+            <Text Label="Tags" FieldChanged="o => _posterSettings.Tags = o.Split('|').ToList()" Field="@string.Join('|', _posterSettings.Tags)"/>
             <Checkbox Label="Continue posting" @bind-field="_posterSettings.ContinuePosting" />
             <Checkbox Label="Disabled" @bind-field="_posterSettings.Disabled" />
         </div>

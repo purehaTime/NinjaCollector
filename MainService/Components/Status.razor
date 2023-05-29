@@ -2,45 +2,64 @@
 @using MainService.Interfaces
 @using MainService.Components.Base
 @inject IWorkerService<RedditStatusModel> RedditStatus
+@inject IWorkerService<TelegramStatusModel> TelegramStatus
 @inherits LayoutComponentBase
 @page "/"
 
-@if (_redditModel != null && _redditModel.Works.Count > 0)
-{
-    <StatusTable Status="@_redditModel" OnStop="async taskId => await StopWorker(taskId)" />
-}
-
 <div>
-    <Button Action="@(async () => await StopAll())">Stop all workers</Button>
-    <Button Action="@(async () => await RunAll())">Run all workers</Button>
+    @if (_redditModel != null && _redditModel.Works.Count > 0)
+    {
+        <StatusTable Status="@_redditModel" OnStop="async taskId => await StopWorker(taskId)" />
+    }
+
+    @if (_telegramModel != null && _telegramModel.Works.Count > 0)
+    {
+        <StatusTable Status="@_telegramModel" OnStop="async taskId => await StopWorker(taskId)" />
+    }
+
+    <div>
+        <Button Action="@(async () => await StopAll())">Stop all workers</Button>
+        <Button Action="@(async () => await RunAll())">Run all workers</Button>
+    </div>
 </div>
 
 
 @code {
     private RedditStatusModel _redditModel;
+    private TelegramStatusModel _telegramModel;
 
     protected override async Task OnInitializedAsync()
     {
         _redditModel = await RedditStatus.GetStatus();
+        _telegramModel = await TelegramStatus.GetStatus();
+
     }
 
     private async Task StopWorker(int taskId)
     {
-        var result = await RedditStatus.StopWorker(taskId);
+        var redditResult = await RedditStatus.StopWorker(taskId);
+        var telegramResult = await TelegramStatus.StopWorker(taskId);
 
-        if (result)
+        if (redditResult)
         {
             _redditModel = await RedditStatus.GetStatus();
+        }
+
+        if (telegramResult)
+        {
+            _telegramModel = await TelegramStatus.GetStatus();
         }
     }
 
     private async Task RunAll()
     {
         var redditRun = await RedditStatus.RunAll();
+        var telegramRun = await TelegramStatus.RunAll();
     }
 
     private async Task StopAll()
     {
         var redditStop = await RedditStatus.StopAll();
+        var telegramStop = await TelegramStatus.StopAll();
     }
 }
