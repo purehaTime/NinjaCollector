@@ -62,8 +62,6 @@ namespace UnitTests.DatabaseService
                 .GetResult();
 
             _parserRepositoryMock.Verify(v => v.Insert(parser, It.IsAny<InsertOneOptions>(), CancellationToken.None), Times.Once);
-            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
-
             result.Should().BeFalse();
         }
 

@@ -2,7 +2,7 @@
 
 <div class="@(Css ?? "input-component")">
     <label for="@_id">@Label</label>
-    <input class="input" id="@_id" type="@Type" @onchange="OnChangedValue" value="@InputValue" />
+    <input class="input" id="@_id" type="@Type" @onchange="OnChangedValue" value="@InputValue" @attributes="Attributes" />
 </div>
 
 @code {
@@ -17,6 +17,9 @@
 
     [Parameter]
     public EventCallback<TParam> OnChanged { get; set; }
+
+    [Parameter]
+    public Dictionary<string, object> Attributes { get; set; }
 
     private readonly string _id;
 

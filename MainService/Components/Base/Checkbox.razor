@@ -1,5 +1,5 @@
 ﻿@{
-    <BaseInput TParam="bool" Label="@Label" Type="checkbox" InputValue="field" OnChanged="@fieldChanged" Css="checkbox-component" />
+    <BaseInput TParam="bool" Label="@Label" Type="checkbox" InputValue="field" OnChanged="@fieldChanged" Css="checkbox-component" Attributes="Attributes" />
 }
 
 @code {
@@ -12,4 +12,15 @@
 
     [Parameter]
     public EventCallback<bool> fieldChanged { get; set; }
+
+    private Dictionary<string, object> Attributes { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (field)
+        {
+            Attributes.TryAdd("checked", true);
+        }
+    }
+
 }
