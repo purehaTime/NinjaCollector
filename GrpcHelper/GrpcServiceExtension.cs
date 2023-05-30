@@ -26,8 +26,9 @@ namespace GrpcHelper
             services.AddGrpcClient<Database.DatabaseClient>(x =>
             {
                 x.Address = new Uri(GetUrl<Database.DatabaseClient>(config));
+                x.ChannelOptionsActions.Add(opt => opt.MaxReceiveMessageSize = null);
                 x.CallOptionsActions.Add(context =>
-                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(5)));
+                    context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(25)));
             });
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));
             services.AddGrpcClient<Auth.AuthClient>(x =>

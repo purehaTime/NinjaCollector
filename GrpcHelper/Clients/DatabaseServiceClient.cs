@@ -1,4 +1,6 @@
-﻿using GrpcHelper.DbService;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
+using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using Serilog;
 using static GrpcHelper.DbService.Database;
@@ -46,7 +48,7 @@ namespace GrpcHelper.Clients
 
         public async Task<bool> AddPosts(PostModel posts)
         {
-            try 
+            try
             {
                 var result = await _client.AddPostsAsync(posts);
                 return result.Success;

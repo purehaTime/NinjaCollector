@@ -27,15 +27,15 @@ namespace ModelsHelper.Mapping
         {
             return new GrpcHelper.DbService.Post
             {
-                PostId = post.PostId,
-                Description = post.Description,
-                Group = post.Group,
-                Source = post.Source,
+                PostId = post.PostId ?? string.Empty,
+                Description = post.Description ?? string.Empty,
+                Group = post.Group ?? string.Empty,
+                Source = post.Source ?? string.Empty,
                 OriginalLink = post.OriginalLink,
                 PostDate = Timestamp.FromDateTime(post.PostDate),
-                Text = post.Text,
-                Title = post.Title,
-                UserName = post.UserName,
+                Text = post.Text ?? string.Empty,
+                Title = post.Title ?? string.Empty,
+                UserName = post.UserName ?? string.Empty,
                 Tags = { tags ?? post.Tags },
                 Images = { post.Images.Select(s => s.ToGrpcData(tags)) }
             };

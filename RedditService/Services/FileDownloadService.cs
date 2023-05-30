@@ -1,5 +1,6 @@
 ﻿using RedditService.Interfaces;
 using System.Collections.Concurrent;
+using System.Web;
 using ILogger = Serilog.ILogger;
 
 namespace RedditService.Services
@@ -20,8 +21,8 @@ namespace RedditService.Services
         {
             try
             {
-                using var httpClient = _clientFactory.CreateClient();
-                var bytes = await httpClient.GetByteArrayAsync(link);
+                using var httpClient = _clientFactory.CreateClient("with_header");
+                var bytes = await httpClient.GetByteArrayAsync(HttpUtility.HtmlDecode(link));
                 return bytes;
             }
             catch (Exception err)
@@ -40,7 +41,7 @@ namespace RedditService.Services
                     try
                     {
                         using var httpClient = _clientFactory.CreateClient();
-                        var bytes = await httpClient.GetByteArrayAsync(link, ct);
+                        var bytes = await httpClient.GetByteArrayAsync(HttpUtility.HtmlDecode(link), ct);
                         result.Add(bytes);
                     }
                     catch (Exception err)
@@ -57,8 +58,8 @@ namespace RedditService.Services
         {
             try
             {
-                using var httpClient = _clientFactory.CreateClient();
-                var data = await httpClient.GetStringAsync(link);
+                using var httpClient = _clientFactory.CreateClient("with_header");
+                var data = await httpClient.GetStringAsync(HttpUtility.HtmlDecode(link));
                 return data;
             }
             catch (Exception err)

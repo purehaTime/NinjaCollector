@@ -19,19 +19,20 @@ namespace ModelsHelper.Mapping
                 Name = image.Name
             };
         }
-
+        // TODO: Change defaults protobuf types to nullable types
+        // https://stackoverflow.com/questions/4763875/does-protobuf-net-support-nullable-types
         public static GrpcHelper.DbService.Image ToGrpcData(this Image image, List<string> tags = null)
         {
             return new GrpcHelper.DbService.Image
             {
-                Description = image.Description,
+                Description = image.Description ?? string.Empty,
                 Tags = { tags ?? image.Tags },
-                File = ByteString.CopyFrom(image.File),
-                DirectLink = image.DirectLink,
-                ImageType = image.ImageType,
+                File = image.File != null ? ByteString.CopyFrom(image.File) : ByteString.Empty,
+                DirectLink = image.DirectLink ?? string.Empty,
+                ImageType = image.ImageType ?? string.Empty,
                 Height = image.Height,
                 Width = image.Width,
-                Name = image.Name
+                Name = image.Name ?? string.Empty
             };
         }
     }

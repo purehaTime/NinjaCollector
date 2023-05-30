@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using RedditService.Interfaces;
 using RedditService.Model;
+using System.Net.Http;
 using ILogger = Serilog.ILogger;
 
 namespace RedditService.Services
@@ -46,7 +47,7 @@ namespace RedditService.Services
                 _logger.Error($"Can't parse url {urlToGallery} in reddit service", err);
             }
 
-            return null;
+            return new List<ParsedImage>();
         }
     }
 }

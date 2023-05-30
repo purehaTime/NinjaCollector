@@ -31,6 +31,7 @@ namespace RedditService.Services
 
             var content = new Content
             {
+                Group = post.Subreddit,
                 PostId = post.Listing.Id,
                 Images = images,
                 PostDate = post.Created,

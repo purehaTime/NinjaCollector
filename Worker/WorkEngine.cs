@@ -147,6 +147,7 @@ namespace Worker
                 if (errorCounter == settings.RetryAfterErrorCount)
                 {
                     _logger.Error($"task {Task.CurrentId} was stopped die to lots of error");
+                    return;
                 }
 
                 stopWatch.Restart();

@@ -19,6 +19,10 @@ namespace RedditService
                 builder.Services.AddGrpcHelper(builder.Configuration);
 
                 builder.Services.AddHttpClient(); //direct
+                builder.Services.AddHttpClient("with_header", client =>   //named
+                {
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
+                });  
                 builder.Services.AddHttpClient<IRedditSession, RedditSessionService>(); //typed
 
                 builder.Services.AddScoped<IRedditAsyncClient, RedditAsyncClient>();

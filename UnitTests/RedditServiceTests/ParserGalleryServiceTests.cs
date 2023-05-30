@@ -6,6 +6,7 @@ using RedditService.Interfaces;
 using RedditService.Services;
 using Serilog;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests.RedditService
 {
@@ -33,6 +34,28 @@ namespace UnitTests.RedditService
             var link = "http://example.com";
 
             _fileDownloadServiceMock.Setup(s => s.GetData(It.IsAny<string>())).ReturnsAsync(_testJson);
+
+            var result = _parserGalleryService.GetImageLinks(link)
+                .GetAwaiter()
+                .GetResult().ToList();
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(1);
+
+            var firstImage = result.First();
+            firstImage.DirectLink.Should().Be("https://test1.com");
+            firstImage.Name.Should().Be("test1");
+            firstImage.Description.Should().Be("testcaption");
+        }
+
+        [Test]
+        public void GetData_ShouldReturn_HttpStringData11()
+        {
+            var link = "https://www.reddit.com/gallery/13vj8x9";
+
+
+            var client = new HttpClient();
+            //_parserGalleryService = new ParserGalleryService(new FileDownloadService(client ), _loggerMock.Object);
 
             var result = _parserGalleryService.GetImageLinks(link)
                 .GetAwaiter()
