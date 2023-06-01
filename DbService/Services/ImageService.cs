@@ -38,6 +38,14 @@ namespace DbService.Services
             return result;
         }
 
+        public async Task<(bool Status, ObjectId SavedImage)> SaveImage(GrpcHelper.DbService.Image image)
+        {
+            var bytes = image.File.ToByteArray();
+            var saved = await InsertFile(bytes);
+            var result = await SaveImage(saved.Id, saved.fileName, image);
+            return result;
+        }
+
         public async Task<(Image image, MemoryStream stream)> GetImageById(string id)
         {
             var filter = Builders<Image>.Filter.Eq(e => e.Id, ObjectId.Parse(id));

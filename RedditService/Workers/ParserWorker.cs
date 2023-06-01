@@ -59,13 +59,8 @@ namespace RedditService.Workers
 
             if (contents.Count > 0)
             {
-                var savedResult = await _dbClient.AddPosts(new PostModel
-                {
-                    Posts =
-                    {
-                        contents.Select(s => s.ToGrpcData(parserSettings.Tags))
-                    }
-                });
+                var data = contents.Select(s => s.ToGrpcData(parserSettings.Tags));
+                var savedResult = await _dbClient.AddPosts(data.ToList());
 
                 if (!savedResult)
                 {

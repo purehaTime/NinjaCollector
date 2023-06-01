@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Grpc.Net.Client;
 using GrpcHelper.AuthService;
 using GrpcHelper.Clients;
 using GrpcHelper.DbService;
@@ -16,7 +15,7 @@ namespace GrpcHelper
 
         public static void AddGrpcHelper(this IServiceCollection services, IConfiguration config)
         {
-            services.AddGrpc();
+            services.AddGrpc(options => options.MaxReceiveMessageSize = null);
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
             services.AddScoped<IWorkerClientAggregator, WorkerClientAggregator>();
@@ -26,7 +25,6 @@ namespace GrpcHelper
             services.AddGrpcClient<Database.DatabaseClient>(x =>
             {
                 x.Address = new Uri(GetUrl<Database.DatabaseClient>(config));
-                x.ChannelOptionsActions.Add(opt => opt.MaxReceiveMessageSize = null);
                 x.CallOptionsActions.Add(context =>
                     context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(25)));
             });

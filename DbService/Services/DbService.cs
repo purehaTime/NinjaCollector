@@ -4,6 +4,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcHelper.DbService;
 using MongoDB.Bson;
+using ILogger = Serilog.ILogger;
 using ParserSettings = GrpcHelper.DbService.ParserSettings;
 using Post = GrpcHelper.DbService.Post;
 using PosterSettings = GrpcHelper.DbService.PosterSettings;
@@ -13,19 +14,21 @@ namespace DbService.Services
 {
     public class DbService : Database.DatabaseBase
     {
-        private ISettingsService _settings;
-        private IPostService _post;
-        private IImageService _image;
-        private IHistoryService _history;
-        private IUserService _userService;
+        private readonly ISettingsService _settings;
+        private readonly IPostService _post;
+        private readonly IImageService _image;
+        private readonly IHistoryService _history;
+        private readonly IUserService _userService;
+        private readonly ILogger _logger;
 
-        public DbService(ISettingsService settings, IPostService post, IImageService image, IHistoryService history, IUserService userService)
+        public DbService(ISettingsService settings, IPostService post, IImageService image, IHistoryService history, IUserService userService, ILogger logger)
         {
             _settings = settings;
             _post = post;
             _image = image;
             _history = history;
             _userService = userService;
+            _logger = logger;
         }
 
         public override async Task<Status> AddUser(AddUserModel request, ServerCallContext context)
@@ -56,9 +59,17 @@ namespace DbService.Services
             return new Status { Success = result };
         }
 
-        public override async Task<Status> AddPosts(PostModel posts, ServerCallContext context)
+        public override async Task<Status> AddPosts(IAsyncStreamReader<Post> requestStream, ServerCallContext context)
         {
-            var result = await _post.SavePosts(posts);
+            var result = true;
+            _logger.Information("Start receive posts");
+
+            await foreach (var message in requestStream.ReadAllAsync())
+            {
+                result &= await _post.SavePost(message);
+            }
+
+            _logger.Information("End receive posts");
             return new Status { Success = result };
         }
 
@@ -73,10 +84,7 @@ namespace DbService.Services
             var model = request.ToDatabase();
             var result = await _settings.SaveParserSettings(model);
             
-            return new Status
-            {
-                Success = result
-            };
+            return new Status { Success = result };
         }
 
         public override async Task<ParserSettings> GetParserSettings(ParserSettingsRequest request, ServerCallContext context)
@@ -123,6 +131,21 @@ namespace DbService.Services
             var image = await _image.GetImageBySettingId(request.SettingsId);
             var result = image.image.ToGrpcData(image.steam.ToArray());
             return result;
+        }
+
+        public override async Task<Status> AddImages(IAsyncStreamReader<Image> requestStream, ServerCallContext context)
+        {
+            var result = true;
+            _logger.Information("Start receive posts");
+
+            await foreach (var message in requestStream.ReadAllAsync())
+            {
+                var saved = await _image.SaveImage(message);
+                result &= saved.Status;
+            }
+
+            _logger.Information("End receive posts");
+            return new Status { Success = result };
         }
     }
 }

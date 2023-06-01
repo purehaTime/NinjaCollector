@@ -5,7 +5,7 @@ using Reddit.Controllers;
 using RedditService.API;
 using RedditService.Interfaces;
 
-namespace UnitTests.RedditService
+namespace UnitTests.RedditServiceTests
 {
     [TestFixture]
     public class RedditApiClientTests : BaseTest

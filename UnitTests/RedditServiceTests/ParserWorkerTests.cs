@@ -99,7 +99,7 @@ namespace UnitTests.RedditServiceTests
             _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>(), filter))
                 .ReturnsAsync(contents);
 
-            _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<PostModel>())).ReturnsAsync(true);
+            _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<List<GrpcHelper.DbService.Post>>())).ReturnsAsync(true);
             _dbServiceClientMock.Setup(s => s.SaveParserSettings(It.IsAny<ParserSettingsModel>())).ReturnsAsync(true);
 
             var result = _parserWorker.Run(settings)
@@ -139,7 +139,7 @@ namespace UnitTests.RedditServiceTests
             _redditServiceMock.Setup(s => s.GetPostsUntilPostId(subName, It.IsAny<string>(), filter))
                 .ReturnsAsync(contents);
 
-            _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<PostModel>())).ReturnsAsync(true);
+            _dbServiceClientMock.Setup(s => s.AddPosts(It.IsAny<List<GrpcHelper.DbService.Post>>())).ReturnsAsync(true);
             _dbServiceClientMock.Setup(s => s.SaveParserSettings(It.IsAny<ParserSettingsModel>())).ReturnsAsync(true);
 
             var result = _parserWorker.Run(settings)

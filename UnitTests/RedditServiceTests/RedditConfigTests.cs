@@ -5,7 +5,7 @@ using Moq;
 using RedditService.Interfaces;
 using RedditService.Services;
 
-namespace UnitTests.RedditService
+namespace UnitTests.RedditServiceTests
 {
     [TestFixture]
     public class RedditConfigTests : BaseTest

@@ -121,11 +121,14 @@ namespace UnitTests.GrpcHelperTests
         [TestCase(false)]
         public void AddPosts_ShouldReturn_Bool(bool responseTestCase)
         {
-            var posts = Fixture.Create<PostModel>();
+            var posts = Fixture.CreateMany<Post>(5).ToList();
             var response = new Status { Success = responseTestCase };
 
-            var returnResponse = GetAsyncUnaryCallSuccess(response);
-            _dbClientMock.Setup(s => s.AddPostsAsync(posts, null, null, CancellationToken.None)).Returns(returnResponse);
+            foreach (var post in posts)
+            {
+                var returnResponse = GetAsyncClientStreamingCallSuccess(post, response);
+                _dbClientMock.SetupSequence(s => s.AddPosts(null, null, CancellationToken.None)).Returns(returnResponse);
+            }
 
             var result = _dbServiceClient.AddPosts(posts)
                 .GetAwaiter()
@@ -133,13 +136,13 @@ namespace UnitTests.GrpcHelperTests
 
             result.Should().Be(responseTestCase);
         }
-
+        
         [Test]
         public void AddPosts_ShouldReturn_FalseException()
         {
-            var posts = Fixture.Create<PostModel>();
+            var posts = Fixture.CreateMany<Post>(5).ToList();
 
-            _dbClientMock.Setup(s => s.AddPostsAsync(posts, null, null, CancellationToken.None)).Throws<Exception>();
+            _dbClientMock.Setup(s => s.AddPosts(null, null, CancellationToken.None)).Throws<Exception>();
 
             var result = _dbServiceClient.AddPosts(posts)
                 .GetAwaiter()
@@ -154,11 +157,14 @@ namespace UnitTests.GrpcHelperTests
         [TestCase(false)]
         public void AddImages_ShouldReturn_Bool(bool responseTestCase)
         {
-            var images = Fixture.Create<ImageModel>();
+            var images = Fixture.CreateMany<Image>(5).ToList();
             var response = new Status { Success = responseTestCase };
 
-            var returnResponse = GetAsyncUnaryCallSuccess(response);
-            _dbClientMock.Setup(s => s.AddImagesAsync(images, null, null, CancellationToken.None)).Returns(returnResponse);
+            foreach (var image in images)
+            {
+                var returnResponse = GetAsyncClientStreamingCallSuccess(image, response);
+                _dbClientMock.SetupSequence(s => s.AddImages(null, null, CancellationToken.None)).Returns(returnResponse);
+            }
 
             var result = _dbServiceClient.AddImages(images)
                 .GetAwaiter()
@@ -170,9 +176,9 @@ namespace UnitTests.GrpcHelperTests
         [Test]
         public void AddImages_ShouldReturn_FalseException()
         {
-            var images = Fixture.Create<ImageModel>();
+            var images = Fixture.CreateMany<Image>(5).ToList();
 
-            _dbClientMock.Setup(s => s.AddImagesAsync(images, null, null, CancellationToken.None)).Throws<Exception>();
+            _dbClientMock.Setup(s => s.AddImages(null, null, CancellationToken.None)).Throws<Exception>();
 
             var result = _dbServiceClient.AddImages(images)
                 .GetAwaiter()

@@ -7,7 +7,7 @@ using RedditService.Services;
 using Serilog;
 using System.Net;
 
-namespace UnitTests.RedditService
+namespace UnitTests.RedditServiceTests
 {
     [TestFixture]
     public class FileDownloadServiceTests : BaseTest

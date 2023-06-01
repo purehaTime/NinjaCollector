@@ -46,11 +46,18 @@ namespace GrpcHelper.Clients
             return false;
         }
 
-        public async Task<bool> AddPosts(PostModel posts)
+        public async Task<bool> AddPosts(List<Post> posts)
         {
             try
             {
-                var result = await _client.AddPostsAsync(posts);
+                using var stream = _client.AddPosts();
+                foreach (var post in posts)
+                {
+                    await stream.RequestStream.WriteAsync(post);
+                }
+
+                await stream.RequestStream.CompleteAsync();
+                var result = await stream.ResponseAsync;
                 return result.Success;
             }
             catch (Exception err)
@@ -78,8 +85,15 @@ namespace GrpcHelper.Clients
         {
             try
             {
-                var result = await _client.GetImagesAsync(request);
-                return result.Images.ToList();
+                var result = new List<Image>();
+                using var stream = _client.GetImages(request);
+                
+                await foreach (var image in stream.ResponseStream.ReadAllAsync())
+                {
+                    result.Add(image);
+                }
+
+                return result;
             }
             catch (Exception err)
             {
@@ -102,11 +116,18 @@ namespace GrpcHelper.Clients
             return null;
         }
 
-        public async Task<bool> AddImages(ImageModel images)
+        public async Task<bool> AddImages(List<Image> images)
         {
             try
             {
-                var result = await _client.AddImagesAsync(images);
+                using var stream = _client.AddImages();
+                foreach (var post in images)
+                {
+                    await stream.RequestStream.WriteAsync(post);
+                }
+
+                await stream.RequestStream.CompleteAsync();
+                var result = await stream.ResponseAsync;
                 return result.Success;
             }
             catch (Exception err)

@@ -9,12 +9,12 @@ service Database {
     rpc WriteLog(DbLogModel) returns (Status);
     rpc GetDbLogs(DbLogsRequest) returns (DbLogsResponse);
     rpc AddPost(Post) returns (Status);
-    rpc AddPosts(PostModel) returns (Status);
-    rpc GetPosts(PostsRequest) returns (PostModel);
+    rpc AddPosts(stream Post) returns (Status);
+    rpc GetPosts(PostsRequest) returns (stream Post);
     rpc GetPost(EntityRequest) returns (Post);
-    rpc GetImages(ImagesRequest) returns (ImageModel);
+    rpc GetImages(ImagesRequest) returns (stream Image);
     rpc GetImage(EntityRequest) returns (Image);
-    rpc AddImages(ImageModel) returns (Status);
+    rpc AddImages(stream Image) returns (Status);
     rpc GetParserSettings(ParserSettingsRequest) returns (ParserSettings);
     rpc GetPosterSettings(PosterSettingsRequest) returns (PosterSettings);
     rpc SaveParserSettings(ParserSettingsModel) returns (Status);

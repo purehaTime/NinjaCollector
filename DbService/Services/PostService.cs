@@ -67,7 +67,7 @@ namespace DbService.Services
             var images = new List<Image>();
             foreach (var image in post.Images)
             {
-                var savedImageId = await _imageService.SaveImage(image.File.ToByteArray(), image);
+                var savedImageId = await _imageService.SaveImage(image);
                 if (savedImageId.Status)
                 {
                     images.Add(image.ToDatabase(savedImageId.SavedImage));
