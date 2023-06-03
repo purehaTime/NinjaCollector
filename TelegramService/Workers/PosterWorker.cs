@@ -57,7 +57,7 @@ namespace TelegramService.Workers
                 }
 
                 _logger.Warning($"Images for {posterSettings.Id} empty or ending");
-                posterSettings.ContinuePosting = false;
+                posterSettings.Disabled = true;
                 await UpdateSettings(posterSettings);
                 return posterSettings;
             }
@@ -67,13 +67,16 @@ namespace TelegramService.Workers
                 SettingsId = posterSettings.Id
             });
 
-            posterSettings.ContinuePosting = false;
             if (post != null && !string.IsNullOrEmpty(post.PostId))
             {
                 var text = posterSettings.UseSettingsText ? posterSettings.TextForPost : post.Text;
                 var images = post.Images.Select(s => s.ToModel());
                 await _tgBot.SendPost(chatId, text, images.ToList());
-                posterSettings.ContinuePosting = true;
+            }
+            else
+            {
+                _logger.Warning($"Posts for {posterSettings.Id} empty or ending");
+                posterSettings.Disabled = true;
             }
 
             await UpdateSettings(posterSettings);

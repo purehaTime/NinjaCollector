@@ -85,13 +85,18 @@ namespace DbService.Services
 
         public async Task<bool> SavePosterSettings(PosterSettings settings)
         {
-            var result = await _posterRepository.Insert(settings, null, CancellationToken.None);
+            var filter = Builders<PosterSettings>.Filter.Eq(e => e.Id, settings.Id);
+            var existingSetting = await _posterRepository.Find(filter, null, CancellationToken.None);
 
-            if (!result)
+            if (existingSetting != null)
             {
-                _logger.Error($"Cant save settings for poster {settings.Source}");
+                filter = Builders<PosterSettings>.Filter.Eq(e => e.Id, settings.Id);
+                var updateResult = await _posterRepository.Update(filter, settings, null, CancellationToken.None);
+                return updateResult;
             }
-            return result;
+
+            var insertResult = await _posterRepository.Insert(settings, null, CancellationToken.None);
+            return insertResult;
         }
 
         public async Task<bool> RemovePosterSettings(string id)

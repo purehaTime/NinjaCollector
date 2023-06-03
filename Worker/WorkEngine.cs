@@ -160,11 +160,10 @@ namespace Worker
                     }
 
                     counter++;
-
                 }
                 catch (Exception err)
                 {
-                    _logger.Error(err, $"Worker error for TaskId: {Task.CurrentId}");
+                    _logger.Error(err, $"Worker {work.Name} error for TaskId: {Task.CurrentId}");
                     errorCounter++;
                 }
 
@@ -173,7 +172,7 @@ namespace Worker
                 await Task.Delay(delay > 0 ? delay * 1000 : 0);
             }
 
-            _logger.Information($"Task {Task.CurrentId} with setting: {settings.Id} finish work");
+            _logger.Information($"Task {Task.CurrentId} with setting: {settings.Id} finish work: {work.Name}");
         }
     }
 

@@ -15,7 +15,7 @@ namespace GrpcHelper
 
         public static void AddGrpcHelper(this IServiceCollection services, IConfiguration config)
         {
-            services.AddGrpc(options => options.MaxReceiveMessageSize = null);
+            services.AddGrpc(options => options.MaxReceiveMessageSize = 1_073_741_824); //1gb
             services.AddScoped<ILoggerServiceClient, LoggerServiceClient>();
             services.AddScoped<IDatabaseServiceClient, DatabaseServiceClient>();
             services.AddScoped<IWorkerClientAggregator, WorkerClientAggregator>();
@@ -38,14 +38,6 @@ namespace GrpcHelper
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("telegram", x => x.Address = new Uri(GetUrl("TelegramService", config)));
-        }
-
-        public static IServiceCollection AddGrpsHelper<TService, TClass>(this IServiceCollection services)
-            where TService : class
-            where TClass : class, TService
-        {
-            services.AddScoped<TService, TClass>();
-            return services;
         }
 
         private static string GetUrl<TService>(IConfiguration config)

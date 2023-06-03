@@ -97,7 +97,7 @@ namespace UnitTests.DatabaseService
             _gridFsMock.Setup(s => s.GetFileAsStream(objectId, It.IsAny<GridFSDownloadOptions>(), CancellationToken.None))
                 .ReturnsAsync(imageStream);
 
-            var result = _imageService.GetImageById(objectId.ToString())
+            var result = _imageService.GetImageById(objectId)
                 .GetAwaiter()
                 .GetResult();
 
@@ -107,36 +107,6 @@ namespace UnitTests.DatabaseService
             result.image.Should().NotBeNull();
             result.image.GridFsId.Should().Be(objectId);
             result.stream.Should().NotBeNull();
-        }
-
-        [Test]
-        public void GetImagesForPost_ShouldReturn_ImageListWithStream()
-        {
-            var objectId = Fixture.Create<ObjectId>();
-
-            var imageStream = Fixture.Create<MemoryStream>();
-            var images = Fixture.Build<Image>()
-                .With(w => w.GridFsId, objectId)
-                .CreateMany(5)
-                .ToList();
-
-            _imageRepositoryMock
-                .Setup(s => s.FindMany(It.IsAny<FilterDefinition<Image>>(), It.IsAny<FindOptions>(), CancellationToken.None))
-                .ReturnsAsync(images);
-
-            _gridFsMock.Setup(s => s.GetFileAsStream(objectId, It.IsAny<GridFSDownloadOptions>(), CancellationToken.None))
-                .ReturnsAsync(imageStream);
-
-            var result = _imageService.GetImagesForPost(objectId)
-                .GetAwaiter()
-                .GetResult();
-
-            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Never);
-
-            result.Should().NotBeNull();
-            result.Should().HaveCount(5);
-            result.Select(s => s.image.GridFsId).Should().AllBeEquivalentTo(objectId);
-            result.Select(s => s.stream).Should().AllBeOfType<MemoryStream>();
         }
 
         [Test]

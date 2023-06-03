@@ -28,7 +28,7 @@ namespace TelegramService.API
             }
             catch (Exception err)
             {
-                _logger.Error("Can't SendMessage to telegram", err);
+                _logger.Error(err, "Can't SendMessage to telegram");
                 return false;
             }
         }
@@ -44,7 +44,7 @@ namespace TelegramService.API
             }
             catch (Exception err)
             {
-                _logger.Error("Can't SendMessage to telegram", err);
+                _logger.Error(err, "Can't SendPicture to telegram");
                 return false;
             }
         }
@@ -65,7 +65,7 @@ namespace TelegramService.API
             }
             catch (Exception err)
             {
-                _logger.Error("Can't SendMessage to telegram", err);
+                _logger.Error(err, "Can't SendGallery to telegram");
                 return false;
             }
         }

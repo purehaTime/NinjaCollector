@@ -33,6 +33,7 @@ namespace TelegramService.Services
                 Name = string.IsNullOrEmpty(s.Name) ? Guid.NewGuid().ToString() : s.Name,
                 Image = new MemoryStream(s.File)
             });
+
             return await _apiClient.SendGallery(chatId, message, gallery);
         }
     }

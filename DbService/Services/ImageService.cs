@@ -46,22 +46,13 @@ namespace DbService.Services
             return result;
         }
 
-        public async Task<(Image image, MemoryStream stream)> GetImageById(string id)
+        public async Task<(Image image, MemoryStream stream)> GetImageById(ObjectId id)
         {
-            var filter = Builders<Image>.Filter.Eq(e => e.Id, ObjectId.Parse(id));
+            var filter = Builders<Image>.Filter.Eq(e => e.Id, id);
             var image = await _imageRepository.Find(filter, null, CancellationToken.None);
 
             var stream = await _gridFsService.GetFileAsStream(image.GridFsId, null!, CancellationToken.None);
             return (image, stream);
-        }
-
-        public async Task<List<(Image image, MemoryStream stream)>> GetImagesForPost(ObjectId postId)
-        {
-            var filter = Builders<Image>.Filter.Eq(e => e.Id, postId);
-            var images = await _imageRepository.FindMany(filter, null, CancellationToken.None);
-
-            var results = await GetImagesFromGridFs(images);
-            return results;
         }
 
         public async Task<List<(Image image, MemoryStream stream)>> GetImagesBySettingId(string settingId)

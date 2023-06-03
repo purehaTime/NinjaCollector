@@ -18,6 +18,7 @@ namespace UnitTests.DatabaseService
         private Mock<IHistoryService> _historyServiceMock;
         private Mock<IImageService> _imageServiceMock;
         private Mock<ISettingsService> _settingsServiceMock;
+        private Mock<IGridFsService> _gridFsServiceMock;
 
         private IPostService _postService;
 
@@ -28,9 +29,15 @@ namespace UnitTests.DatabaseService
             _historyServiceMock = new Mock<IHistoryService>();
             _imageServiceMock = new Mock<IImageService>();
             _settingsServiceMock = new Mock<ISettingsService>();
+            _gridFsServiceMock = new Mock<IGridFsService>();
             _loggerMock = new Mock<ILogger>();
 
-            _postService = new PostService(_postRepositoryMock.Object, _imageServiceMock.Object, _historyServiceMock.Object, _settingsServiceMock.Object, _loggerMock.Object);
+            _postService = new PostService(_postRepositoryMock.Object, 
+                _imageServiceMock.Object,
+                _historyServiceMock.Object,
+                _settingsServiceMock.Object,
+                _gridFsServiceMock.Object,
+                _loggerMock.Object);
         }
 
         [Test]
@@ -67,6 +74,8 @@ namespace UnitTests.DatabaseService
                 .With(w => w.GridFsId, postObjectId)
                 .Create();
 
+            var imageBytes = Fixture.Create<byte[]>();
+
             postList[0].Id = postObjectId; // one should be not filtered by history
 
             var settingsId = Fixture.Create<string>();
@@ -89,9 +98,8 @@ namespace UnitTests.DatabaseService
                 .Setup(s => s.GetHistory(postList.Select(p => p.Id), settings.Source, settings.Group))
                 .ReturnsAsync(histories);
 
-            _imageServiceMock
-                .Setup(s => s.GetImagesForPost(It.IsAny<ObjectId>()))
-                .ReturnsAsync(() => new List<(Image image, MemoryStream stream)> {(image, imageStream)});
+            _gridFsServiceMock.Setup(s => s.GetFileAsBytes(It.IsAny<ObjectId>(), null, CancellationToken.None))
+                .ReturnsAsync(imageBytes);
 
             var result = _postService.GetPostBySettingId(settingsId)
                 .GetAwaiter()

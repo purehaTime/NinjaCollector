@@ -31,8 +31,7 @@ namespace DbService.Services
         public async Task<IEnumerable<History>> GetHistory(IEnumerable<ObjectId> entities, string service,
             string forGroup)
         {
-            var historyFilter = Builders<History>.Filter
-                .Where(w => entities.Any(a => a == w.EntityId));
+            var historyFilter = Builders<History>.Filter.In(x => x.EntityId, entities);
             historyFilter &= Builders<History>.Filter.Eq(e => e.Service, service);
             historyFilter &= Builders<History>.Filter.Eq(e => e.ForGroup, forGroup);
             var histories = await _historyRepository.FindMany(historyFilter, null!, CancellationToken.None);
