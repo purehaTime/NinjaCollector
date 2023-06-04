@@ -61,28 +61,23 @@ namespace UnitTests.DatabaseService
         [Test]
         public void GetHistory_ShouldReturn_HistoryList()
         {
-            var postObjectId = Fixture.Create<ObjectId>();
+            var postId = Fixture.Create<string>();
             
             var postList = Fixture.Build<Post>()
-                .With(w => w.Id, postObjectId)
+                .With(w => w.PostId, postId)
                 .With(w => w.PostDate, new DateTime().ToUniversalTime())
                 .CreateMany(5)
                 .ToList();
 
-            var imageStream = Fixture.Create<MemoryStream>();
-            var image = Fixture.Build<Image>()
-                .With(w => w.GridFsId, postObjectId)
-                .Create();
-
             var imageBytes = Fixture.Create<byte[]>();
 
-            postList[0].Id = postObjectId; // one should be not filtered by history
+            postList[0].PostId = postId; // one should be not filtered by history
 
             var settingsId = Fixture.Create<string>();
             var settings = Fixture.Create<PosterSettings>();
 
             var histories = Fixture.Build<History>()
-                .With(w => w.EntityId, postList.First().Id)
+                .With(w => w.EntityId, postList.First().PostId)
                 .CreateMany()
                 .ToList();
 
@@ -95,7 +90,7 @@ namespace UnitTests.DatabaseService
                 .ReturnsAsync(postList);
 
             _historyServiceMock
-                .Setup(s => s.GetHistory(postList.Select(p => p.Id), settings.Source, settings.Group))
+                .Setup(s => s.GetHistory(postList.Select(p => p.PostId), settings.Source, settings.Group))
                 .ReturnsAsync(histories);
 
             _gridFsServiceMock.Setup(s => s.GetFileAsBytes(It.IsAny<ObjectId>(), null, CancellationToken.None))

@@ -66,14 +66,18 @@ namespace DbService.Services
             var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, setting.Tags);
             var images = (await _imageRepository.FindMany(filter, null, CancellationToken.None)).ToList();
 
-            var filteredImages = images;
             if (!setting.IgnoreHistory)
             {
-                var histories = await _historyService.GetHistory(images.Select(s => s.Id), setting.Source, setting.Group);
-                filteredImages = images.Where(w => histories.All(a => a.EntityId != w.Id)).ToList();
+                var histories = await _historyService.GetHistory(images.Select(s => s.DirectLink), setting.Source, setting.Group);
+                images = images.ExceptBy(histories.Select(s => s.EntityId), post => post.DirectLink).ToList();
+                if (images.Count == 0)
+                {
+                    _logger.Information("All posts was posted by history");
+                    return null;
+                }
             }
 
-            var results = await GetImagesFromGridFs(filteredImages);
+            var results = await GetImagesFromGridFs(images);
             return results;
         }
 
@@ -86,24 +90,21 @@ namespace DbService.Services
             }
 
             var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, setting.Tags);
-
-            var rnd = new Random();
             var images = (await _imageRepository.FindMany(filter, null, CancellationToken.None)).ToList();
-            var image = setting.UseRandom ? images[rnd.Next(images.Count - 1)] : images.FirstOrDefault();
-
-            if (image == null)
-            {
-                return (null, null);
-            }
 
             if (!setting.IgnoreHistory)
             {
-                var histories = await _historyService.GetHistory(new List<ObjectId> { image.Id }, setting.Source, setting.Group);
-                if (histories.Any())
+                var histories = await _historyService.GetHistory(images.Select(s => s.DirectLink), setting.Source, setting.Group);
+                images = images.ExceptBy(histories.Select(s => s.EntityId), post => post.DirectLink).ToList();
+                if (images.Count > 0)
                 {
+                    _logger.Information("All posts was posted by history");
                     return (null, null);
                 }
             }
+
+            var rnd = new Random();
+            var image = setting.UseRandom ? images[rnd.Next(images.Count - 1)] : images.First();
 
             var results = await GetImagesFromGridFs(new List<Image> { image });
             return results.FirstOrDefault();

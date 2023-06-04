@@ -155,9 +155,9 @@ message PosterSettings {
 }
 
 message HistoryModel {
-    int32 EntityId = 1;
+    string EntityId = 1;
     string Source = 2;
-    string ForGroup = 3;
+    string Group = 3;
     google.protobuf.Timestamp PostDate = 4;
 }
 

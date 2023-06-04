@@ -3,7 +3,6 @@ using DbService.Interfaces;
 using DbService.Models;
 using DbService.Services;
 using FluentAssertions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Moq;
 using Serilog;
@@ -15,6 +14,7 @@ namespace UnitTests.DatabaseService
     {
 
         private Mock<IRepository<History>> _historyRepositoryMock;
+        private Mock<IPostService> _postServiceMock;
         private Mock<ILogger> _loggerMock;
 
         private IHistoryService _historyService;
@@ -23,7 +23,10 @@ namespace UnitTests.DatabaseService
         public void Setup()
         {
             _historyRepositoryMock = new Mock<IRepository<History>>();
+            _postServiceMock  = new Mock<IPostService>();
             _loggerMock = new Mock<ILogger>();
+
+            _historyService = new HistoryService(_historyRepositoryMock.Object, _postServiceMock.Object, _loggerMock.Object);
         }
 
 
@@ -33,8 +36,6 @@ namespace UnitTests.DatabaseService
             var history = Fixture.Create<History>();
 
             _historyRepositoryMock.Setup(s => s.Insert(history, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(true);
-
-            _historyService = new HistoryService(_historyRepositoryMock.Object, _loggerMock.Object);
 
             var result = _historyService.SaveHistory(history)
                 .GetAwaiter()
@@ -52,8 +53,6 @@ namespace UnitTests.DatabaseService
 
             _historyRepositoryMock.Setup(s => s.Insert(history, It.IsAny<InsertOneOptions>(), CancellationToken.None)).ReturnsAsync(false);
 
-            _historyService = new HistoryService(_historyRepositoryMock.Object, _loggerMock.Object);
-
             var result = _historyService.SaveHistory(history)
                 .GetAwaiter()
                 .GetResult();
@@ -67,14 +66,12 @@ namespace UnitTests.DatabaseService
         public void GetHistory_ShouldReturn_HistoryList()
         {
             var historyList = Fixture.CreateMany<History>(5);
-            var entities = Fixture.CreateMany<ObjectId>();
+            var entities = Fixture.CreateMany<string>();
             var serviceGroup = Fixture.Create<string>();
 
             _historyRepositoryMock
                 .Setup(s => s.FindMany(It.IsAny<FilterDefinition<History>>(), It.IsAny<FindOptions>(), CancellationToken.None))
                 .ReturnsAsync(historyList);
-
-            _historyService = new HistoryService(_historyRepositoryMock.Object, _loggerMock.Object);
 
             var result = _historyService.GetHistory(entities, serviceGroup, serviceGroup)
                 .GetAwaiter()

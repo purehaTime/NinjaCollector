@@ -8,7 +8,7 @@ namespace DbService.Models
         [BsonId]
         public ObjectId Id { get; set; }
 
-        public ObjectId EntityId { get; set; }
+        public string EntityId { get; set; }
 
         public string Service { get; set; }
 

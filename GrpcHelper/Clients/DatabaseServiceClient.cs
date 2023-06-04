@@ -227,6 +227,20 @@ namespace GrpcHelper.Clients
             return false;
         }
 
+        public async Task<bool> SaveHistory(HistoryModel history)
+        {
+            try
+            {
+                var result = await _client.SaveHistoryAsync(history);
+                return result.Success;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err.Message);
+            }
+            return false;
+        }
+
         public async Task<bool> CreateUser(string userName, string password)
         {
             try

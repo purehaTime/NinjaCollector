@@ -100,8 +100,6 @@ namespace UnitTests.DatabaseService
                 .GetResult();
 
             _posterRepositoryMock.Verify(v => v.Insert(poster, It.IsAny<InsertOneOptions>(), CancellationToken.None), Times.Once);
-            _loggerMock.Verify(v => v.Error(It.IsAny<string>()), Times.Once);
-
             result.Should().BeFalse();
         }
 

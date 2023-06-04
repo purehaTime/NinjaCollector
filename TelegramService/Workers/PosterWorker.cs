@@ -1,4 +1,5 @@
-﻿using GrpcHelper.DbService;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcHelper.DbService;
 using GrpcHelper.Interfaces;
 using ModelsHelper.Mapping;
 using ModelsHelper.Models;
@@ -71,7 +72,11 @@ namespace TelegramService.Workers
             {
                 var text = posterSettings.UseSettingsText ? posterSettings.TextForPost : post.Text;
                 var images = post.Images.Select(s => s.ToModel());
-                await _tgBot.SendPost(chatId, text, images.ToList());
+                var result = await _tgBot.SendPost(chatId, text, images.ToList());
+                if (result)
+                {
+                    await UpdateHistory(post.PostId, posterSettings);
+                }
             }
             else
             {
@@ -86,6 +91,17 @@ namespace TelegramService.Workers
         private async Task UpdateSettings(PosterSettings settings)
         {
             await _dbClient.SavePosterSettings(settings.ToGrpcData());
+        }
+
+        private async Task UpdateHistory(string postId, PosterSettings setting)
+        {
+            await _dbClient.SaveHistory(new HistoryModel
+            {
+                EntityId = postId,
+                Group = setting.Group,
+                Source = setting.Source,
+                PostDate = DateTime.UtcNow.ToTimestamp()
+            });
         }
 
         private async Task<List<PosterSettings>> GetPosterSettings(string settingsId)

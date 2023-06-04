@@ -4,6 +4,7 @@ using GrpcHelper.DbService;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.Collections.Concurrent;
+using System.Linq;
 using DbPost = DbService.Models.Post;
 using ILogger = Serilog.ILogger;
 using Image = DbService.Models.Image;
@@ -54,20 +55,23 @@ namespace DbService.Services
                 return null;
             }
 
-            var rnd = new Random();
-            var filterPost = setting.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.FirstOrDefault();
             if (!setting.IgnoreHistory)
             {
                 _logger.Information($"Start getting history posts for: {setting.Id}");
-                var histories = await _historyService.GetHistory(posts.Select(s => s.Id), setting.Source, setting.Group);
-                filterPost = posts.FirstOrDefault(w => histories.All(a => a.EntityId != w.Id));
+                var histories = await _historyService.GetHistory(posts.Select(s => s.PostId), setting.Source, setting.Group);
+                //posts = posts.Where(postId => !histIds.Contains(postId.PostId)).ToList();
+                posts = posts.ExceptBy(histories.Select(s => s.EntityId), post => post.PostId).ToList();
+
+                if (posts.Count == 0)
+                {
+                    _logger.Information("All posts was posted by history");
+                    return null;
+                }
             }
 
-            if (filterPost == null)
-            {
-                _logger.Information($"Posts empty");
-                return null;
-            }
+            var rnd = new Random();
+            var filterPost = setting.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.First();
+
 
             var resultImages = new List<GrpcHelper.DbService.Image>();
             foreach (var image in filterPost.Images)

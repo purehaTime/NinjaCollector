@@ -9,11 +9,13 @@ namespace DbService.Services
     public class HistoryService : IHistoryService
     {
         private readonly IRepository<History> _historyRepository;
+        private readonly IPostService _postService;
         private readonly ILogger _logger;
 
-        public HistoryService(IRepository<History> historyRepository, ILogger logger)
+        public HistoryService(IRepository<History> historyRepository, IPostService postService, ILogger logger)
         {
             _historyRepository = historyRepository;
+            _postService = postService;
             _logger = logger;
         }
 
@@ -28,13 +30,13 @@ namespace DbService.Services
             return result;
         }
 
-        public async Task<IEnumerable<History>> GetHistory(IEnumerable<ObjectId> entities, string service,
+        public async Task<IEnumerable<History>> GetHistory(IEnumerable<string> entities, string service,
             string forGroup)
         {
             var historyFilter = Builders<History>.Filter.In(x => x.EntityId, entities);
             historyFilter &= Builders<History>.Filter.Eq(e => e.Service, service);
             historyFilter &= Builders<History>.Filter.Eq(e => e.ForGroup, forGroup);
-            var histories = await _historyRepository.FindMany(historyFilter, null!, CancellationToken.None);
+            var histories = await _historyRepository.FindMany(historyFilter, null, CancellationToken.None);
 
             return histories;
         }
