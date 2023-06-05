@@ -43,6 +43,7 @@ namespace DbService.Services
             var bytes = image.File.ToByteArray();
             var saved = await InsertFile(bytes);
             var result = await SaveImage(saved.Id, saved.fileName, image);
+
             return result;
         }
 
@@ -96,7 +97,7 @@ namespace DbService.Services
             {
                 var histories = await _historyService.GetHistory(images.Select(s => s.DirectLink), setting.Source, setting.Group);
                 images = images.ExceptBy(histories.Select(s => s.EntityId), post => post.DirectLink).ToList();
-                if (images.Count > 0)
+                if (images.Count == 0)
                 {
                     _logger.Information("All posts was posted by history");
                     return (null, null);
@@ -108,6 +109,15 @@ namespace DbService.Services
 
             var results = await GetImagesFromGridFs(new List<Image> { image });
             return results.FirstOrDefault();
+        }
+
+        public async Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags)
+        {
+            var filter = Builders<Image>.Filter.AnyIn(x => x.Tags, tags);
+            var images = (await _imageRepository.FindMany(filter, null, CancellationToken.None)).ToList();
+
+            var results = await GetImagesFromGridFs(images);
+            return results;
         }
 
         private async Task<(bool, ObjectId)> SaveImage(ObjectId id, string fileName, GrpcHelper.DbService.Image image)

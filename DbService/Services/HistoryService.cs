@@ -9,13 +9,11 @@ namespace DbService.Services
     public class HistoryService : IHistoryService
     {
         private readonly IRepository<History> _historyRepository;
-        private readonly IPostService _postService;
         private readonly ILogger _logger;
 
-        public HistoryService(IRepository<History> historyRepository, IPostService postService, ILogger logger)
+        public HistoryService(IRepository<History> historyRepository, ILogger logger)
         {
             _historyRepository = historyRepository;
-            _postService = postService;
             _logger = logger;
         }
 
@@ -24,7 +22,7 @@ namespace DbService.Services
             var result = await _historyRepository.Insert(history, null!, CancellationToken.None);
             if (!result)
             {
-                _logger.Error($"Cant save history for {history.Service} : {history.ForGroup}");
+                _logger.Error($"Cant save history for {history.Source} : {history.Group}");
             }
 
             return result;
@@ -34,8 +32,8 @@ namespace DbService.Services
             string forGroup)
         {
             var historyFilter = Builders<History>.Filter.In(x => x.EntityId, entities);
-            historyFilter &= Builders<History>.Filter.Eq(e => e.Service, service);
-            historyFilter &= Builders<History>.Filter.Eq(e => e.ForGroup, forGroup);
+            historyFilter &= Builders<History>.Filter.Eq(e => e.Source, service);
+            historyFilter &= Builders<History>.Filter.Eq(e => e.Group, forGroup);
             var histories = await _historyRepository.FindMany(historyFilter, null, CancellationToken.None);
 
             return histories;

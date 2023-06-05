@@ -78,7 +78,7 @@ namespace RedditService.Workers
                 }
             }
 
-            parserSettings.Disabled = true;
+            parserSettings.Disabled = !parserSettings.ContinueMonitoring;
             await UpdateSettings(parserSettings);
 
             return parserSettings;

@@ -46,7 +46,6 @@ namespace RedditService.Services
             return content;
         }
 
-
         private async Task<List<Image>> ParseImages(Post post)
         {
             var imageLink = post.Listing.URL;
@@ -60,7 +59,7 @@ namespace RedditService.Services
                     var data = await _fileDownloadService.GetFile(image.DirectLink);
                     images.Add(new Image
                     {
-                        DirectLink = imageLink,
+                        DirectLink = image.DirectLink,
                         Width = image.Width,
                         Height = image.Height,
                         Name = post.Fullname,

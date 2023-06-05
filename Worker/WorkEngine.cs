@@ -168,7 +168,8 @@ namespace Worker
                 }
 
                 stopWatch.Stop();
-                var delay = settings.Timeout - stopWatch.Elapsed.Milliseconds;
+                _logger.Information($"{work.Name} time run is {stopWatch.Elapsed.Seconds} seconds");
+                var delay = settings.Timeout - stopWatch.Elapsed.Seconds;
                 await Task.Delay(delay > 0 ? delay * 1000 : 0);
             }
 

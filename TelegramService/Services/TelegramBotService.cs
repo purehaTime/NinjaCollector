@@ -2,16 +2,19 @@
 using ModelsHelper.Models;
 using TelegramService.Interfaces;
 using TelegramService.Models;
+using ILogger = Serilog.ILogger;
 
 namespace TelegramService.Services
 {
     public class TelegramBotService  : ITelegramBotService
     {
         private readonly ITelegramBotApiClient _apiClient;
+        private readonly ILogger _logger;
 
-        public TelegramBotService(ITelegramBotApiClient apiClient)
+        public TelegramBotService(ITelegramBotApiClient apiClient, ILogger logger)
         {
             _apiClient = apiClient;
+            _logger = logger;
         }
 
         public async Task<bool> SendPost(string chatId, string message, List<Image> images)
@@ -28,12 +31,7 @@ namespace TelegramService.Services
                 return await _apiClient.SendPicture(chatId, message, stream);
             }
 
-            var gallery = images.Select(s => new ImageGallery
-            {
-                Name = string.IsNullOrEmpty(s.Name) ? Guid.NewGuid().ToString() : s.Name,
-                Image = new MemoryStream(s.File)
-            });
-
+            var gallery = images.Select(s => new MemoryStream(s.File));
             return await _apiClient.SendGallery(chatId, message, gallery);
         }
     }

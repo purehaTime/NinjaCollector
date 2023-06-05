@@ -10,9 +10,9 @@ namespace DbService.Models
 
         public string EntityId { get; set; }
 
-        public string Service { get; set; }
+        public string Source { get; set; }
 
-        public string ForGroup { get; set; }
+        public string Group { get; set; }
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime Date { get; set; }

@@ -85,6 +85,7 @@ namespace TelegramService.Workers
             }
 
             await UpdateSettings(posterSettings);
+
             return posterSettings;
         }
 

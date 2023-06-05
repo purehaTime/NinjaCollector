@@ -27,6 +27,7 @@ namespace GrpcHelper
                 x.Address = new Uri(GetUrl<Database.DatabaseClient>(config));
                 x.CallOptionsActions.Add(context =>
                     context.CallOptions = new CallOptions(deadline: DateTime.UtcNow.AddSeconds(25)));
+                x.ChannelOptionsActions.Add(a => a.MaxReceiveMessageSize = 1_073_741_824);
             });
             services.AddGrpcClient<Logger.LoggerClient>(x => x.Address = new Uri(GetUrl<Logger.LoggerClient>(config)));
             services.AddGrpcClient<Auth.AuthClient>(x =>
@@ -37,7 +38,11 @@ namespace GrpcHelper
             });
 
             services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("reddit", x => x.Address = new Uri(GetUrl("RedditService", config)));
-            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("telegram", x => x.Address = new Uri(GetUrl("TelegramService", config)));
+            services.AddGrpcClient<WorkerService.WorkerService.WorkerServiceClient>("telegram", x =>
+            {
+                x.Address = new Uri(GetUrl("TelegramService", config));
+                x.ChannelOptionsActions.Add(a => a.MaxReceiveMessageSize = 1_073_741_824);
+            });
         }
 
         private static string GetUrl<TService>(IConfiguration config)

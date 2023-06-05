@@ -133,6 +133,16 @@ namespace DbService.Services
             return result;
         }
 
+        public override async Task GetImages(ImagesRequest request, IServerStreamWriter<Image> responseStream, ServerCallContext context)
+        {
+            var images = await _image.GetImagesByTags(request.Tags.ToList());
+            foreach (var image in images)
+            {
+                var result = image.image.ToGrpcData(image.stream.ToArray());
+                await responseStream.WriteAsync(result);
+            }
+        }
+
         public override async Task<Status> AddImages(IAsyncStreamReader<Image> requestStream, ServerCallContext context)
         {
             var result = true;
@@ -146,6 +156,12 @@ namespace DbService.Services
 
             _logger.Information("End receive posts");
             return new Status { Success = result };
+        }
+
+        public override async Task<Status> SaveHistory(HistoryModel request, ServerCallContext context)
+        {
+           var result = await _history.SaveHistory(request.ToDatabase());
+           return new Status { Success = result };
         }
     }
 }

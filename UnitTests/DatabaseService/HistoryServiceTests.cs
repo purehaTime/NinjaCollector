@@ -26,7 +26,7 @@ namespace UnitTests.DatabaseService
             _postServiceMock  = new Mock<IPostService>();
             _loggerMock = new Mock<ILogger>();
 
-            _historyService = new HistoryService(_historyRepositoryMock.Object, _postServiceMock.Object, _loggerMock.Object);
+            _historyService = new HistoryService(_historyRepositoryMock.Object, _loggerMock.Object);
         }
 
 

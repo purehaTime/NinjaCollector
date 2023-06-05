@@ -46,7 +46,6 @@ namespace DbService.Services
                 return new Post();
             }
 
-            _logger.Information($"Start getting posts for: {setting.Id}");
             var filter = Builders<DbPost>.Filter.AnyIn(x => x.Tags, setting.Tags);
             var posts = (await _postRepository.FindMany(filter, null, CancellationToken.None)).ToList();
 
@@ -59,7 +58,6 @@ namespace DbService.Services
             {
                 _logger.Information($"Start getting history posts for: {setting.Id}");
                 var histories = await _historyService.GetHistory(posts.Select(s => s.PostId), setting.Source, setting.Group);
-                //posts = posts.Where(postId => !histIds.Contains(postId.PostId)).ToList();
                 posts = posts.ExceptBy(histories.Select(s => s.EntityId), post => post.PostId).ToList();
 
                 if (posts.Count == 0)
@@ -71,7 +69,6 @@ namespace DbService.Services
 
             var rnd = new Random();
             var filterPost = setting.UseRandom ? posts[rnd.Next(posts.Count - 1)] : posts.First();
-
 
             var resultImages = new List<GrpcHelper.DbService.Image>();
             foreach (var image in filterPost.Images)
@@ -125,8 +122,7 @@ namespace DbService.Services
                 });
                 dbPosts.Add(post.ToDatabase(imageBag.ToList()));
             }
-            
-            
+
             var result = await _postRepository.InsertMany(dbPosts, null!, CancellationToken.None);
 
             if (!result)

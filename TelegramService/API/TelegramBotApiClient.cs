@@ -1,7 +1,6 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramService.Interfaces;
-using TelegramService.Models;
 using ILogger = Serilog.ILogger;
 using InputFile = Telegram.Bot.Types.InputFile;
 
@@ -49,7 +48,7 @@ namespace TelegramService.API
             }
         }
 
-        public async Task<bool> SendGallery(string chatId, string message, IEnumerable<ImageGallery> pictures)
+        public async Task<bool> SendGallery(string chatId, string message, IEnumerable<MemoryStream> pictures)
         {
             try
             {
@@ -57,7 +56,7 @@ namespace TelegramService.API
                 var media = new List<IAlbumInputMedia>();
                 foreach (var image in pictures)
                 {
-                    media.Add(new InputMediaPhoto(InputFile.FromStream(image.Image, image.Name)));
+                    media.Add(new InputMediaPhoto(InputFile.FromStream(image, Guid.NewGuid().ToString())));
                 }
 
                 await _botClient.SendMediaGroupAsync(chat, media);

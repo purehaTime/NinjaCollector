@@ -16,5 +16,7 @@ namespace DbService.Interfaces
         public Task<List<(Image image, MemoryStream stream)>> GetImagesBySettingId(string settingId);
 
         public Task<(Image image, MemoryStream steam)> GetImageBySettingId(string settingId);
+
+        public Task<List<(Image image, MemoryStream stream)>> GetImagesByTags(List<string> tags);
     }
 }
